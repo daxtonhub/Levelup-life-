@@ -296,7 +296,21 @@ body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text)
 </div>
 </div>
 <div class="sec-title">🎨 Personalization</div>
-<button class="btn-secondary" onclick="openBgPicker()">🎨 Change Card Background</button>
+<button class="btn-secondary"
+  onclick="openBgPicker()">
+  🎨 Change Card Color
+</button>
+<button class="btn-secondary"
+  onclick="document.getElementById(
+    'bg-image-input').click()"
+  style="margin-top:8px">
+  🖼️ Upload Background Image
+</button>
+<input type="file"
+  id="bg-image-input"
+  accept="image/*"
+  style="display:none"
+  onchange="uploadBgImage(event)"/>
 <div class="sec-title">⚙️ Settings</div>
 <div class="toggle-row">
 <div><div class="toggle-label">♀️ Female Mode</div><div class="toggle-desc">Period tracking + special quests</div></div>
@@ -379,12 +393,77 @@ function getTitle(l){return LEVELS[Math.min(l-1,LEVELS.length-1)].title;}
 function getMinXP(l){return LEVELS[Math.min(l-1,LEVELS.length-1)].min;}
 function getNextXP(l){return LEVELS[Math.min(l,LEVELS.length-1)].min;}
 function renderTopbar(){if(!profile)return;const xp=profile.xp||0;const level=getLevel(xp);const title=getTitle(level);id('topbar-name').textContent=profile.username||'Hero';id('topbar-level').textContent=`LVL ${level} • ${title}`;id('topbar-xp').textContent=`${xp} XP`;if(profile.avatar_url){id('topbar-avatar').innerHTML=`<img src="${profile.avatar_url}"/>`;}}
-function renderHeroCard(){if(!profile)return;const xp=profile.xp||0;const level=getLevel(xp);const title=getTitle(level);const curMin=getMinXP(level);const nextMin=getNextXP(level);const pct=level>=10?100:Math.round(((xp-curMin)/(nextMin-curMin))*100);id('hero-name').textContent=profile.username||'Hero';id('hero-title').textContent=`⚡ ${title}`;id('hero-badge').textContent=`LV ${level}`;id('xp-fill').style.width=pct+'%';id('xp-nums').textContent=`${xp} / ${nextMin}`;id('hstat-streak').textContent=profile.streak||0;id('hstat-motivation').textContent=profile.motivation||100;id('hstat-done').textContent=dailyQuests.filter(q=>q.is_completed).length;if(profile.avatar_url){id('hero-avatar').innerHTML=`<img src="${profile.avatar_url}"/>`;}if(profile.namecard_bg){selectedBg=profile.namecard_bg;document.querySelector('.hero-bg').style.background=`linear-gradient(135deg,${profile.namecard_bg} 0%,#0a0a1a 100%)`;}}
+function renderHeroCard(){
+  if(!profile)return;
+  const xp=profile.xp||0;
+  const level=getLevel(xp);
+  const title=getTitle(level);
+  const curMin=getMinXP(level);
+  const nextMin=getNextXP(level);
+  const pct=level>=10?100:
+    Math.round(((xp-curMin)/(nextMin-curMin))*100);
+  id('hero-name').textContent=
+    profile.username||'Hero';
+  id('hero-title').textContent=`⚡ ${title}`;
+  id('hero-badge').textContent=`LV ${level}`;
+  id('xp-fill').style.width=pct+'%';
+  id('xp-nums').textContent=`${xp} / ${nextMin}`;
+  id('hstat-streak').textContent=
+    profile.streak||0;
+  id('hstat-motivation').textContent=
+    profile.motivation||100;
+  id('hstat-done').textContent=
+    dailyQuests.filter(q=>q.is_completed).length;
+  if(profile.avatar_url){
+    id('hero-avatar').innerHTML=
+      `<img src="${profile.avatar_url}"/>`;
+  }
+  if(profile.bg_image_url){
+    applyBgImage(profile.bg_image_url);
+  }else if(profile.namecard_bg){
+    selectedBg=profile.namecard_bg;
+    document.querySelector('.hero-bg')
+      .style.background=
+      `linear-gradient(135deg,
+        ${profile.namecard_bg} 0%,
+        #0a0a1a 100%)`;
+  }
+}
 function renderDashQuests(){const el=id('dash-quests');if(!dailyQuests.length){el.innerHTML=empty('✅','No quests today');return;}el.innerHTML=dailyQuests.slice(0,4).map(q=>questCard(q)).join('');}
 async function renderDashSystem(){const el=id('dash-system');if(!systemQuests.length){el.innerHTML=empty('🎯','No system quests yet');return;}const{data:uSQ}=await sb.from('user_system_quests').select('*').eq('user_id',user.id);const doneIds=(uSQ||[]).filter(x=>x.is_completed).map(x=>x.quest_id);el.innerHTML=systemQuests.map(q=>`<div class="quest-card system-q ${doneIds.includes(q.id)?'done':''}" onclick="completeSQ('${q.id}',${q.xp_reward},${doneIds.includes(q.id)})"><div class="qcheck">${doneIds.includes(q.id)?'✓':'👑'}</div><div class="qinfo"><div class="qtitle">${q.title}</div><div class="qmeta">${q.description||'System Quest'}</div></div><div class="qxp">+${q.xp_reward} XP</div></div>`).join('');}
 function renderSkills(){const el=id('dash-skills');if(!allSkills.length){el.innerHTML=empty('📚','No skills yet');return;}el.innerHTML=allSkills.map(s=>`<div class="skill-card"><div class="skill-icon">${SKILL_ICONS[s.skill_name]||'⭐'}</div><div class="skill-name">${cap(s.skill_name)}</div><div class="skill-lv">LV ${s.skill_level}</div><div class="skill-track"><div class="skill-fill" style="width:${(s.skill_xp||0)%100}%"></div></div></div>`).join('');}
 async function renderQuestsTab(){const el=id('quests-list');const total=dailyQuests.length;const done=dailyQuests.filter(q=>q.is_completed).length;const pct=total>0?Math.round((done/total)*100):0;id('q-progress-fill').style.width=pct+'%';id('q-progress-text').textContent=`${done}/${total} done`;const{data:uSQ}=await sb.from('user_system_quests').select('*').eq('user_id',user.id);const doneIds=(uSQ||[]).filter(x=>x.is_completed).map(x=>x.quest_id);let list=[...dailyQuests];const sqList=systemQuests.map(q=>({...q,quest_type:'system',skill_category:'system',is_completed:doneIds.includes(q.id)}));if(qFilter==='all')list=[...list,...sqList];else if(qFilter==='habit')list=list.filter(q=>q.quest_type==='habit');else if(qFilter==='todo')list=list.filter(q=>q.quest_type==='todo');else if(qFilter==='system')list=sqList;if(!list.length){el.innerHTML=empty('📋','No quests here');return;}el.innerHTML=list.map(q=>{if(q.quest_type==='system'){return`<div class="quest-card system-q ${q.is_completed?'done':''}" onclick="completeSQ('${q.id}',${q.xp_reward},${q.is_completed})"><div class="qcheck">${q.is_completed?'✓':'👑'}</div><div class="qinfo"><div class="qtitle">${q.title}</div><div class="qmeta">👑 System Quest</div></div><div class="qxp">+${q.xp_reward} XP</div></div>`;}return questCard(q);}).join('');}
-function renderProfile(){if(!profile)return;const xp=profile.xp||0;const level=getLevel(xp);id('profile-name').textContent=profile.username||'Hero';id('profile-email').textContent=user?.email||'';id('pstat-level').textContent=level;id('pstat-xp').textContent=xp;id('pstat-streak').textContent=profile.streak||0;if(profile.avatar_url){id('profile-avatar').innerHTML=`<img src="${profile.avatar_url}"/>`;}if(profile.namecard_bg){document.querySelector('.profile-bg').style.background=`linear-gradient(135deg,${profile.namecard_bg} 0%,#0a1a2e 100%)`;}if(profile.is_female_mode){id('female-toggle').classList.add('on');show('female-section');loadPeriodHistory();}}
+function renderProfile(){
+  if(!profile)return;
+  const xp=profile.xp||0;
+  const level=getLevel(xp);
+  id('profile-name').textContent=
+    profile.username||'Hero';
+  id('profile-email').textContent=
+    user?.email||'';
+  id('pstat-level').textContent=level;
+  id('pstat-xp').textContent=xp;
+  id('pstat-streak').textContent=
+    profile.streak||0;
+  if(profile.avatar_url){
+    id('profile-avatar').innerHTML=
+      `<img src="${profile.avatar_url}"/>`;
+  }
+  if(profile.bg_image_url){
+    applyBgImage(profile.bg_image_url);
+  }else if(profile.namecard_bg){
+    document.querySelector('.profile-bg')
+      .style.background=
+      `linear-gradient(135deg,
+        ${profile.namecard_bg} 0%,
+        #0a1a2e 100%)`;
+  }
+  if(profile.is_female_mode){
+    id('female-toggle').classList.add('on');
+    show('female-section');
+    loadPeriodHistory();
+  }
+}
 function questCard(q){return`<div class="quest-card ${q.is_completed?'done':''}" onclick="completeQuest('${q.id}',${q.xp_reward},'${q.skill_category}',${q.is_completed})"><div class="qcheck">${q.is_completed?'✓':''}</div><div class="qinfo"><div class="qtitle">${q.title}</div><div class="qmeta">${SKILL_ICONS[q.skill_category]||'⭐'} ${q.skill_category} • ${q.quest_type}</div></div><div class="qxp">+${q.xp_reward} XP</div></div>`;}
 window.completeQuest=async function(qid,xpReward,skillCat,done){if(done){toast('Already done! ✅');return;}await sb.from('daily_quests').update({is_completed:true}).eq('id',qid);const q=dailyQuests.find(x=>x.id===qid);if(q)q.is_completed=true;await giveXP(xpReward,skillCat);toast(`+${xpReward} XP! 🌟`);await checkStreak();renderAll();};
 window.completeSQ=async function(sqId,xpReward,done){if(done){toast('Already done! ✅');return;}const{data:ex}=await sb.from('user_system_quests').select('id').eq('user_id',user.id).eq('quest_id',sqId).single();if(ex){await sb.from('user_system_quests').update({is_completed:true,completed_at:new Date().toISOString()}).eq('id',ex.id);}else{await sb.from('user_system_quests').insert({user_id:user.id,quest_id:sqId,is_completed:true,completed_at:new Date().toISOString()});}await giveXP(xpReward,null);toast(`👑 +${xpReward} XP! System Quest done!`);renderAll();};
@@ -396,6 +475,51 @@ window.filterQ=function(f,btn){qFilter=f;document.querySelectorAll('.filter-btn'
 window.uploadAvatar=async function(e){const file=e.target.files[0];if(!file)return;toast('Uploading...','green');const ext=file.name.split('.').pop();const path=`${user.id}/avatar.${ext}`;const{error}=await sb.storage.from('avatars').upload(path,file,{upsert:true});if(error){toast('Upload failed: '+error.message,'red');return;}const{data:{publicUrl}}=sb.storage.from('avatars').getPublicUrl(path);const url=publicUrl+'?t='+Date.now();await sb.from('profiles').update({avatar_url:url}).eq('id',user.id);profile.avatar_url=url;toast('Avatar updated! 🎉','green');renderAll();};
 window.openBgPicker=function(){id('color-grid').innerHTML=BG_COLORS.map(c=>`<div class="color-swatch ${c===selectedBg?'selected':''}" style="background:${c}" onclick="pickBg('${c}',this)"></div>`).join('');show('bg-modal');};
 window.pickBg=function(c,el){selectedBg=c;document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('selected'));el.classList.add('selected');};
+window.uploadBgImage=async function(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  toast('Uploading background...','green');
+
+  const ext=file.name.split('.').pop();
+  const path=`${user.id}/bg.${ext}`;
+
+  // Upload to Supabase Storage
+  const{error}=await sb.storage
+    .from('backgrounds')
+    .upload(path,file,{upsert:true});
+
+  if(error){
+    toast('Upload failed: '+error.message,'red');
+    return;
+  }
+
+  // Get public URL
+  const{data:{publicUrl}}=sb.storage
+    .from('backgrounds')
+    .getPublicUrl(path);
+
+  const url=publicUrl+'?t='+Date.now();
+
+  // Save to profile
+  await sb.from('profiles')
+    .update({bg_image_url:url})
+    .eq('id',user.id);
+
+  profile.bg_image_url=url;
+
+  // Apply background image to cards
+  applyBgImage(url);
+  toast('Background updated! 🎉','green');
+};
+
+function applyBgImage(url){
+  if(!url)return;
+  const heroB=document.querySelector('.hero-bg');
+  const profB=document.querySelector('.profile-bg');
+  const style=`url('${url}') center/cover no-repeat`;
+  if(heroB)heroB.style.background=style;
+  if(profB)profB.style.background=style;
+}
 window.saveBg=async function(){await sb.from('profiles').update({namecard_bg:selectedBg}).eq('id',user.id);profile.namecard_bg=selectedBg;closeModal('bg-modal');toast('Background saved! 🎨','green');renderAll();};
 window.toggleFemale=async function(){const btn=id('female-toggle');const isOn=!btn.classList.contains('on');btn.classList.toggle('on',isOn);profile.is_female_mode=isOn;if(isOn)show('female-section');else hide('female-section');await sb.from('profiles').update({is_female_mode:isOn}).eq('id',user.id);if(isOn)loadPeriodHistory();toast(isOn?'Female mode on 💜':'Female mode off','green');};
 window.logPeriod=async function(){const start=val('period-start');const end=val('period-end');if(!start){toast('Enter start date ⚠️','red');return;}await sb.from('period_tracking').insert({user_id:user.id,period_start:start,period_end:end||null});toast('Period logged 💜','green');id('period-start').value='';id('period-end').value='';loadPeriodHistory();};
