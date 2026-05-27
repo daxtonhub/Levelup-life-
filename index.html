@@ -2,2502 +2,421 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport"
-  content="width=device-width,
-  initial-scale=1.0,
-  maximum-scale=1.0"/>
-<meta name="theme-color" content="#0a0a0f"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>LevelUp Life</title>
 <style>
-/* *{margin:0;padding:0;box-sizing:border-box;
--webkit-tap-highlight-color:transparent}
-
-:root{
-  --bg:#0a0a0f;
-  --bg2:#12121a;
-  --bg3:#16161f;
-  --border:#2a2a3d;
-  --accent:#7c3aed;
-  --accent2:#a855f7;
-  --gold:#f59e0b;
-  --green:#10b981;
-  --red:#ef4444;
-  --pink:#ec4899;
-  --text:#f0f0ff;
-  --text2:#888;
-  --text3:#444;
-}
-
-body{
-  font-family:-apple-system,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0a0a0f;--bg2:#12121a;--bg3:#16161f;--border:#2a2a3d;--accent:#7c3aed;--accent2:#a855f7;--gold:#f59e0b;--green:#10b981;--red:#ef4444;--pink:#ec4899;--text:#f0f0ff;--text2:#888;--text3:#444}
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 .hidden{display:none!important}
-
-/* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-thumb{
-  background:var(--accent);border-radius:2px}
-
-/* ── LOADING ── */
-#loading-screen{
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  height:100vh;gap:16px;
-  background:radial-gradient(
-    ellipse at 50% 0%,#2d1065 0%,var(--bg) 60%);
-}
-.loading-logo{
-  font-size:26px;font-weight:900;
-  color:var(--accent2);letter-spacing:3px;
-}
-.loading-sub{
-  font-size:13px;color:var(--text2);
-  letter-spacing:2px;
-}
-.spinner{
-  width:36px;height:36px;
-  border:3px solid var(--border);
-  border-top-color:var(--accent);
-  border-radius:50%;
-  animation:spin .8s linear infinite;
-}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+#loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:16px;background:radial-gradient(ellipse at 50% 0%,#2d1065 0%,var(--bg) 60%)}
+.loading-logo{font-size:26px;font-weight:900;color:var(--accent2);letter-spacing:3px}
+.loading-sub{font-size:13px;color:var(--text2);letter-spacing:2px}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── AUTH ── */
-#auth-wrap{
-  min-height:100vh;display:flex;
-  align-items:center;justify-content:center;
-  padding:24px;
-  background:radial-gradient(
-    ellipse at 50% 0%,#2d1065 0%,var(--bg) 60%);
-}
+#auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 50% 0%,#2d1065 0%,var(--bg) 60%)}
 .auth-screen{width:100%;max-width:400px}
-.auth-logo{
-  font-size:24px;font-weight:900;
-  color:var(--accent2);text-align:center;
-  letter-spacing:2px;margin-bottom:6px;
-}
-.auth-sub{
-  text-align:center;color:var(--text2);
-  font-size:13px;margin-bottom:28px;
-  letter-spacing:2px;
-}
-.auth-card{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:20px;padding:28px 20px;
-}
-.auth-tabs{
-  display:flex;background:var(--bg);
-  border-radius:10px;padding:4px;
-  margin-bottom:24px;
-}
-.auth-tab{
-  flex:1;padding:10px;border:none;
-  background:transparent;color:var(--text2);
-  font-size:14px;font-weight:700;
-  border-radius:8px;cursor:pointer;
-  transition:all .2s;
-}
-.auth-tab.active{
-  background:var(--accent);color:#fff;
-}
+.auth-logo{font-size:24px;font-weight:900;color:var(--accent2);text-align:center;letter-spacing:2px;margin-bottom:6px}
+.auth-sub{text-align:center;color:var(--text2);font-size:13px;margin-bottom:28px;letter-spacing:2px}
+.auth-card{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:28px 20px}
+.auth-tabs{display:flex;background:var(--bg);border-radius:10px;padding:4px;margin-bottom:24px}
+.auth-tab{flex:1;padding:10px;border:none;background:transparent;color:var(--text2);font-size:14px;font-weight:700;border-radius:8px;cursor:pointer;transition:all .2s}
+.auth-tab.active{background:var(--accent);color:#fff}
 .form-group{margin-bottom:14px}
-.form-group label{
-  display:block;font-size:11px;
-  color:var(--text2);margin-bottom:6px;
-  letter-spacing:1px;text-transform:uppercase;
-}
-.form-group input,
-.form-group select,
-.form-group textarea{
-  width:100%;padding:12px 14px;
-  background:var(--bg);
-  border:1px solid var(--border);
-  border-radius:10px;color:var(--text);
-  font-size:14px;outline:none;
-  transition:border-color .2s;
-}
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus{
-  border-color:var(--accent);
-}
+.form-group label{display:block;font-size:11px;color:var(--text2);margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
 .form-group select option{background:var(--bg2)}
-.form-group textarea{
-  min-height:70px;resize:vertical;
-}
-.auth-error{
-  color:var(--red);font-size:13px;
-  min-height:18px;margin-bottom:10px;
-  text-align:center;
-}
-.auth-link{
-  text-align:center;color:var(--accent2);
-  font-size:13px;margin-top:14px;
-  cursor:pointer;font-weight:600;
-}
-.btn-primary{
-  width:100%;padding:14px;
-  background:linear-gradient(
-    135deg,var(--accent),var(--accent2));
-  border:none;border-radius:12px;color:#fff;
-  font-size:13px;font-weight:900;
-  letter-spacing:2px;cursor:pointer;
-  transition:opacity .2s;
-  box-shadow:0 0 20px rgba(124,58,237,.3);
-}
+.form-group textarea{min-height:70px;resize:vertical}
+.auth-error{color:var(--red);font-size:13px;min-height:18px;margin-bottom:10px;text-align:center}
+.auth-link{text-align:center;color:var(--accent2);font-size:13px;margin-top:14px;cursor:pointer;font-weight:600}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:12px;color:#fff;font-size:13px;font-weight:900;letter-spacing:2px;cursor:pointer;transition:opacity .2s;box-shadow:0 0 20px rgba(124,58,237,.3)}
 .btn-primary:disabled{opacity:.5}
 .btn-primary:active{opacity:.85}
-.btn-secondary{
-  width:100%;padding:13px;
-  background:transparent;
-  border:1px solid var(--border);
-  border-radius:12px;color:var(--text2);
-  font-size:14px;font-weight:600;
-  cursor:pointer;transition:all .2s;
-  display:flex;align-items:center;
-  justify-content:center;gap:8px;
-}
-.btn-secondary:active{
-  border-color:var(--accent);
-  color:var(--accent);
-}
-.btn-danger{
-  width:100%;padding:13px;
-  background:rgba(239,68,68,.1);
-  border:1px solid rgba(239,68,68,.3);
-  border-radius:12px;color:var(--red);
-  font-size:14px;font-weight:600;
-  cursor:pointer;
-}
-
-/* ── TOPBAR ── */
-.topbar{
-  display:flex;align-items:center;
-  justify-content:space-between;
-  padding:14px 16px;
-  background:var(--bg2);
-  border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:50;
-}
-.topbar-left{
-  display:flex;align-items:center;gap:10px;
-}
-.topbar-avatar{
-  width:38px;height:38px;border-radius:50%;
-  background:var(--bg3);
-  border:2px solid var(--accent);
-  display:flex;align-items:center;
-  justify-content:center;font-size:18px;
-  cursor:pointer;overflow:hidden;
-  box-shadow:0 0 12px rgba(124,58,237,.3);
-}
-.topbar-avatar img{
-  width:100%;height:100%;object-fit:cover;
-}
-.topbar-name{
-  font-size:14px;font-weight:900;
-  color:var(--text);
-}
-.topbar-level{
-  font-size:11px;color:var(--accent2);
-  margin-top:2px;
-}
-.topbar-xp{
-  background:var(--bg3);
-  border:1px solid var(--gold);
-  border-radius:20px;padding:5px 12px;
-  font-size:12px;font-weight:700;
-  color:var(--gold);
-}
-
-/* ── TAB CONTENT ── */
-.tab-content{
-  padding:0 16px 100px;
-  overflow-y:auto;
-  min-height:calc(100vh - 130px);
-}
-
-/* ── HERO CARD ── */
-.hero-card{
-  margin:16px 0;border-radius:20px;
-  overflow:hidden;
-  border:1px solid var(--border);
-  position:relative;
-}
-.hero-bg{
-  position:absolute;inset:0;
-  background:linear-gradient(
-    135deg,#1a0a3a 0%,#0d1a2e 50%,
-    #0a0a1a 100%);
-}
-.hero-bg::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(
-    circle at 80% 50%,
-    rgba(124,58,237,.3) 0%,transparent 60%);
-}
-.hero-body{
-  position:relative;
-  display:flex;align-items:center;
-  gap:14px;padding:20px;
-}
+.btn-secondary{width:100%;padding:13px;background:transparent;border:1px solid var(--border);border-radius:12px;color:var(--text2);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-secondary:active{border-color:var(--accent);color:var(--accent)}
+.btn-danger{width:100%;padding:13px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:12px;color:var(--red);font-size:14px;font-weight:600;cursor:pointer}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.topbar-avatar{width:38px;height:38px;border-radius:50%;background:var(--bg3);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;overflow:hidden;box-shadow:0 0 12px rgba(124,58,237,.3)}
+.topbar-avatar img{width:100%;height:100%;object-fit:cover}
+.topbar-name{font-size:14px;font-weight:900;color:var(--text)}
+.topbar-level{font-size:11px;color:var(--accent2);margin-top:2px}
+.topbar-xp{background:var(--bg3);border:1px solid var(--gold);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--gold)}
+.tab-content{padding:0 16px 100px;overflow-y:auto;min-height:calc(100vh - 130px)}
+.hero-card{margin:16px 0;border-radius:20px;overflow:hidden;border:1px solid var(--border);position:relative}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1a0a3a 0%,#0d1a2e 50%,#0a0a1a 100%)}
+.hero-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(124,58,237,.3) 0%,transparent 60%)}
+.hero-body{position:relative;display:flex;align-items:center;gap:14px;padding:20px}
 .hero-avatar-wrap{position:relative;flex-shrink:0}
-.hero-avatar{
-  width:76px;height:76px;border-radius:50%;
-  background:var(--bg3);
-  border:3px solid var(--accent2);
-  display:flex;align-items:center;
-  justify-content:center;font-size:34px;
-  overflow:hidden;
-  box-shadow:0 0 25px rgba(168,85,247,.4);
-}
-.hero-avatar img{
-  width:100%;height:100%;object-fit:cover;
-}
-.hero-badge{
-  position:absolute;bottom:-4px;right:-4px;
-  background:var(--gold);color:#000;
-  font-size:10px;font-weight:900;
-  border-radius:8px;padding:2px 6px;
-}
+.hero-avatar{width:76px;height:76px;border-radius:50%;background:var(--bg3);border:3px solid var(--accent2);display:flex;align-items:center;justify-content:center;font-size:34px;overflow:hidden;box-shadow:0 0 25px rgba(168,85,247,.4)}
+.hero-avatar img{width:100%;height:100%;object-fit:cover}
+.hero-badge{position:absolute;bottom:-4px;right:-4px;background:var(--gold);color:#000;font-size:10px;font-weight:900;border-radius:8px;padding:2px 6px}
 .hero-info{flex:1;min-width:0}
-.hero-name{
-  font-size:17px;font-weight:900;
-  color:#fff;margin-bottom:2px;
-  white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis;
-}
-.hero-title{
-  font-size:12px;color:var(--accent2);
-  letter-spacing:1px;margin-bottom:8px;
-}
-.xp-row{
-  display:flex;justify-content:space-between;
-  font-size:11px;color:var(--text2);
-  margin-bottom:4px;
-}
-.xp-track{
-  height:8px;background:var(--bg);
-  border-radius:4px;overflow:hidden;
-  border:1px solid var(--border);
-}
-.xp-fill{
-  height:100%;border-radius:4px;
-  background:linear-gradient(
-    90deg,var(--accent),var(--accent2));
-  transition:width .6s ease;
-  box-shadow:0 0 8px rgba(168,85,247,.5);
-}
-.hero-stats{
-  position:relative;
-  display:flex;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-.hstat{
-  flex:1;text-align:center;padding:12px 8px;
-  border-right:1px solid rgba(255,255,255,.08);
-}
+.hero-name{font-size:17px;font-weight:900;color:#fff;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero-title{font-size:12px;color:var(--accent2);letter-spacing:1px;margin-bottom:8px}
+.xp-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px}
+.xp-track{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.xp-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s ease;box-shadow:0 0 8px rgba(168,85,247,.5)}
+.hero-stats{position:relative;display:flex;border-top:1px solid rgba(255,255,255,.08)}
+.hstat{flex:1;text-align:center;padding:12px 8px;border-right:1px solid rgba(255,255,255,.08)}
 .hstat:last-child{border-right:none}
-.hstat-val{
-  font-size:20px;font-weight:900;
-  color:var(--gold);
-}
-.hstat-lbl{
-  font-size:10px;color:var(--text2);margin-top:3px;
-}
-
-/* ── SECTION TITLE ── */
-.sec-title{
-  font-size:11px;font-weight:700;
-  color:var(--text2);letter-spacing:2px;
-  text-transform:uppercase;
-  margin:20px 0 10px;
-  display:flex;align-items:center;gap:8px;
-}
-.sec-title::after{
-  content:'';flex:1;height:1px;
-  background:var(--border);
-}
-
-/* ── QUEST CARDS ── */
-.quest-card{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-left:3px solid var(--accent);
-  border-radius:14px;padding:13px;
-  margin-bottom:9px;
-  display:flex;align-items:center;gap:12px;
-  cursor:pointer;transition:transform .1s;
-}
+.hstat-val{font-size:20px;font-weight:900;color:var(--gold)}
+.hstat-lbl{font-size:10px;color:var(--text2);margin-top:3px}
+.sec-title{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.quest-card{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:14px;padding:13px;margin-bottom:9px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .1s}
 .quest-card:active{transform:scale(.98)}
-.quest-card.done{
-  opacity:.45;
-  border-left-color:var(--green);
-}
-.quest-card.system-q{
-  border-left-color:var(--gold);
-  background:#1a1508;
-}
-.qcheck{
-  width:27px;height:27px;border-radius:50%;
-  border:2px solid var(--border);
-  background:var(--bg);
-  display:flex;align-items:center;
-  justify-content:center;font-size:13px;
-  flex-shrink:0;color:var(--green);
-  font-weight:700;
-}
-.quest-card.done .qcheck{
-  background:var(--green);
-  border-color:var(--green);color:#fff;
-}
+.quest-card.done{opacity:.45;border-left-color:var(--green)}
+.quest-card.system-q{border-left-color:var(--gold);background:#1a1508}
+.quest-card.system-q.done{border-left-color:var(--green)}
+.qcheck{width:27px;height:27px;border-radius:50%;border:2px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;color:var(--green);font-weight:700}
+.quest-card.done .qcheck{background:var(--green);border-color:var(--green);color:#fff}
 .qinfo{flex:1;min-width:0}
-.qtitle{
-  font-size:14px;font-weight:600;
-  color:var(--text);margin-bottom:3px;
-}
-.quest-card.done .qtitle{
-  text-decoration:line-through;color:var(--text2);
-}
+.qtitle{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.quest-card.done .qtitle{text-decoration:line-through;color:var(--text2)}
 .qmeta{font-size:11px;color:var(--text2)}
-.qxp{
-  font-size:11px;font-weight:700;
-  color:var(--gold);
-  background:rgba(245,158,11,.1);
-  border:1px solid rgba(245,158,11,.2);
-  border-radius:6px;padding:3px 7px;
-  white-space:nowrap;flex-shrink:0;
-}
-
-/* ── SKILLS ── */
-.skills-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-.skill-card{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:14px;padding:13px;
-}
+.qxp{font-size:11px;font-weight:700;color:var(--gold);background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:3px 7px;white-space:nowrap;flex-shrink:0}
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.skill-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:13px}
 .skill-icon{font-size:22px;margin-bottom:5px}
-.skill-name{
-  font-size:13px;font-weight:600;
-  color:var(--text);margin-bottom:2px;
-}
-.skill-lv{
-  font-size:10px;color:var(--accent2);
-  letter-spacing:1px;margin-bottom:7px;
-}
-.skill-track{
-  height:5px;background:var(--bg);
-  border-radius:3px;overflow:hidden;
-}
-.skill-fill{
-  height:100%;border-radius:3px;
-  background:linear-gradient(
-    90deg,var(--accent),var(--accent2));
-  transition:width .5s;
-}
-
-/* ── FILTERS ── */
-.filters{
-  display:flex;gap:8px;
-  padding:14px 0 6px;
-  overflow-x:auto;scrollbar-width:none;
-}
+.skill-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.skill-lv{font-size:10px;color:var(--accent2);letter-spacing:1px;margin-bottom:7px}
+.skill-track{height:5px;background:var(--bg);border-radius:3px;overflow:hidden}
+.skill-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .5s}
+.filters{display:flex;gap:8px;padding:14px 0 6px;overflow-x:auto;scrollbar-width:none}
 .filters::-webkit-scrollbar{display:none}
-.filter-btn{
-  padding:7px 16px;border-radius:20px;
-  border:1px solid var(--border);
-  background:transparent;color:var(--text2);
-  font-size:13px;font-weight:600;
-  white-space:nowrap;cursor:pointer;
-  transition:all .2s;flex-shrink:0;
-}
-.filter-btn.active{
-  background:var(--accent);
-  border-color:var(--accent);color:#fff;
-}
-
-/* ── PROGRESS ── */
-.progress-wrap{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:14px;padding:14px;
-  margin-bottom:14px;
-}
-.progress-label{
-  display:flex;justify-content:space-between;
-  font-size:12px;color:var(--text2);
-  margin-bottom:8px;
-}
-.progress-track{
-  height:7px;background:var(--bg);
-  border-radius:4px;overflow:hidden;
-}
-.progress-fill{
-  height:100%;
-  background:linear-gradient(
-    90deg,var(--green),#34d399);
-  border-radius:4px;transition:width .5s;
-}
-
-/* ── ADD QUEST BTN ── */
-.add-quest-btn{
-  width:100%;padding:14px;
-  background:transparent;
-  border:1px dashed var(--border);
-  border-radius:14px;color:var(--text2);
-  font-size:14px;font-weight:600;
-  cursor:pointer;transition:all .2s;
-  margin-top:4px;
-}
-.add-quest-btn:active{
-  border-color:var(--accent);
-  color:var(--accent);
-}
-
-/* ── PROFILE ── */
-.profile-card{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:24px 16px;
-  text-align:center;
-  position:relative;overflow:hidden;
-  margin-top:16px;margin-bottom:20px;
-}
-.profile-bg{
-  position:absolute;inset:0;
-  background:linear-gradient(
-    135deg,#1a0a3a,#0a1a2e);
-  z-index:0;
-}
+.filter-btn{padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;transition:all .2s;flex-shrink:0}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.progress-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:8px}
+.progress-track{height:7px;background:var(--bg);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),#34d399);border-radius:4px;transition:width .5s}
+.add-quest-btn{width:100%;padding:14px;background:transparent;border:1px dashed var(--border);border-radius:14px;color:var(--text2);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;margin-top:4px}
+.add-quest-btn:active{border-color:var(--accent);color:var(--accent)}
+.profile-card{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:24px 16px;text-align:center;position:relative;overflow:hidden;margin-top:16px;margin-bottom:20px}
+.profile-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1a0a3a,#0a1a2e);z-index:0}
 .profile-card>*{position:relative;z-index:1}
-.profile-avatar-wrap{
-  position:relative;
-  display:inline-block;margin-bottom:12px;
-}
-.profile-avatar{
-  width:88px;height:88px;border-radius:50%;
-  background:var(--bg3);
-  border:3px solid var(--accent2);
-  display:flex;align-items:center;
-  justify-content:center;font-size:40px;
-  margin:0 auto;overflow:hidden;
-  box-shadow:0 0 25px rgba(168,85,247,.4);
-}
-.profile-avatar img{
-  width:100%;height:100%;object-fit:cover;
-}
-.avatar-edit{
-  position:absolute;bottom:0;right:0;
-  width:28px;height:28px;border-radius:50%;
-  background:var(--accent);
-  border:2px solid var(--bg);
-  display:flex;align-items:center;
-  justify-content:center;font-size:13px;
-  cursor:pointer;
-}
-.profile-name{
-  font-size:20px;font-weight:900;
-  color:#fff;margin-bottom:4px;
-}
-.profile-email{
-  font-size:12px;color:var(--text2);
-  margin-bottom:14px;
-}
-.profile-stats{
-  display:flex;gap:10px;
-  justify-content:center;
-}
-.pstat{
-  flex:1;max-width:80px;
-  background:rgba(255,255,255,.05);
-  border-radius:10px;padding:10px;
-}
-.pstat-val{
-  font-size:20px;font-weight:900;
-  color:var(--gold);
-}
-.pstat-lbl{
-  font-size:10px;color:var(--text2);
-  letter-spacing:1px;margin-top:2px;
-}
-
-/* ── TOGGLE ── */
-.toggle-row{
-  display:flex;align-items:center;
-  justify-content:space-between;
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:12px;padding:14px;
-  margin-bottom:10px;
-}
+.profile-avatar-wrap{position:relative;display:inline-block;margin-bottom:12px}
+.profile-avatar{width:88px;height:88px;border-radius:50%;background:var(--bg3);border:3px solid var(--accent2);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto;overflow:hidden;box-shadow:0 0 25px rgba(168,85,247,.4)}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.avatar-edit{position:absolute;bottom:0;right:0;width:28px;height:28px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer}
+.profile-name{font-size:20px;font-weight:900;color:#fff;margin-bottom:4px}
+.profile-email{font-size:12px;color:var(--text2);margin-bottom:14px}
+.profile-stats{display:flex;gap:10px;justify-content:center}
+.pstat{flex:1;max-width:80px;background:rgba(255,255,255,.05);border-radius:10px;padding:10px}
+.pstat-val{font-size:20px;font-weight:900;color:var(--gold)}
+.pstat-lbl{font-size:10px;color:var(--text2);letter-spacing:1px;margin-top:2px}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
 .toggle-label{font-size:14px;font-weight:600}
-.toggle-desc{
-  font-size:11px;color:var(--text2);margin-top:3px;
-}
-.toggle-btn{
-  width:44px;height:24px;border-radius:12px;
-  background:var(--bg);border:none;
-  cursor:pointer;position:relative;
-  transition:background .2s;flex-shrink:0;
-}
+.toggle-desc{font-size:11px;color:var(--text2);margin-top:3px}
+.toggle-btn{width:44px;height:24px;border-radius:12px;background:var(--bg);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
 .toggle-btn.on{background:var(--accent)}
-.toggle-btn::after{
-  content:'';position:absolute;
-  width:18px;height:18px;background:#fff;
-  border-radius:50%;top:3px;left:3px;
-  transition:transform .2s;
-}
-.toggle-btn.on::after{
-  transform:translateX(20px);
-}
-
-/* ── FEMALE SECTION ── */
-.female-card{
-  background:rgba(236,72,153,.05);
-  border:1px solid rgba(236,72,153,.2);
-  border-radius:16px;padding:16px;
-  margin-bottom:14px;
-}
-.female-title{
-  font-size:12px;font-weight:700;
-  color:var(--pink);letter-spacing:2px;
-  margin-bottom:12px;
-}
+.toggle-btn::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s}
+.toggle-btn.on::after{transform:translateX(20px)}
+.female-card{background:rgba(236,72,153,.05);border:1px solid rgba(236,72,153,.2);border-radius:16px;padding:16px;margin-bottom:14px}
+.female-title{font-size:12px;font-weight:700;color:var(--pink);letter-spacing:2px;margin-bottom:12px}
 .period-row{display:flex;gap:10px;margin-bottom:10px}
-.period-input{
-  flex:1;padding:10px 12px;
-  background:var(--bg);
-  border:1px solid var(--border);
-  border-radius:10px;color:var(--text);
-  font-size:13px;outline:none;
-}
-.btn-pink{
-  padding:10px 18px;
-  background:linear-gradient(
-    135deg,var(--pink),var(--accent));
-  border:none;border-radius:10px;color:#fff;
-  font-size:13px;font-weight:700;cursor:pointer;
-}
-.period-entry{
-  background:var(--bg3);
-  border:1px solid rgba(236,72,153,.2);
-  border-radius:8px;padding:9px 12px;
-  font-size:12px;color:var(--text2);
-  margin-top:8px;
-}
-
-/* ── ADMIN ── */
-.admin-banner{
-  background:linear-gradient(
-    135deg,#1a0a0a,#2a0a0a);
-  border:1px solid rgba(245,158,11,.3);
-  border-radius:14px;padding:14px;
-  display:flex;align-items:center;gap:12px;
-  margin:16px 0;
-}
+.period-input{flex:1;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;outline:none}
+.btn-pink{padding:10px 18px;background:linear-gradient(135deg,var(--pink),var(--accent));border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer}
+.period-entry{background:var(--bg3);border:1px solid rgba(236,72,153,.2);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--text2);margin-top:8px}
+.admin-banner{background:linear-gradient(135deg,#1a0a0a,#2a0a0a);border:1px solid rgba(245,158,11,.3);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;margin:16px 0}
 .admin-crown{font-size:28px}
-.admin-banner-title{
-  font-size:14px;color:var(--gold);
-  font-weight:900;
-}
-.admin-banner-sub{
-  font-size:12px;color:var(--text2);margin-top:2px;
-}
-.admin-stats{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;margin-bottom:16px;
-}
-.astat{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:12px;padding:14px;
-  text-align:center;
-}
-.astat-val{
-  font-size:26px;font-weight:900;
-  color:var(--gold);
-}
-.astat-lbl{
-  font-size:11px;color:var(--text2);
-  letter-spacing:1px;margin-top:4px;
-}
-.admin-tabs{
-  display:flex;background:var(--bg);
-  border-radius:10px;padding:4px;
-  margin-bottom:16px;
-}
-.admin-tab{
-  flex:1;padding:9px;border:none;
-  background:transparent;color:var(--text2);
-  font-size:13px;font-weight:700;
-  border-radius:8px;cursor:pointer;
-  transition:all .2s;
-}
-.admin-tab.active{
-  background:var(--gold);color:#000;
-}
+.admin-banner-title{font-size:14px;color:var(--gold);font-weight:900}
+.admin-banner-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.admin-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.astat{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.astat-val{font-size:26px;font-weight:900;color:var(--gold)}
+.astat-lbl{font-size:11px;color:var(--text2);letter-spacing:1px;margin-top:4px}
+.admin-tabs{display:flex;background:var(--bg);border-radius:10px;padding:4px;margin-bottom:16px}
+.admin-tab{flex:1;padding:9px;border:none;background:transparent;color:var(--text2);font-size:13px;font-weight:700;border-radius:8px;cursor:pointer;transition:all .2s}
+.admin-tab.active{background:var(--gold);color:#000}
 .admin-section{display:none}
 .admin-section.active{display:block}
-.form-card{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:16px;padding:16px;
-  margin-bottom:16px;
-}
-.form-card-title{
-  font-size:13px;font-weight:900;
-  color:var(--gold);margin-bottom:14px;
-  letter-spacing:1px;
-}
-.input-hint{
-  font-size:11px;color:var(--text3);margin-top:4px;
-}
-.btn-gold{
-  width:100%;padding:14px;
-  background:linear-gradient(
-    135deg,#b45309,var(--gold));
-  border:none;border-radius:12px;
-  color:#000;font-size:14px;font-weight:900;
-  cursor:pointer;
-}
-.sq-item{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-left:3px solid var(--gold);
-  border-radius:12px;padding:13px;
-  margin-bottom:9px;
-  display:flex;align-items:flex-start;gap:12px;
-}
+.form-card{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px}
+.form-card-title{font-size:13px;font-weight:900;color:var(--gold);margin-bottom:14px;letter-spacing:1px}
+.input-hint{font-size:11px;color:var(--text3);margin-top:4px}
+.btn-gold{width:100%;padding:14px;background:linear-gradient(135deg,#b45309,var(--gold));border:none;border-radius:12px;color:#000;font-size:14px;font-weight:900;cursor:pointer}
+.sq-item{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:12px;padding:13px;margin-bottom:9px;display:flex;align-items:flex-start;gap:12px}
 .sq-info{flex:1;min-width:0}
-.sq-title{
-  font-size:14px;font-weight:700;
-  color:var(--text);margin-bottom:3px;
-}
-.sq-desc{font-size:12px;color:var(--text2);
-  margin-bottom:6px;}
+.sq-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
+.sq-desc{font-size:12px;color:var(--text2);margin-bottom:6px}
 .sq-badges{display:flex;gap:6px;flex-wrap:wrap}
-.sq-xp-badge{
-  font-size:11px;font-weight:700;
-  color:var(--gold);
-  background:rgba(245,158,11,.1);
-  border:1px solid rgba(245,158,11,.2);
-  border-radius:6px;padding:3px 8px;
-}
-.sq-tag{
-  font-size:11px;color:var(--text2);
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:6px;padding:3px 8px;
-}
-.sq-actions{
-  display:flex;flex-direction:column;
-  gap:6px;flex-shrink:0;
-}
-.btn-icon{
-  width:32px;height:32px;border-radius:8px;
-  border:none;font-size:14px;cursor:pointer;
-  display:flex;align-items:center;
-  justify-content:center;
-}
-.btn-icon.del{
-  background:rgba(239,68,68,.15);
-  color:var(--red);
-}
-.btn-icon.tog{
-  background:rgba(16,185,129,.15);
-  color:var(--green);
-}
-.player-item{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:12px;padding:13px;
-  margin-bottom:8px;
-  display:flex;align-items:center;gap:12px;
-}
-.player-av{
-  width:40px;height:40px;border-radius:50%;
-  background:var(--bg);
-  border:2px solid var(--accent);
-  display:flex;align-items:center;
-  justify-content:center;font-size:18px;
-  flex-shrink:0;overflow:hidden;
-}
-.player-av img{
-  width:100%;height:100%;object-fit:cover;
-}
-.player-name{
-  font-size:13px;font-weight:700;
-  color:var(--text);
-}
-.player-meta{
-  font-size:11px;color:var(--text2);margin-top:2px;
-}
-.player-xp{
-  font-size:14px;font-weight:900;
-  color:var(--gold);text-align:right;
-}
-.player-lv{
-  font-size:11px;color:var(--accent2);
-  text-align:right;margin-top:2px;
-}
-
-/* ── BOTTOM NAV ── */
-.bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;
-  background:var(--bg2);
-  border-top:1px solid var(--border);
-  display:flex;z-index:100;
-  padding-bottom:env(safe-area-inset-bottom);
-}
-.nav-btn{
-  flex:1;display:flex;
-  flex-direction:column;align-items:center;
-  justify-content:center;
-  padding:10px 0;border:none;
-  background:transparent;color:var(--text2);
-  font-size:10px;font-weight:600;
-  letter-spacing:.5px;
-  text-transform:uppercase;
-  gap:3px;cursor:pointer;transition:color .2s;
-}
+.sq-xp-badge{font-size:11px;font-weight:700;color:var(--gold);background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:3px 8px}
+.sq-tag{font-size:11px;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:3px 8px}
+.sq-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.btn-icon{width:32px;height:32px;border-radius:8px;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.btn-icon.del{background:rgba(239,68,68,.15);color:var(--red)}
+.btn-icon.tog{background:rgba(16,185,129,.15);color:var(--green)}
+.player-item{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.player-av{width:40px;height:40px;border-radius:50%;background:var(--bg);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden}
+.player-av img{width:100%;height:100%;object-fit:cover}
+.player-name{font-size:13px;font-weight:700;color:var(--text)}
+.player-meta{font-size:11px;color:var(--text2);margin-top:2px}
+.player-xp{font-size:14px;font-weight:900;color:var(--gold);text-align:right}
+.player-lv{font-size:11px;color:var(--accent2);text-align:right;margin-top:2px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0;border:none;background:transparent;color:var(--text2);font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;gap:3px;cursor:pointer;transition:color .2s}
 .nav-btn.active{color:var(--accent2)}
 .nav-icon{font-size:20px;line-height:1}
-
-/* ── MODAL ── */
-.modal-overlay{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.8);
-  display:flex;align-items:flex-end;
-  justify-content:center;
-  z-index:200;backdrop-filter:blur(4px);
-}
-.modal{
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:24px 24px 0 0;
-  padding:20px;width:100%;max-width:500px;
-  animation:slideUp .3s ease;
-  max-height:90vh;overflow-y:auto;
-}
-@keyframes slideUp{
-  from{transform:translateY(100%)}
-  to{transform:translateY(0)}
-}
-.modal-handle{
-  width:40px;height:4px;
-  background:var(--border);
-  border-radius:2px;margin:0 auto 18px;
-}
-.modal-title{
-  font-size:17px;font-weight:900;
-  color:var(--text);margin-bottom:18px;
-}
-
-/* ── COLOR PICKER ── */
-.color-grid{
-  display:grid;grid-template-columns:repeat(5,1fr);
-  gap:10px;margin-top:10px;
-}
-.color-swatch{
-  aspect-ratio:1;border-radius:10px;
-  cursor:pointer;
-  border:2px solid transparent;
-  transition:all .2s;
-}
-.color-swatch.selected{
-  border-color:var(--accent2);
-  transform:scale(1.1);
-}
-
-/* ── TOAST ── */
-.toast{
-  position:fixed;top:20px;left:50%;
-  transform:translateX(-50%);
-  background:var(--bg3);
-  border:1px solid var(--gold);
-  color:var(--gold);
-  padding:10px 20px;border-radius:12px;
-  font-size:13px;font-weight:700;
-  z-index:999;white-space:nowrap;
-  animation:fadeIn .3s ease;
-}
-.toast.green{
-  border-color:var(--green);color:var(--green);
-}
-.toast.red{
-  border-color:var(--red);color:var(--red);
-}
-@keyframes fadeIn{
-  from{opacity:0;transform:translateX(-50%)
-    translateY(-8px)}
-  to{opacity:1;transform:translateX(-50%)
-    translateY(0)}
-}
-
-/* ── EMPTY STATE ── */
-.empty{
-  text-align:center;padding:30px;
-  color:var(--text2);font-size:14px;
-}
-.empty-icon{font-size:36px;margin-bottom:8px} */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:flex-end;justify-content:center;z-index:200;backdrop-filter:blur(4px)}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:20px;width:100%;max-width:500px;animation:slideUp .3s ease;max-height:90vh;overflow-y:auto}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px}
+.modal-title{font-size:17px;font-weight:900;color:var(--text);margin-bottom:18px}
+.color-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px}
+.color-swatch{aspect-ratio:1;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:all .2s}
+.color-swatch.selected{border-color:var(--accent2);transform:scale(1.1)}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--gold);color:var(--gold);padding:10px 20px;border-radius:12px;font-size:13px;font-weight:700;z-index:999;white-space:nowrap;animation:fadeIn .3s ease}
+.toast.green{border-color:var(--green);color:var(--green)}
+.toast.red{border-color:var(--red);color:var(--red)}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-50%) translateY(-8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.empty{text-align:center;padding:30px;color:var(--text2);font-size:14px}
+.empty-icon{font-size:36px;margin-bottom:8px}
 </style>
 </head>
 <body>
-
-<!-- <div id="app">
-
-  <!-- LOADING -->
-  <div id="loading-screen">
-    <div class="loading-logo">⚡ LEVELUP LIFE</div>
-    <div class="loading-sub">Loading your journey...</div>
-    <div class="spinner"></div>
-  </div>
-
-  <!-- ══ AUTH SCREENS ══ -->
-  <div id="auth-wrap" class="hidden">
-
-    <!-- LOGIN -->
-    <div id="login-screen" class="auth-screen">
-      <div class="auth-logo">⚡ LEVELUP LIFE</div>
-      <div class="auth-sub">Your journey starts here</div>
-      <div class="auth-card">
-        <div class="auth-tabs">
-          <button class="auth-tab active"
-            onclick="switchAuth('login',this)">
-            Login
-          </button>
-          <button class="auth-tab"
-            onclick="switchAuth('signup',this)">
-            Sign Up
-          </button>
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="login-email"
-            placeholder="you@email.com"/>
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="login-password"
-            placeholder="••••••••"/>
-        </div>
-        <div class="auth-error" id="login-error"></div>
-        <button class="btn-primary" id="login-btn"
-          onclick="doLogin()">
-          ENTER THE GAME
-        </button>
-        <div class="auth-link"
-          onclick="switchAuth('forgot',this)">
-          Forgot Password?
-        </div>
-      </div>
-    </div>
-
-    <!-- SIGNUP -->
-    <div id="signup-screen"
-      class="auth-screen hidden">
-      <div class="auth-logo">⚡ LEVELUP LIFE</div>
-      <div class="auth-sub">Begin your adventure</div>
-      <div class="auth-card">
-        <div class="auth-tabs">
-          <button class="auth-tab"
-            onclick="switchAuth('login',this)">
-            Login
-          </button>
-          <button class="auth-tab active"
-            onclick="switchAuth('signup',this)">
-            Sign Up
-          </button>
-        </div>
-        <div class="form-group">
-          <label>Username</label>
-          <input type="text" id="signup-username"
-            placeholder="YourHeroName"/>
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="signup-email"
-            placeholder="you@email.com"/>
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="signup-password"
-            placeholder="Min 6 characters"/>
-        </div>
-        <div class="auth-error" id="signup-error">
-        </div>
-        <button class="btn-primary" id="signup-btn"
-          onclick="doSignup()">
-          BEGIN ADVENTURE
-        </button>
-      </div>
-    </div>
-
-    <!-- FORGOT PASSWORD -->
-    <div id="forgot-screen"
-      class="auth-screen hidden">
-      <div class="auth-logo">🔑 Reset Password</div>
-      <div class="auth-sub">
-        Enter your email to reset
-      </div>
-      <div class="auth-card">
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="forgot-email"
-            placeholder="you@email.com"/>
-        </div>
-        <div class="auth-error" id="forgot-msg">
-        </div>
-        <button class="btn-primary"
-          onclick="doForgot()">
-          SEND RESET EMAIL
-        </button>
-        <div class="auth-link"
-          onclick="showAuthScreen('login')">
-          ← Back to Login
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ══ MAIN APP ══ -->
-  <div id="main-app" class="hidden">
-
-    <!-- TOP BAR -->
-    <div class="topbar">
-      <div class="topbar-left">
-        <div id="topbar-avatar"
-          class="topbar-avatar"
-          onclick="showTab('profile')">
-          🧙
-        </div>
-        <div>
-          <div class="topbar-name"
-            id="topbar-name">Hero
-          </div>
-          <div class="topbar-level"
-            id="topbar-level">
-            LVL 1 • Novice
-          </div>
-        </div>
-      </div>
-      <div class="topbar-xp" id="topbar-xp">
-        0 XP
-      </div>
-    </div>
-
-    <!-- TAB CONTENTS -->
-
-    <!-- DASHBOARD TAB -->
-    <div id="tab-dashboard" class="tab-content">
-
-      <div class="hero-card">
-        <div class="hero-bg"></div>
-        <div class="hero-body">
-          <div class="hero-avatar-wrap">
-            <div id="hero-avatar"
-              class="hero-avatar">🧙
-            </div>
-            <div class="hero-badge"
-              id="hero-badge">LV 1
-            </div>
-          </div>
-          <div class="hero-info">
-            <div class="hero-name"
-              id="hero-name">Loading...
-            </div>
-            <div class="hero-title"
-              id="hero-title">⚡ Novice
-            </div>
-            <div class="xp-row">
-              <span>XP</span>
-              <span id="xp-nums">0/100</span>
-            </div>
-            <div class="xp-track">
-              <div class="xp-fill"
-                id="xp-fill"
-                style="width:0%">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="hero-stats">
-          <div class="hstat">
-            <div class="hstat-val"
-              id="hstat-streak">0
-            </div>
-            <div class="hstat-lbl">🔥 Streak</div>
-          </div>
-          <div class="hstat">
-            <div class="hstat-val"
-              id="hstat-motivation">100
-            </div>
-            <div class="hstat-lbl">
-              ⚡ Motivation
-            </div>
-          </div>
-          <div class="hstat">
-            <div class="hstat-val"
-              id="hstat-done">0
-            </div>
-            <div class="hstat-lbl">✅ Done</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="sec-title">📋 Today's Quests</div>
-      <div id="dash-quests"></div>
-
-      <div class="sec-title">👑 System Quests</div>
-      <div id="dash-system"></div>
-
-      <div class="sec-title">🧠 Skills</div>
-      <div class="skills-grid" id="dash-skills">
-      </div>
-
-    </div>
-
-    <!-- QUESTS TAB -->
-    <div id="tab-quests"
-      class="tab-content hidden">
-
-      <div class="filters">
-        <button class="filter-btn active"
-          onclick="filterQ('all',this)">All
-        </button>
-        <button class="filter-btn"
-          onclick="filterQ('habit',this)">
-          🔁 Habits
-        </button>
-        <button class="filter-btn"
-          onclick="filterQ('todo',this)">
-          ✅ To-Do
-        </button>
-        <button class="filter-btn"
-          onclick="filterQ('system',this)">
-          👑 System
-        </button>
-      </div>
-
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span>Today's Progress</span>
-          <span id="q-progress-text">0/0</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill"
-            id="q-progress-fill"
-            style="width:0%">
-          </div>
-        </div>
-      </div>
-
-      <div id="quests-list"></div>
-
-      <button class="add-quest-btn"
-        onclick="openAddQuest()">
-        ＋ Add New Quest
-      </button>
-
-    </div>
-
-    <!-- PROFILE TAB -->
-    <div id="tab-profile"
-      class="tab-content hidden">
-
-      <div class="profile-card">
-        <div class="profile-bg"></div>
-        <div class="profile-avatar-wrap">
-          <div id="profile-avatar"
-            class="profile-avatar">🧙
-          </div>
-          <div class="avatar-edit"
-            onclick="document.getElementById(
-              'avatar-input').click()">
-            ✏️
-          </div>
-          <input type="file"
-            id="avatar-input"
-            accept="image/*"
-            style="display:none"
-            onchange="uploadAvatar(event)"/>
-        </div>
-        <div class="profile-name"
-          id="profile-name">Hero
-        </div>
-        <div class="profile-email"
-          id="profile-email">
-        </div>
-        <div class="profile-stats">
-          <div class="pstat">
-            <div class="pstat-val"
-              id="pstat-level">1
-            </div>
-            <div class="pstat-lbl">LEVEL</div>
-          </div>
-          <div class="pstat">
-            <div class="pstat-val"
-              id="pstat-xp">0
-            </div>
-            <div class="pstat-lbl">XP</div>
-          </div>
-          <div class="pstat">
-            <div class="pstat-val"
-              id="pstat-streak">0
-            </div>
-            <div class="pstat-lbl">STREAK</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="sec-title">🎨 Personalization</div>
-      <button class="btn-secondary"
-        onclick="openBgPicker()">
-        🎨 Change Card Background
-      </button>
-
-      <div class="sec-title">⚙️ Settings</div>
-      <div class="toggle-row">
-        <div>
-          <div class="toggle-label">
-            ♀️ Female Mode
-          </div>
-          <div class="toggle-desc">
-            Period tracking + special quests
-          </div>
-        </div>
-        <button class="toggle-btn"
-          id="female-toggle"
-          onclick="toggleFemale()">
-        </button>
-      </div>
-
-      <div id="female-section" class="hidden">
-        <div class="female-card">
-          <div class="female-title">
-            ♀️ PERIOD TRACKER
-          </div>
-          <div class="period-row">
-            <input type="date"
-              id="period-start"
-              class="period-input"/>
-            <input type="date"
-              id="period-end"
-              class="period-input"/>
-          </div>
-          <button class="btn-pink"
-            onclick="logPeriod()">
-            Log Period
-          </button>
-          <div id="period-history"></div>
-        </div>
-      </div>
-
-      <div class="sec-title">🔐 Account</div>
-      <button class="btn-danger"
-        onclick="doLogout()">
-        🚪 Sign Out
-      </button>
-
-    </div>
-
-    <!-- ADMIN TAB -->
-    <div id="tab-admin"
-      class="tab-content hidden">
-
-      <div id="admin-wrap"></div>
-
-    </div>
-
-    <!-- BOTTOM NAV -->
-    <nav class="bottom-nav">
-      <button class="nav-btn active"
-        id="nav-dashboard"
-        onclick="showTab('dashboard')">
-        <span class="nav-icon">🏠</span>
-        <span>Home</span>
-      </button>
-      <button class="nav-btn"
-        id="nav-quests"
-        onclick="showTab('quests')">
-        <span class="nav-icon">📋</span>
-        <span>Quests</span>
-      </button>
-      <button class="nav-btn"
-        id="nav-profile"
-        onclick="showTab('profile')">
-        <span class="nav-icon">👤</span>
-        <span>Profile</span>
-      </button>
-      <button class="nav-btn"
-        id="nav-admin"
-        onclick="showTab('admin')"
-        style="display:none">
-        <span class="nav-icon">👑</span>
-        <span>Admin</span>
-      </button>
-    </nav>
-
-  </div>
-
-  <!-- ══ ADD QUEST MODAL ══ -->
-  <div class="modal-overlay hidden"
-    id="add-quest-modal"
-    onclick="closeModalBg(event,
-      'add-quest-modal')">
-    <div class="modal">
-      <div class="modal-handle"></div>
-      <div class="modal-title">➕ New Quest</div>
-      <div class="form-group">
-        <label>Title</label>
-        <input type="text" id="nq-title"
-          placeholder="e.g. Morning workout"/>
-      </div>
-      <div class="form-group">
-        <label>Type</label>
-        <select id="nq-type">
-          <option value="habit">
-            🔁 Habit (Daily)
-          </option>
-          <option value="todo">
-            ✅ To-Do (Once)
-          </option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Skill</label>
-        <select id="nq-skill">
-          <option value="fitness">💪 Fitness</option>
-          <option value="mindset">🧠 Mindset</option>
-          <option value="knowledge">
-            📚 Knowledge
-          </option>
-          <option value="discipline">
-            ⚔️ Discipline
-          </option>
-          <option value="creativity">
-            🎨 Creativity
-          </option>
-          <option value="social">🤝 Social</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>XP Reward</label>
-        <input type="number" id="nq-xp"
-          value="10" min="1" max="200"/>
-      </div>
-      <button class="btn-primary"
-        onclick="addQuest()">
-        CREATE QUEST
-      </button>
-      <button class="btn-secondary"
-        onclick="closeModal('add-quest-modal')"
-        style="margin-top:8px">
-        Cancel
-      </button>
-    </div>
-  </div>
-
-  <!-- ══ BG PICKER MODAL ══ -->
-  <div class="modal-overlay hidden"
-    id="bg-modal"
-    onclick="closeModalBg(event,'bg-modal')">
-    <div class="modal">
-      <div class="modal-handle"></div>
-      <div class="modal-title">
-        🎨 Card Background
-      </div>
-      <div class="color-grid" id="color-grid">
-      </div>
-      <button class="btn-primary"
-        onclick="saveBg()"
-        style="margin-top:16px">
-        SAVE
-      </button>
-    </div>
-  </div>
-
-</div> -->
-
+<div id="app">
+<div id="loading-screen">
+<div class="loading-logo">⚡ LEVELUP LIFE</div>
+<div class="loading-sub">Loading your journey...</div>
+<div class="spinner"></div>
+</div>
+<div id="auth-wrap" class="hidden">
+<div id="login-screen" class="auth-screen">
+<div class="auth-logo">⚡ LEVELUP LIFE</div>
+<div class="auth-sub">Your journey starts here</div>
+<div class="auth-card">
+<div class="auth-tabs">
+<button class="auth-tab active" onclick="switchAuth('login',this)">Login</button>
+<button class="auth-tab" onclick="switchAuth('signup',this)">Sign Up</button>
+</div>
+<div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com"/></div>
+<div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••"/></div>
+<div class="auth-error" id="login-error"></div>
+<button class="btn-primary" id="login-btn" onclick="doLogin()">ENTER THE GAME</button>
+<div class="auth-link" onclick="showAuthScreen('forgot')">Forgot Password?</div>
+</div>
+</div>
+<div id="signup-screen" class="auth-screen hidden">
+<div class="auth-logo">⚡ LEVELUP LIFE</div>
+<div class="auth-sub">Begin your adventure</div>
+<div class="auth-card">
+<div class="auth-tabs">
+<button class="auth-tab" onclick="switchAuth('login',this)">Login</button>
+<button class="auth-tab active" onclick="switchAuth('signup',this)">Sign Up</button>
+</div>
+<div class="form-group"><label>Username</label><input type="text" id="signup-username" placeholder="YourHeroName"/></div>
+<div class="form-group"><label>Email</label><input type="email" id="signup-email" placeholder="you@email.com"/></div>
+<div class="form-group"><label>Password</label><input type="password" id="signup-password" placeholder="Min 6 characters"/></div>
+<div class="auth-error" id="signup-error"></div>
+<button class="btn-primary" id="signup-btn" onclick="doSignup()">BEGIN ADVENTURE</button>
+</div>
+</div>
+<div id="forgot-screen" class="auth-screen hidden">
+<div class="auth-logo">🔑 Reset Password</div>
+<div class="auth-sub">Enter your email to reset</div>
+<div class="auth-card">
+<div class="form-group"><label>Email</label><input type="email" id="forgot-email" placeholder="you@email.com"/></div>
+<div class="auth-error" id="forgot-msg"></div>
+<button class="btn-primary" onclick="doForgot()">SEND RESET EMAIL</button>
+<div class="auth-link" onclick="showAuthScreen('login')">← Back to Login</div>
+</div>
+</div>
+</div>
+<div id="main-app" class="hidden">
+<div class="topbar">
+<div class="topbar-left">
+<div id="topbar-avatar" class="topbar-avatar" onclick="showTab('profile')">🧙</div>
+<div>
+<div class="topbar-name" id="topbar-name">Hero</div>
+<div class="topbar-level" id="topbar-level">LVL 1 • Novice</div>
+</div>
+</div>
+<div class="topbar-xp" id="topbar-xp">0 XP</div>
+</div>
+<div id="tab-dashboard" class="tab-content">
+<div class="hero-card">
+<div class="hero-bg"></div>
+<div class="hero-body">
+<div class="hero-avatar-wrap">
+<div id="hero-avatar" class="hero-avatar">🧙</div>
+<div class="hero-badge" id="hero-badge">LV 1</div>
+</div>
+<div class="hero-info">
+<div class="hero-name" id="hero-name">Loading...</div>
+<div class="hero-title" id="hero-title">⚡ Novice</div>
+<div class="xp-row"><span>XP</span><span id="xp-nums">0/100</span></div>
+<div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+</div>
+</div>
+<div class="hero-stats">
+<div class="hstat"><div class="hstat-val" id="hstat-streak">0</div><div class="hstat-lbl">🔥 Streak</div></div>
+<div class="hstat"><div class="hstat-val" id="hstat-motivation">100</div><div class="hstat-lbl">⚡ Motivation</div></div>
+<div class="hstat"><div class="hstat-val" id="hstat-done">0</div><div class="hstat-lbl">✅ Done</div></div>
+</div>
+</div>
+<div class="sec-title">📋 Today's Quests</div>
+<div id="dash-quests"></div>
+<div class="sec-title">👑 System Quests</div>
+<div id="dash-system"></div>
+<div class="sec-title">🧠 Skills</div>
+<div class="skills-grid" id="dash-skills"></div>
+</div>
+<div id="tab-quests" class="tab-content hidden">
+<div class="filters">
+<button class="filter-btn active" onclick="filterQ('all',this)">All</button>
+<button class="filter-btn" onclick="filterQ('habit',this)">🔁 Habits</button>
+<button class="filter-btn" onclick="filterQ('todo',this)">✅ To-Do</button>
+<button class="filter-btn" onclick="filterQ('system',this)">👑 System</button>
+</div>
+<div class="progress-wrap">
+<div class="progress-label"><span>Today's Progress</span><span id="q-progress-text">0/0</span></div>
+<div class="progress-track"><div class="progress-fill" id="q-progress-fill" style="width:0%"></div></div>
+</div>
+<div id="quests-list"></div>
+<button class="add-quest-btn" onclick="openAddQuest()">＋ Add New Quest</button>
+</div>
+<div id="tab-profile" class="tab-content hidden">
+<div class="profile-card">
+<div class="profile-bg"></div>
+<div class="profile-avatar-wrap">
+<div id="profile-avatar" class="profile-avatar">🧙</div>
+<div class="avatar-edit" onclick="document.getElementById('avatar-input').click()">✏️</div>
+<input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)"/>
+</div>
+<div class="profile-name" id="profile-name">Hero</div>
+<div class="profile-email" id="profile-email"></div>
+<div class="profile-stats">
+<div class="pstat"><div class="pstat-val" id="pstat-level">1</div><div class="pstat-lbl">LEVEL</div></div>
+<div class="pstat"><div class="pstat-val" id="pstat-xp">0</div><div class="pstat-lbl">XP</div></div>
+<div class="pstat"><div class="pstat-val" id="pstat-streak">0</div><div class="pstat-lbl">STREAK</div></div>
+</div>
+</div>
+<div class="sec-title">🎨 Personalization</div>
+<button class="btn-secondary" onclick="openBgPicker()">🎨 Change Card Background</button>
+<div class="sec-title">⚙️ Settings</div>
+<div class="toggle-row">
+<div><div class="toggle-label">♀️ Female Mode</div><div class="toggle-desc">Period tracking + special quests</div></div>
+<button class="toggle-btn" id="female-toggle" onclick="toggleFemale()"></button>
+</div>
+<div id="female-section" class="hidden">
+<div class="female-card">
+<div class="female-title">♀️ PERIOD TRACKER</div>
+<div class="period-row">
+<input type="date" id="period-start" class="period-input"/>
+<input type="date" id="period-end" class="period-input"/>
+</div>
+<button class="btn-pink" onclick="logPeriod()">Log Period</button>
+<div id="period-history"></div>
+</div>
+</div>
+<div class="sec-title">🔐 Account</div>
+<button class="btn-danger" onclick="doLogout()">🚪 Sign Out</button>
+</div>
+<div id="tab-admin" class="tab-content hidden">
+<div id="admin-wrap"></div>
+</div>
+<nav class="bottom-nav">
+<button class="nav-btn active" id="nav-dashboard" onclick="showTab('dashboard')"><span class="nav-icon">🏠</span><span>Home</span></button>
+<button class="nav-btn" id="nav-quests" onclick="showTab('quests')"><span class="nav-icon">📋</span><span>Quests</span></button>
+<button class="nav-btn" id="nav-profile" onclick="showTab('profile')"><span class="nav-icon">👤</span><span>Profile</span></button>
+<button class="nav-btn" id="nav-admin" onclick="showTab('admin')" style="display:none"><span class="nav-icon">👑</span><span>Admin</span></button>
+</nav>
+</div>
+<div class="modal-overlay hidden" id="add-quest-modal" onclick="closeModalBg(event,'add-quest-modal')">
+<div class="modal">
+<div class="modal-handle"></div>
+<div class="modal-title">➕ New Quest</div>
+<div class="form-group"><label>Title</label><input type="text" id="nq-title" placeholder="e.g. Morning workout"/></div>
+<div class="form-group"><label>Type</label><select id="nq-type"><option value="habit">🔁 Habit (Daily)</option><option value="todo">✅ To-Do (Once)</option></select></div>
+<div class="form-group"><label>Skill</label><select id="nq-skill"><option value="fitness">💪 Fitness</option><option value="mindset">🧠 Mindset</option><option value="knowledge">📚 Knowledge</option><option value="discipline">⚔️ Discipline</option><option value="creativity">🎨 Creativity</option><option value="social">🤝 Social</option></select></div>
+<div class="form-group"><label>XP Reward</label><input type="number" id="nq-xp" value="10" min="1" max="200"/></div>
+<button class="btn-primary" onclick="addQuest()">CREATE QUEST</button>
+<button class="btn-secondary" onclick="closeModal('add-quest-modal')" style="margin-top:8px">Cancel</button>
+</div>
+</div>
+<div class="modal-overlay hidden" id="bg-modal" onclick="closeModalBg(event,'bg-modal')">
+<div class="modal">
+<div class="modal-handle"></div>
+<div class="modal-title">🎨 Card Background</div>
+<div class="color-grid" id="color-grid"></div>
+<button class="btn-primary" onclick="saveBg()" style="margin-top:16px">SAVE</button>
+</div>
+</div>
+</div>
 <script>
-/// ══════════════════════════════════
-// CONFIG — REPLACE THESE!
-// ══════════════════════════════════
-const SUPABASE_URL  = 'https://tcdptsbhkprngrwlsewq.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjZHB0c2Joa3Bybmdyd2xzZXdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjU0OTYsImV4cCI6MjA5NTMwMTQ5Nn0.JUwa7eYAzX135HQl8jbEirZvckF5iPJGaKtsdWaFtW0';
-const ADMIN_EMAIL   = 'daxtonhub6@gmail.com';
-
-// ══════════════════════════════════
-// LOAD SUPABASE
-// ══════════════════════════════════
-const _s = document.createElement('script');
-_s.src   = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-_s.onload = () => initApp();
+const SUPABASE_URL='https://tcdptsbhkprngrwlsewq.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjZHB0c2Joa3Bybmdyd2xzZXdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjU0OTYsImV4cCI6MjA5NTMwMTQ5Nn0.JUwa7eYAzX135HQl8jbEirZvckF5iPJGaKtsdWaFtW0';
+const ADMIN_EMAIL='daxtonhub6@gmail.com';
+const _s=document.createElement('script');
+_s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+_s.onload=()=>initApp();
 document.head.appendChild(_s);
-
-// ══════════════════════════════════
-// GLOBALS
-// ══════════════════════════════════
-let sb, user, profile;
-let dailyQuests  = [];
-let systemQuests = [];
-let allSkills    = [];
-let qFilter      = 'all';
-let selectedBg   = '#1a1a2e';
-const today      = new Date()
-  .toISOString().split('T')[0];
-
-const LEVELS = [
-  {min:0,    title:'Novice'},
-  {min:100,  title:'Apprentice'},
-  {min:300,  title:'Explorer'},
-  {min:600,  title:'Warrior'},
-  {min:1000, title:'Champion'},
-  {min:1500, title:'Hero'},
-  {min:2200, title:'Legend'},
-  {min:3000, title:'Myth'},
-  {min:4000, title:'Demigod'},
-  {min:5500, title:'Ascended'}
-];
-
-const SKILL_ICONS = {
-  fitness:'💪', mindset:'🧠',
-  knowledge:'📚', discipline:'⚔️',
-  creativity:'🎨', social:'🤝'
-};
-
-const DEFAULT_QUESTS = [
-  {title:'Morning Stretch (5 mins)',
-    type:'habit',skill:'fitness',   xp:10},
-  {title:'Drink 8 glasses of water',
-    type:'habit',skill:'discipline',xp:10},
-  {title:'Read for 15 minutes',
-    type:'habit',skill:'knowledge', xp:15},
-  {title:'Write in your journal',
-    type:'habit',skill:'mindset',   xp:15},
-  {title:'No social media for 2 hrs',
-    type:'habit',skill:'discipline',xp:20},
-  {title:'Learn something new',
-    type:'habit',skill:'knowledge', xp:20},
-  {title:'Reach out to a friend',
-    type:'todo', skill:'social',    xp:15},
-];
-
-const BG_COLORS = [
-  '#1a1a2e','#0d1a2e','#1a0a2e','#0d2e1a',
-  '#2e1a0d','#1a2e2e','#2e0d1a','#0a1a0a',
-  '#1a1a0a','#0a0a2e','#2d1065','#134e4a',
-  '#1e3a5f','#4a1942','#1a0000','#0f172a',
-  '#1c1917','#052e16','#450a0a','#1e1b4b'
-];
-
-// ══════════════════════════════════
-// INIT
-// ══════════════════════════════════
-async function initApp() {
-  const {createClient} = supabase;
-  sb = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  const {data:{session}} = await sb.auth.getSession();
-
-  if (session) {
-    user = session.user;
-    await loadProfile();
-    await generateDailyQuests();
-    await loadAllData();
-    showMainApp();
-  } else {
-    showAuth();
-  }
-}
-
-function showAuth() {
-  hide('loading-screen');
-  show('auth-wrap');
-  showAuthScreen('login');
-}
-
-function showMainApp() {
-  hide('loading-screen');
-  hide('auth-wrap');
-  show('main-app');
-  renderAll();
-  if(profile?.is_admin ||
-    user?.email?.toLowerCase() ===
-    ADMIN_EMAIL.toLowerCase()){
-    document.getElementById('nav-admin')
-      .style.display = '';
-  }
-}
-
-// ══════════════════════════════════
-// AUTH
-// ══════════════════════════════════
-window.switchAuth = function(tab, btn) {
-  showAuthScreen(tab);
-};
-
-function showAuthScreen(name) {
-  ['login','signup','forgot'].forEach(s => {
-    hide(s + '-screen');
-  });
-  show(name + '-screen');
-}
-
-window.doLogin = async function() {
-  const email = val('login-email');
-  const pass  = val('login-password');
-  const errEl = id('login-error');
-  const btn   = id('login-btn');
-  errEl.textContent = '';
-
-  if(!email || !pass){
-    errEl.textContent = '⚠️ Fill in all fields';
-    return;
-  }
-  btn.textContent = 'Logging in...';
-  btn.disabled = true;
-
-  const {data, error} =
-    await sb.auth.signInWithPassword(
-      {email, password:pass}
-    );
-
-  btn.textContent = 'ENTER THE GAME';
-  btn.disabled = false;
-
-  if(error){
-    errEl.textContent = error.message
-      .includes('Invalid')
-      ? '❌ Wrong email or password'
-      : '❌ ' + error.message;
-    return;
-  }
-  user = data.user;
-  show('loading-screen');
-  hide('auth-wrap');
-  await loadProfile();
-  await generateDailyQuests();
-  await loadAllData();
-  showMainApp();
-};
-
-window.doSignup = async function() {
-  const username = val('signup-username');
-  const email    = val('signup-email');
-  const pass     = val('signup-password');
-  const errEl    = id('signup-error');
-  const btn      = id('signup-btn');
-  errEl.textContent = '';
-
-  if(!username || !email || !pass){
-    errEl.textContent = '⚠️ Fill in all fields';
-    return;
-  }
-  if(pass.length < 6){
-    errEl.textContent =
-      '⚠️ Password must be 6+ characters';
-    return;
-  }
-  btn.textContent = 'Creating account...';
-  btn.disabled = true;
-
-  const {data, error} = await sb.auth.signUp(
-    {email, password:pass}
-  );
-
-  btn.textContent = 'BEGIN ADVENTURE';
-  btn.disabled = false;
-
-  if(error){
-    errEl.textContent = '❌ ' + error.message;
-    return;
-  }
-  user = data.user;
-
-  // Create profile
-  const isAdmin = email.toLowerCase() ===
-    ADMIN_EMAIL.toLowerCase();
-  await sb.from('profiles').insert({
-    id: user.id, username,
-    xp:0, level:1, motivation:100,
-    streak:0, is_admin: isAdmin
-  });
-
-  // Create default skills
-  for(const s of [
-    'fitness','mindset','knowledge',
-    'discipline','creativity','social'
-  ]){
-    await sb.from('skills').insert({
-      user_id: user.id,
-      skill_name:s, skill_level:1, skill_xp:0
-    });
-  }
-
-  show('loading-screen');
-  hide('auth-wrap');
-  await loadProfile();
-  await generateDailyQuests();
-  await loadAllData();
-  showMainApp();
-};
-
-window.doForgot = async function() {
-  const email = val('forgot-email');
-  const msgEl = id('forgot-msg');
-  msgEl.style.color = 'var(--red)';
-
-  if(!email){
-    msgEl.textContent = '⚠️ Enter your email';
-    return;
-  }
-  const {error} =
-    await sb.auth.resetPasswordForEmail(email);
-  if(error){
-    msgEl.textContent = '❌ ' + error.message;
-    return;
-  }
-  msgEl.style.color = 'var(--green)';
-  msgEl.textContent = '✅ Reset email sent!';
-};
-
-window.doLogout = async function() {
-  await sb.auth.signOut();
-  user = null; profile = null;
-  dailyQuests = []; systemQuests = [];
-  hide('main-app');
-  showAuth();
-};
-
-// ══════════════════════════════════
-// LOAD DATA
-// ══════════════════════════════════
-async function loadProfile() {
-  const {data} = await sb.from('profiles')
-    .select('*').eq('id', user.id).single();
-
-  if(data){
-    profile = data;
-  } else {
-    const isAdmin = user.email.toLowerCase() ===
-      ADMIN_EMAIL.toLowerCase();
-    const {data:np} = await sb.from('profiles')
-      .insert({
-        id:user.id,
-        username: user.email.split('@')[0],
-        xp:0, level:1, motivation:100,
-        streak:0, is_admin:isAdmin
-      }).select().single();
-    profile = np;
-  }
-}
-
-async function generateDailyQuests() {
-  const {data:ex} = await sb.from('daily_quests')
-    .select('id').eq('user_id', user.id)
-    .eq('quest_date', today).limit(1);
-  if(ex && ex.length > 0) return;
-
-  await sb.from('daily_quests').insert(
-    DEFAULT_QUESTS.map(q => ({
-      user_id: user.id,
-      title: q.title,
-      quest_type: q.type,
-      skill_category: q.skill,
-      xp_reward: q.xp,
-      quest_date: today,
-      is_completed: false
-    }))
-  );
-}
-
-async function loadAllData() {
-  // Daily quests
-  const {data:dq} = await sb.from('daily_quests')
-    .select('*').eq('user_id', user.id)
-    .eq('quest_date', today);
-  dailyQuests = dq || [];
-
-  // System quests
-  const {data:sq} = await sb.from('system_quests')
-    .select('*').eq('is_active', true);
-  systemQuests = sq || [];
-
-  // Skills
-  const {data:sk} = await sb.from('skills')
-    .select('*').eq('user_id', user.id);
-  allSkills = sk || [];
-}
-
-// ══════════════════════════════════
-// RENDER ALL
-// ══════════════════════════════════
-function renderAll() {
-  renderTopbar();
-  renderHeroCard();
-  renderDashQuests();
-  renderDashSystem();
-  renderSkills();
-  renderQuestsTab();
-  renderProfile();
-}
-
-// ── Level helpers ──
-function getLevel(xp){
-  let l = 1;
-  for(let i = LEVELS.length-1; i >= 0; i--){
-    if(xp >= LEVELS[i].min){l = i+1; break;}
-  }
-  return l;
-}
-function getTitle(l){
-  return LEVELS[Math.min(l-1,LEVELS.length-1)].title;
-}
-function getMinXP(l){
-  return LEVELS[Math.min(l-1,LEVELS.length-1)].min;
-}
-function getNextXP(l){
-  return LEVELS[Math.min(l,LEVELS.length-1)].min;
-}
-
-// ── Topbar ──
-function renderTopbar(){
-  if(!profile) return;
-  const xp    = profile.xp || 0;
-  const level = getLevel(xp);
-  const title = getTitle(level);
-  id('topbar-name').textContent =
-    profile.username || 'Hero';
-  id('topbar-level').textContent =
-    `LVL ${level} • ${title}`;
-  id('topbar-xp').textContent = `${xp} XP`;
-
-  // Avatar
-  if(profile.avatar_url){
-    id('topbar-avatar').innerHTML =
-      `<img src="${profile.avatar_url}"/>`;
-  }
-}
-
-// ── Hero card ──
-function renderHeroCard(){
-  if(!profile) return;
-  const xp    = profile.xp || 0;
-  const level = getLevel(xp);
-  const title = getTitle(level);
-  const curMin  = getMinXP(level);
-  const nextMin = getNextXP(level);
-  const pct   = level >= 10 ? 100 :
-    Math.round(((xp-curMin)/(nextMin-curMin))*100);
-
-  id('hero-name').textContent =
-    profile.username || 'Hero';
-  id('hero-title').textContent = `⚡ ${title}`;
-  id('hero-badge').textContent = `LV ${level}`;
-  id('xp-fill').style.width   = pct + '%';
-  id('xp-nums').textContent   =
-    `${xp} / ${nextMin}`;
-  id('hstat-streak').textContent =
-    profile.streak || 0;
-  id('hstat-motivation').textContent =
-    profile.motivation || 100;
-  id('hstat-done').textContent =
-    dailyQuests.filter(q => q.is_completed).length;
-
-  // Avatar
-  if(profile.avatar_url){
-    id('hero-avatar').innerHTML =
-      `<img src="${profile.avatar_url}"/>`;
-  }
-
-  // Namecard bg
-  if(profile.namecard_bg){
-    selectedBg = profile.namecard_bg;
-    document.querySelector('.hero-bg').style
-      .background = `linear-gradient(135deg,
-        ${profile.namecard_bg} 0%, #0a0a1a 100%)`;
-  }
-}
-
-// ── Dashboard quests ──
-function renderDashQuests(){
-  const el = id('dash-quests');
-  if(!dailyQuests.length){
-    el.innerHTML = empty('✅','No quests today');
-    return;
-  }
-  el.innerHTML = dailyQuests.slice(0,4)
-    .map(q => questCard(q)).join('');
-}
-
-// ── Dashboard system quests ──
-async function renderDashSystem(){
-  const el = id('dash-system');
-  if(!systemQuests.length){
-    el.innerHTML = empty('🎯','No system quests yet');
-    return;
-  }
-  const {data:uSQ} = await sb
-    .from('user_system_quests').select('*')
-    .eq('user_id', user.id);
-  const doneIds = (uSQ||[])
-    .filter(x => x.is_completed)
-    .map(x => x.quest_id);
-
-  el.innerHTML = systemQuests.map(q => `
-    <div class="quest-card system-q
-      ${doneIds.includes(q.id) ? 'done' : ''}"
-      onclick="completeSQ('${q.id}',
-        ${q.xp_reward},
-        ${doneIds.includes(q.id)})">
-      <div class="qcheck">
-        ${doneIds.includes(q.id) ? '✓' : '👑'}
-      </div>
-      <div class="qinfo">
-        <div class="qtitle">${q.title}</div>
-        <div class="qmeta">
-          ${q.description || 'System Quest'}
-        </div>
-      </div>
-      <div class="qxp">+${q.xp_reward} XP</div>
-    </div>`).join('');
-}
-
-// ── Skills ──
-function renderSkills(){
-  const el = id('dash-skills');
-  if(!allSkills.length){
-    el.innerHTML = empty('📚','No skills yet');
-    return;
-  }
-  el.innerHTML = allSkills.map(s => `
-    <div class="skill-card">
-      <div class="skill-icon">
-        ${SKILL_ICONS[s.skill_name] || '⭐'}
-      </div>
-      <div class="skill-name">
-        ${cap(s.skill_name)}
-      </div>
-      <div class="skill-lv">LV ${s.skill_level}</div>
-      <div class="skill-track">
-        <div class="skill-fill"
-          style="width:${(s.skill_xp||0)%100}%">
-        </div>
-      </div>
-    </div>`).join('');
-}
-
-// ── Quests tab ──
-async function renderQuestsTab(){
-  const el    = id('quests-list');
-  const total = dailyQuests.length;
-  const done  = dailyQuests
-    .filter(q => q.is_completed).length;
-  const pct   = total > 0
-    ? Math.round((done/total)*100) : 0;
-  id('q-progress-fill').style.width = pct + '%';
-  id('q-progress-text').textContent =
-    `${done}/${total} done`;
-
-  // Get system quest completions
-  const {data:uSQ} = await sb
-    .from('user_system_quests').select('*')
-    .eq('user_id', user.id);
-  const doneIds = (uSQ||[])
-    .filter(x => x.is_completed)
-    .map(x => x.quest_id);
-
-  let list = [...dailyQuests];
-  const sqList = systemQuests.map(q => ({
-    ...q,
-    quest_type: 'system',
-    skill_category: 'system',
-    is_completed: doneIds.includes(q.id)
-  }));
-
-  if(qFilter === 'all')
-    list = [...list, ...sqList];
-  else if(qFilter === 'habit')
-    list = list.filter(q => q.quest_type==='habit');
-  else if(qFilter === 'todo')
-    list = list.filter(q => q.quest_type==='todo');
-  else if(qFilter === 'system')
-    list = sqList;
-
-  if(!list.length){
-    el.innerHTML = empty('📋','No quests here');
-    return;
-  }
-  el.innerHTML = list.map(q => {
-    if(q.quest_type === 'system'){
-      return `
-        <div class="quest-card system-q
-          ${q.is_completed ? 'done' : ''}"
-          onclick="completeSQ('${q.id}',
-            ${q.xp_reward},${q.is_completed})">
-          <div class="qcheck">
-            ${q.is_completed ? '✓' : '👑'}
-          </div>
-          <div class="qinfo">
-            <div class="qtitle">${q.title}</div>
-            <div class="qmeta">👑 System Quest</div>
-          </div>
-          <div class="qxp">+${q.xp_reward} XP</div>
-        </div>`;
-    }
-    return questCard(q);
-  }).join('');
-}
-
-// ── Profile tab ──
-function renderProfile(){
-  if(!profile) return;
-  const xp    = profile.xp || 0;
-  const level = getLevel(xp);
-  id('profile-name').textContent =
-    profile.username || 'Hero';
-  id('profile-email').textContent =
-    user?.email || '';
-  id('pstat-level').textContent = level;
-  id('pstat-xp').textContent    = xp;
-  id('pstat-streak').textContent =
-    profile.streak || 0;
-
-  // Avatar
-  if(profile.avatar_url){
-    id('profile-avatar').innerHTML =
-      `<img src="${profile.avatar_url}"/>`;
-  }
-
-  // Profile bg
-  if(profile.namecard_bg){
-    document.querySelector('.profile-bg')
-      .style.background =
-      `linear-gradient(135deg,
-        ${profile.namecard_bg} 0%, #0a1a2e 100%)`;
-  }
-
-  // Female mode
-  if(profile.is_female_mode){
-    id('female-toggle').classList.add('on');
-    show('female-section');
-    loadPeriodHistory();
-  }
-}
-
-// ══════════════════════════════════
-// QUEST CARD HTML
-// ══════════════════════════════════
-function questCard(q){
-  return `
-    <div class="quest-card
-      ${q.is_completed ? 'done' : ''}"
-      onclick="completeQuest('${q.id}',
-        ${q.xp_reward},
-        '${q.skill_category}',
-        ${q.is_completed})">
-      <div class="qcheck">
-        ${q.is_completed ? '✓' : ''}
-      </div>
-      <div class="qinfo">
-        <div class="qtitle">${q.title}</div>
-        <div class="qmeta">
-          ${SKILL_ICONS[q.skill_category]||'⭐'}
-          ${q.skill_category} • ${q.quest_type}
-        </div>
-      </div>
-      <div class="qxp">+${q.xp_reward} XP</div>
-    </div>`;
-}
-
-// ══════════════════════════════════
-// COMPLETE QUEST
-// ══════════════════════════════════
-window.completeQuest = async function(
-  qid, xpReward, skillCat, done
-) {
-  if(done){ toast('Already done! ✅'); return; }
-
-  await sb.from('daily_quests')
-    .update({is_completed:true}).eq('id', qid);
-
-  const q = dailyQuests.find(x => x.id === qid);
-  if(q) q.is_completed = true;
-
-  await giveXP(xpReward, skillCat);
-  toast(`+${xpReward} XP! 🌟`);
-  await checkStreak();
-  renderAll();
-};
-
-window.completeSQ = async function(
-  sqId, xpReward, done
-) {
-  if(done){ toast('Already done! ✅'); return; }
-
-  const {data:ex} = await sb
-    .from('user_system_quests').select('id')
-    .eq('user_id', user.id)
-    .eq('quest_id', sqId).single();
-
-  if(ex){
-    await sb.from('user_system_quests')
-      .update({
-        is_completed: true,
-        completed_at: new Date().toISOString()
-      }).eq('id', ex.id);
-  } else {
-    await sb.from('user_system_quests').insert({
-      user_id: user.id,
-      quest_id: sqId,
-      is_completed: true,
-      completed_at: new Date().toISOString()
-    });
-  }
-  await giveXP(xpReward, null);
-  toast(`👑 +${xpReward} XP! System Quest done!`);
-  renderAll();
-};
-
-async function giveXP(amount, skillCat) {
-  if(!profile) return;
-  const newXP    = (profile.xp||0) + amount;
-  const newLevel = getLevel(newXP);
-  const oldLevel = getLevel(profile.xp||0);
-
-  await sb.from('profiles')
-    .update({xp:newXP, level:newLevel})
-    .eq('id', user.id);
-  profile.xp    = newXP;
-  profile.level = newLevel;
-
-  if(newLevel > oldLevel){
-    setTimeout(() =>
-      toast(`🎉 LEVEL UP! You're Level ${newLevel}!`),
-    700);
-  }
-
-  if(skillCat && skillCat !== 'system'){
-    const sk = allSkills.find(
-      s => s.skill_name === skillCat
-    );
-    if(sk){
-      const newSXP = (sk.skill_xp||0) + amount;
-      const newSLV = Math.floor(newSXP/100) + 1;
-      await sb.from('skills')
-        .update({skill_xp:newSXP, skill_level:newSLV})
-        .eq('id', sk.id);
-      sk.skill_xp   = newSXP;
-      sk.skill_level = newSLV;
-    }
-  }
-
-  const newMot = Math.min(
-    100, (profile.motivation||100) + 2
-  );
-  await sb.from('profiles')
-    .update({motivation:newMot}).eq('id', user.id);
-  profile.motivation = newMot;
-}
-
-async function checkStreak(){
-  if(!profile) return;
-  if(profile.last_active === today) return;
-  const yesterday = new Date(Date.now()-86400000)
-    .toISOString().split('T')[0];
-  const newStreak = profile.last_active === yesterday
-    ? (profile.streak||0) + 1 : 1;
-  profile.streak      = newStreak;
-  profile.last_active = today;
-  await sb.from('profiles')
-    .update({streak:newStreak, last_active:today})
-    .eq('id', user.id);
-}
-
-// ══════════════════════════════════
-// ADD QUEST
-// ══════════════════════════════════
-window.openAddQuest = function(){
-  show('add-quest-modal');
-};
-window.addQuest = async function(){
-  const title = val('nq-title');
-  const type  = val('nq-type');
-  const skill = val('nq-skill');
-  const xp    = parseInt(val('nq-xp')) || 10;
-  if(!title){ toast('Enter a title! ⚠️','red'); return; }
-
-  const {data} = await sb.from('daily_quests')
-    .insert({
-      user_id: user.id, title,
-      quest_type: type,
-      skill_category: skill,
-      xp_reward: xp,
-      quest_date: today,
-      is_completed: false
-    }).select().single();
-
-  if(data) dailyQuests.push(data);
-  closeModal('add-quest-modal');
-  id('nq-title').value = '';
-  toast('Quest created! 🎯','green');
-  renderAll();
-};
-
-window.filterQ = function(f, btn){
-  qFilter = f;
-  document.querySelectorAll('.filter-btn')
-    .forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderQuestsTab();
-};
-
-// ══════════════════════════════════
-// AVATAR UPLOAD
-// ══════════════════════════════════
-window.uploadAvatar = async function(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  toast('Uploading...','green');
-
-  // Check storage bucket exists
-  const ext  = file.name.split('.').pop();
-  const path = `${user.id}/avatar.${ext}`;
-
-  const {error} = await sb.storage
-    .from('avatars')
-    .upload(path, file, {upsert:true});
-
-  if(error){
-    toast('Upload failed: ' + error.message,'red');
-    return;
-  }
-
-  const {data:{publicUrl}} = sb.storage
-    .from('avatars').getPublicUrl(path);
-
-  const url = publicUrl + '?t=' + Date.now();
-  await sb.from('profiles')
-    .update({avatar_url: url}).eq('id', user.id);
-  profile.avatar_url = url;
-  toast('Avatar updated! 🎉','green');
-  renderAll();
-};
-
-// ══════════════════════════════════
-// BG COLOR PICKER
-// ══════════════════════════════════
-window.openBgPicker = function(){
-  id('color-grid').innerHTML = BG_COLORS.map(c => `
-    <div class="color-swatch
-      ${c === selectedBg ? 'selected' : ''}"
-      style="background:${c}"
-      onclick="pickBg('${c}',this)">
-    </div>`).join('');
-  show('bg-modal');
-};
-window.pickBg = function(c, el){
-  selectedBg = c;
-  document.querySelectorAll('.color-swatch')
-    .forEach(s => s.classList.remove('selected'));
-  el.classList.add('selected');
-};
-window.saveBg = async function(){
-  await sb.from('profiles')
-    .update({namecard_bg:selectedBg})
-    .eq('id', user.id);
-  profile.namecard_bg = selectedBg;
-  closeModal('bg-modal');
-  toast('Background saved! 🎨','green');
-  renderAll();
-};
-
-// ══════════════════════════════════
-// FEMALE MODE
-// ══════════════════════════════════
-window.toggleFemale = async function(){
-  const btn = id('female-toggle');
-  const isOn = !btn.classList.contains('on');
-  btn.classList.toggle('on', isOn);
-  profile.is_female_mode = isOn;
-
-  if(isOn) show('female-section');
-  else     hide('female-section');
-
-  await sb.from('profiles')
-    .update({is_female_mode:isOn})
-    .eq('id', user.id);
-
-  if(isOn) loadPeriodHistory();
-  toast(isOn
-    ? 'Female mode on 💜'
-    : 'Female mode off', 'green');
-};
-
-window.logPeriod = async function(){
-  const start = val('period-start');
-  const end   = val('period-end');
-  if(!start){toast('Enter start date ⚠️','red');return;}
-
-  await sb.from('period_tracking').insert({
-    user_id: user.id,
-    period_start: start,
-    period_end:   end || null
-  });
-  toast('Period logged 💜','green');
-  id('period-start').value = '';
-  id('period-end').value   = '';
-  loadPeriodHistory();
-};
-
-async function loadPeriodHistory(){
-  const {data} = await sb.from('period_tracking')
-    .select('*').eq('user_id', user.id)
-    .order('period_start',{ascending:false})
-    .limit(5);
-  const el = id('period-history');
-  if(!data||!data.length){
-    el.innerHTML = '<div style="font-size:12px;'+
-      'color:#444;margin-top:8px">No entries yet</div>';
-    return;
-  }
-  el.innerHTML = data.map(p =>
-    `<div class="period-entry">
-      📅 ${p.period_start}
-      ${p.period_end ? ' → ' + p.period_end : ''}
-    </div>`).join('');
-}
-
-// ══════════════════════════════════
-// ADMIN PANEL
-// ══════════════════════════════════
-window.showTab = async function(tab){
-  document.querySelectorAll('.tab-content')
-    .forEach(t => t.classList.add('hidden'));
-  document.querySelectorAll('.nav-btn')
-    .forEach(b => b.classList.remove('active'));
-
-  show('tab-' + tab);
-  const navBtn = id('nav-' + tab);
-  if(navBtn) navBtn.classList.add('active');
-
-  if(tab === 'admin') await renderAdmin();
-  if(tab === 'quests') await renderQuestsTab();
-  if(tab === 'profile'){
-    renderProfile();
-    if(profile?.is_female_mode) loadPeriodHistory();
-  }
-};
-
-async function renderAdmin(){
-  const isAdmin =
-    profile?.is_admin ||
-    user?.email?.toLowerCase() ===
-    ADMIN_EMAIL.toLowerCase();
-
-  if(!isAdmin){
-    id('admin-wrap').innerHTML = `
-      <div class="empty" style="padding-top:80px">
-        <div class="empty-icon">🔒</div>
-        <div style="color:var(--red);font-weight:700;
-          font-size:18px;margin-bottom:8px">
-          Access Denied
-        </div>
-        <div>Host only area</div>
-      </div>`;
-    return;
-  }
-
-  // Load stats
-  const {data:users}   = await sb
-    .from('profiles').select('*');
-  const {data:squests} = await sb
-    .from('system_quests').select('*');
-  const {data:comps}   = await sb
-    .from('user_system_quests').select('*')
-    .eq('is_completed', true);
-  const totalXP = (users||[])
-    .reduce((a,u) => a+(u.xp||0), 0);
-
-  id('admin-wrap').innerHTML = `
-    <div class="admin-banner">
-      <div class="admin-crown">👑</div>
-      <div>
-        <div class="admin-banner-title">
-          HOST CONTROL PANEL
-        </div>
-        <div class="admin-banner-sub">
-          Welcome, ${profile.username}
-        </div>
-      </div>
-    </div>
-
-    <div class="admin-stats">
-      <div class="astat">
-        <div class="astat-val">
-          ${(users||[]).length}
-        </div>
-        <div class="astat-lbl">👥 PLAYERS</div>
-      </div>
-      <div class="astat">
-        <div class="astat-val">
-          ${(squests||[]).length}
-        </div>
-        <div class="astat-lbl">📋 QUESTS</div>
-      </div>
-      <div class="astat">
-        <div class="astat-val">
-          ${(comps||[]).length}
-        </div>
-        <div class="astat-lbl">✅ DONE</div>
-      </div>
-      <div class="astat">
-        <div class="astat-val">${totalXP}</div>
-        <div class="astat-lbl">⚡ TOTAL XP</div>
-      </div>
-    </div>
-
-    <div class="admin-tabs">
-      <button class="admin-tab active"
-        onclick="switchAdminTab('quests',this)">
-        📋 Quests
-      </button>
-      <button class="admin-tab"
-        onclick="switchAdminTab('players',this)">
-        👥 Players
-      </button>
-    </div>
-
-    <!-- QUESTS TAB -->
-    <div class="admin-section active"
-      id="asec-quests">
-      <div class="form-card">
-        <div class="form-card-title">
-          ➕ Create System Quest
-        </div>
-        <div class="form-group">
-          <label>Title</label>
-          <input type="text" id="sq-title"
-            placeholder="e.g. No social media 3 hrs"/>
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <textarea id="sq-desc"
-            placeholder="What the player must do...">
-          </textarea>
-        </div>
-        <div class="form-group">
-          <label>XP Reward</label>
-          <input type="number" id="sq-xp"
-            value="50" min="1"/>
-          <div class="input-hint">
-            💡 System quests give more XP!
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Assign To</label>
-          <select id="sq-assign">
-            <option value="">👥 All Players</option>
-            ${(users||[]).map(u =>
-              `<option value="${u.id}">
-                👤 ${u.username||'Unknown'}
-              </option>`).join('')}
-          </select>
-        </div>
-        <button class="btn-gold"
-          onclick="createSQ()">
-          👑 CREATE QUEST
-        </button>
-      </div>
-
-      <div class="sec-title">Active Quests</div>
-      <div id="admin-sq-list">
-        ${(squests||[]).length === 0
-          ? empty('📋','No system quests yet')
-          : (squests||[]).map(q => adminQCard(q,users))
-            .join('')}
-      </div>
-    </div>
-
-    <!-- PLAYERS TAB -->
-    <div class="admin-section" id="asec-players">
-      <div class="sec-title">All Players</div>
-      ${(users||[]).length === 0
-        ? empty('👤','No players yet')
-        : (users||[])
-          .sort((a,b) => (b.xp||0)-(a.xp||0))
-          .map((u,i) => `
-            <div class="player-item">
-              <div class="player-av">
-                ${u.avatar_url
-                  ? `<img src="${u.avatar_url}"/>`
-                  : '🧙'}
-              </div>
-              <div style="flex:1">
-                <div class="player-name">
-                  ${i===0?'🥇 ':''}
-                  ${u.username||'Unknown'}
-                  ${u.is_admin?' 👑':''}
-                </div>
-                <div class="player-meta">
-                  🔥 ${u.streak||0} streak •
-                  ⚡ ${u.motivation||100} motivation
-                </div>
-              </div>
-              <div>
-                <div class="player-xp">
-                  ${u.xp||0} XP
-                </div>
-                <div class="player-lv">
-                  Level ${getLevel(u.xp||0)}
-                </div>
-              </div>
-            </div>`).join('')}
-    </div>`;
-}
-
-function adminQCard(q, users){
-  const assignedUser = q.assigned_to
-    ? (users||[]).find(u => u.id === q.assigned_to)
-    : null;
-  return `
-    <div class="sq-item">
-      <div class="sq-info">
-        <div class="sq-title">${q.title}</div>
-        <div class="sq-desc">
-          ${q.description||'No description'}
-        </div>
-        <div class="sq-badges">
-          <div class="sq-xp-badge">
-            +${q.xp_reward} XP
-          </div>
-          <div class="sq-tag">
-            ${assignedUser
-              ? '👤 '+assignedUser.username
-              : '👥 All Players'}
-          </div>
-          <div class="sq-tag" style="color:${
-            q.is_active
-              ? 'var(--green)':'var(--red)'}">
-            ${q.is_active ? '● Active':'● Inactive'}
-          </div>
-        </div>
-      </div>
-      <div class="sq-actions">
-        <button class="btn-icon del"
-          onclick="deleteSQ('${q.id}')">🗑</button>
-        <button class="btn-icon tog"
-          onclick="toggleSQ('${q.id}',
-            ${q.is_active})">
-          ${q.is_active ? '✓':'○'}
-        </button>
-      </div>
-    </div>`;
-}
-
-window.switchAdminTab = function(tab, btn){
-  document.querySelectorAll('.admin-tab')
-    .forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.admin-section')
-    .forEach(s => s.classList.remove('active'));
-  id('asec-' + tab).classList.add('active');
-};
-
-window.createSQ = async function(){
-  const title  = val('sq-title');
-  const desc   = val('sq-desc');
-  const xp     = parseInt(val('sq-xp')) || 50;
-  const assign = val('sq-assign') || null;
-  if(!title){toast('Enter a title! ⚠️','red');return;}
-
-  await sb.from('system_quests').insert({
-    title, description:desc,
-    xp_reward:xp, is_active:true,
-    assigned_to:assign
-  });
-  toast('Quest created! 👑','green');
-  await loadAllData();
-  renderAdmin();
-};
-
-window.deleteSQ = async function(id_){
-  await sb.from('system_quests')
-    .delete().eq('id', id_);
-  toast('Quest deleted 🗑');
-  await loadAllData();
-  renderAdmin();
-};
-
-window.toggleSQ = async function(id_, current){
-  await sb.from('system_quests')
-    .update({is_active:!current}).eq('id', id_);
-  toast(current
-    ? '⏸ Deactivated'
-    : '✅ Activated', 'green');
-  await loadAllData();
-  renderAdmin();
-};
-
-// ══════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════
-// Initial tab shown
-window.showTab('dashboard');
-
-// ══════════════════════════════════
-// MODALS
-// ══════════════════════════════════
-window.closeModal = function(modalId){
-  hide(modalId);
-};
-window.closeModalBg = function(e, modalId){
-  if(e.target.id === modalId) hide(modalId);
-};
-
-// ══════════════════════════════════
-// TOAST
-// ══════════════════════════════════
-function toast(msg, type=''){
-  const old = document.getElementById('_toast');
-  if(old) old.remove();
-  const t = document.createElement('div');
-  t.id = '_toast';
-  t.className = 'toast ' + type;
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2500);
-}
-
-// ══════════════════════════════════
-// HELPERS
-// ══════════════════════════════════
-function id(i){ return document.getElementById(i); }
-function val(i){ return id(i)?.value?.trim()||''; }
-function show(i){ id(i)?.classList.remove('hidden'); }
-function hide(i){ id(i)?.classList.add('hidden'); }
-function cap(s){
-  return s ? s[0].toUpperCase()+s.slice(1) : s;
-}
-function empty(icon, msg){
-  return `<div class="empty">
-    <div class="empty-icon">${icon}</div>
-    ${msg}
-  </div>`;
-}/
+let sb,user,profile,dailyQuests=[],systemQuests=[],allSkills=[],qFilter='all',selectedBg='#1a1a2e';
+const today=new Date().toISOString().split('T')[0];
+const LEVELS=[{min:0,title:'Novice'},{min:100,title:'Apprentice'},{min:300,title:'Explorer'},{min:600,title:'Warrior'},{min:1000,title:'Champion'},{min:1500,title:'Hero'},{min:2200,title:'Legend'},{min:3000,title:'Myth'},{min:4000,title:'Demigod'},{min:5500,title:'Ascended'}];
+const SKILL_ICONS={fitness:'💪',mindset:'🧠',knowledge:'📚',discipline:'⚔️',creativity:'🎨',social:'🤝'};
+const DEFAULT_QUESTS=[{title:'Morning Stretch (5 mins)',type:'habit',skill:'fitness',xp:10},{title:'Drink 8 glasses of water',type:'habit',skill:'discipline',xp:10},{title:'Read for 15 minutes',type:'habit',skill:'knowledge',xp:15},{title:'Write in your journal',type:'habit',skill:'mindset',xp:15},{title:'No social media for 2 hrs',type:'habit',skill:'discipline',xp:20},{title:'Learn something new',type:'habit',skill:'knowledge',xp:20},{title:'Reach out to a friend',type:'todo',skill:'social',xp:15}];
+const BG_COLORS=['#1a1a2e','#0d1a2e','#1a0a2e','#0d2e1a','#2e1a0d','#1a2e2e','#2e0d1a','#0a1a0a','#1a1a0a','#0a0a2e','#2d1065','#134e4a','#1e3a5f','#4a1942','#1a0000','#0f172a','#1c1917','#052e16','#450a0a','#1e1b4b'];
+async function initApp(){const{createClient}=supabase;sb=createClient(SUPABASE_URL,SUPABASE_KEY);const{data:{session}}=await sb.auth.getSession();if(session){user=session.user;await loadProfile();await generateDailyQuests();await loadAllData();showMainApp();}else{showAuth();}}
+function showAuth(){hide('loading-screen');show('auth-wrap');showAuthScreen('login');}
+function showMainApp(){hide('loading-screen');hide('auth-wrap');show('main-app');renderAll();if(profile?.is_admin||user?.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase()){document.getElementById('nav-admin').style.display='';}}
+window.switchAuth=function(tab,btn){showAuthScreen(tab);};
+function showAuthScreen(name){['login','signup','forgot'].forEach(s=>hide(s+'-screen'));show(name+'-screen');}
+window.doLogin=async function(){const email=val('login-email');const pass=val('login-password');const errEl=id('login-error');const btn=id('login-btn');errEl.textContent='';if(!email||!pass){errEl.textContent='⚠️ Fill in all fields';return;}btn.textContent='Logging in...';btn.disabled=true;const{data,error}=await sb.auth.signInWithPassword({email,password:pass});btn.textContent='ENTER THE GAME';btn.disabled=false;if(error){errEl.textContent=error.message.includes('Invalid')?'❌ Wrong email or password':'❌ '+error.message;return;}user=data.user;show('loading-screen');hide('auth-wrap');await loadProfile();await generateDailyQuests();await loadAllData();showMainApp();};
+window.doSignup=async function(){const username=val('signup-username');const email=val('signup-email');const pass=val('signup-password');const errEl=id('signup-error');const btn=id('signup-btn');errEl.textContent='';if(!username||!email||!pass){errEl.textContent='⚠️ Fill in all fields';return;}if(pass.length<6){errEl.textContent='⚠️ Password must be 6+ characters';return;}btn.textContent='Creating account...';btn.disabled=true;const{data,error}=await sb.auth.signUp({email,password:pass});btn.textContent='BEGIN ADVENTURE';btn.disabled=false;if(error){errEl.textContent='❌ '+error.message;return;}user=data.user;const isAdmin=email.toLowerCase()===ADMIN_EMAIL.toLowerCase();await sb.from('profiles').insert({id:user.id,username,xp:0,level:1,motivation:100,streak:0,is_admin:isAdmin});for(const s of['fitness','mindset','knowledge','discipline','creativity','social']){await sb.from('skills').insert({user_id:user.id,skill_name:s,skill_level:1,skill_xp:0});}show('loading-screen');hide('auth-wrap');await loadProfile();await generateDailyQuests();await loadAllData();showMainApp();};
+window.doForgot=async function(){const email=val('forgot-email');const msgEl=id('forgot-msg');msgEl.style.color='var(--red)';if(!email){msgEl.textContent='⚠️ Enter your email';return;}const{error}=await sb.auth.resetPasswordForEmail(email);if(error){msgEl.textContent='❌ '+error.message;return;}msgEl.style.color='var(--green)';msgEl.textContent='✅ Reset email sent!';};
+window.doLogout=async function(){await sb.auth.signOut();user=null;profile=null;dailyQuests=[];systemQuests=[];hide('main-app');showAuth();};
+async function loadProfile(){const{data}=await sb.from('profiles').select('*').eq('id',user.id).single();if(data){profile=data;}else{const isAdmin=user.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();const{data:np}=await sb.from('profiles').insert({id:user.id,username:user.email.split('@')[0],xp:0,level:1,motivation:100,streak:0,is_admin:isAdmin}).select().single();profile=np;}}
+async function generateDailyQuests(){const{data:ex}=await sb.from('daily_quests').select('id').eq('user_id',user.id).eq('quest_date',today).limit(1);if(ex&&ex.length>0)return;await sb.from('daily_quests').insert(DEFAULT_QUESTS.map(q=>({user_id:user.id,title:q.title,quest_type:q.type,skill_category:q.skill,xp_reward:q.xp,quest_date:today,is_completed:false})));}
+async function loadAllData(){const{data:dq}=await sb.from('daily_quests').select('*').eq('user_id',user.id).eq('quest_date',today);dailyQuests=dq||[];const{data:sq}=await sb.from('system_quests').select('*').eq('is_active',true);systemQuests=sq||[];const{data:sk}=await sb.from('skills').select('*').eq('user_id',user.id);allSkills=sk||[];if(allSkills.length===0){for(const s of['fitness','mindset','knowledge','discipline','creativity','social']){await sb.from('skills').insert({user_id:user.id,skill_name:s,skill_level:1,skill_xp:0});}const{data:newSk}=await sb.from('skills').select('*').eq('user_id',user.id);allSkills=newSk||[];}}
+function renderAll(){renderTopbar();renderHeroCard();renderDashQuests();renderDashSystem();renderSkills();renderQuestsTab();renderProfile();}
+function getLevel(xp){let l=1;for(let i=LEVELS.length-1;i>=0;i--){if(xp>=LEVELS[i].min){l=i+1;break;}}return l;}
+function getTitle(l){return LEVELS[Math.min(l-1,LEVELS.length-1)].title;}
+function getMinXP(l){return LEVELS[Math.min(l-1,LEVELS.length-1)].min;}
+function getNextXP(l){return LEVELS[Math.min(l,LEVELS.length-1)].min;}
+function renderTopbar(){if(!profile)return;const xp=profile.xp||0;const level=getLevel(xp);const title=getTitle(level);id('topbar-name').textContent=profile.username||'Hero';id('topbar-level').textContent=`LVL ${level} • ${title}`;id('topbar-xp').textContent=`${xp} XP`;if(profile.avatar_url){id('topbar-avatar').innerHTML=`<img src="${profile.avatar_url}"/>`;}}
+function renderHeroCard(){if(!profile)return;const xp=profile.xp||0;const level=getLevel(xp);const title=getTitle(level);const curMin=getMinXP(level);const nextMin=getNextXP(level);const pct=level>=10?100:Math.round(((xp-curMin)/(nextMin-curMin))*100);id('hero-name').textContent=profile.username||'Hero';id('hero-title').textContent=`⚡ ${title}`;id('hero-badge').textContent=`LV ${level}`;id('xp-fill').style.width=pct+'%';id('xp-nums').textContent=`${xp} / ${nextMin}`;id('hstat-streak').textContent=profile.streak||0;id('hstat-motivation').textContent=profile.motivation||100;id('hstat-done').textContent=dailyQuests.filter(q=>q.is_completed).length;if(profile.avatar_url){id('hero-avatar').innerHTML=`<img src="${profile.avatar_url}"/>`;}if(profile.namecard_bg){selectedBg=profile.namecard_bg;document.querySelector('.hero-bg').style.background=`linear-gradient(135deg,${profile.namecard_bg} 0%,#0a0a1a 100%)`;}}
+function renderDashQuests(){const el=id('dash-quests');if(!dailyQuests.length){el.innerHTML=empty('✅','No quests today');return;}el.innerHTML=dailyQuests.slice(0,4).map(q=>questCard(q)).join('');}
+async function renderDashSystem(){const el=id('dash-system');if(!systemQuests.length){el.innerHTML=empty('🎯','No system quests yet');return;}const{data:uSQ}=await sb.from('user_system_quests').select('*').eq('user_id',user.id);const doneIds=(uSQ||[]).filter(x=>x.is_completed).map(x=>x.quest_id);el.innerHTML=systemQuests.map(q=>`<div class="quest-card system-q ${doneIds.includes(q.id)?'done':''}" onclick="completeSQ('${q.id}',${q.xp_reward},${doneIds.includes(q.id)})"><div class="qcheck">${doneIds.includes(q.id)?'✓':'👑'}</div><div class="qinfo"><div class="qtitle">${q.title}</div><div class="qmeta">${q.description||'System Quest'}</div></div><div class="qxp">+${q.xp_reward} XP</div></div>`).join('');}
+function renderSkills(){const el=id('dash-skills');if(!allSkills.length){el.innerHTML=empty('📚','No skills yet');return;}el.innerHTML=allSkills.map(s=>`<div class="skill-card"><div class="skill-icon">${SKILL_ICONS[s.skill_name]||'⭐'}</div><div class="skill-name">${cap(s.skill_name)}</div><div class="skill-lv">LV ${s.skill_level}</div><div class="skill-track"><div class="skill-fill" style="width:${(s.skill_xp||0)%100}%"></div></div></div>`).join('');}
+async function renderQuestsTab(){const el=id('quests-list');const total=dailyQuests.length;const done=dailyQuests.filter(q=>q.is_completed).length;const pct=total>0?Math.round((done/total)*100):0;id('q-progress-fill').style.width=pct+'%';id('q-progress-text').textContent=`${done}/${total} done`;const{data:uSQ}=await sb.from('user_system_quests').select('*').eq('user_id',user.id);const doneIds=(uSQ||[]).filter(x=>x.is_completed).map(x=>x.quest_id);let list=[...dailyQuests];const sqList=systemQuests.map(q=>({...q,quest_type:'system',skill_category:'system',is_completed:doneIds.includes(q.id)}));if(qFilter==='all')list=[...list,...sqList];else if(qFilter==='habit')list=list.filter(q=>q.quest_type==='habit');else if(qFilter==='todo')list=list.filter(q=>q.quest_type==='todo');else if(qFilter==='system')list=sqList;if(!list.length){el.innerHTML=empty('📋','No quests here');return;}el.innerHTML=list.map(q=>{if(q.quest_type==='system'){return`<div class="quest-card system-q ${q.is_completed?'done':''}" onclick="completeSQ('${q.id}',${q.xp_reward},${q.is_completed})"><div class="qcheck">${q.is_completed?'✓':'👑'}</div><div class="qinfo"><div class="qtitle">${q.title}</div><div class="qmeta">👑 System Quest</div></div><div class="qxp">+${q.xp_reward} XP</div></div>`;}return questCard(q);}).join('');}
+function renderProfile(){if(!profile)return;const xp=profile.xp||0;const level=getLevel(xp);id('profile-name').textContent=profile.username||'Hero';id('profile-email').textContent=user?.email||'';id('pstat-level').textContent=level;id('pstat-xp').textContent=xp;id('pstat-streak').textContent=profile.streak||0;if(profile.avatar_url){id('profile-avatar').innerHTML=`<img src="${profile.avatar_url}"/>`;}if(profile.namecard_bg){document.querySelector('.profile-bg').style.background=`linear-gradient(135deg,${profile.namecard_bg} 0%,#0a1a2e 100%)`;}if(profile.is_female_mode){id('female-toggle').classList.add('on');show('female-section');loadPeriodHistory();}}
+function questCard(q){return`<div class="quest-card ${q.is_completed?'done':''}" onclick="completeQuest('${q.id}',${q.xp_reward},'${q.skill_category}',${q.is_completed})"><div class="qcheck">${q.is_completed?'✓':''}</div><div class="qinfo"><div class="qtitle">${q.title}</div><div class="qmeta">${SKILL_ICONS[q.skill_category]||'⭐'} ${q.skill_category} • ${q.quest_type}</div></div><div class="qxp">+${q.xp_reward} XP</div></div>`;}
+window.completeQuest=async function(qid,xpReward,skillCat,done){if(done){toast('Already done! ✅');return;}await sb.from('daily_quests').update({is_completed:true}).eq('id',qid);const q=dailyQuests.find(x=>x.id===qid);if(q)q.is_completed=true;await giveXP(xpReward,skillCat);toast(`+${xpReward} XP! 🌟`);await checkStreak();renderAll();};
+window.completeSQ=async function(sqId,xpReward,done){if(done){toast('Already done! ✅');return;}const{data:ex}=await sb.from('user_system_quests').select('id').eq('user_id',user.id).eq('quest_id',sqId).single();if(ex){await sb.from('user_system_quests').update({is_completed:true,completed_at:new Date().toISOString()}).eq('id',ex.id);}else{await sb.from('user_system_quests').insert({user_id:user.id,quest_id:sqId,is_completed:true,completed_at:new Date().toISOString()});}await giveXP(xpReward,null);toast(`👑 +${xpReward} XP! System Quest done!`);renderAll();};
+async function giveXP(amount,skillCat){if(!profile)return;const newXP=(profile.xp||0)+amount;const newLevel=getLevel(newXP);const oldLevel=getLevel(profile.xp||0);await sb.from('profiles').update({xp:newXP,level:newLevel}).eq('id',user.id);profile.xp=newXP;profile.level=newLevel;if(newLevel>oldLevel){setTimeout(()=>toast(`🎉 LEVEL UP! You're Level ${newLevel}!`),700);}if(skillCat&&skillCat!=='system'){const sk=allSkills.find(s=>s.skill_name===skillCat);if(sk){const newSXP=(sk.skill_xp||0)+amount;const newSLV=Math.floor(newSXP/100)+1;await sb.from('skills').update({skill_xp:newSXP,skill_level:newSLV}).eq('id',sk.id);sk.skill_xp=newSXP;sk.skill_level=newSLV;}}const newMot=Math.min(100,(profile.motivation||100)+2);await sb.from('profiles').update({motivation:newMot}).eq('id',user.id);profile.motivation=newMot;}
+async function checkStreak(){if(!profile)return;if(profile.last_active===today)return;const yesterday=new Date(Date.now()-86400000).toISOString().split('T')[0];const newStreak=profile.last_active===yesterday?(profile.streak||0)+1:1;profile.streak=newStreak;profile.last_active=today;await sb.from('profiles').update({streak:newStreak,last_active:today}).eq('id',user.id);}
+window.openAddQuest=function(){show('add-quest-modal');};
+window.addQuest=async function(){const title=val('nq-title');const type=val('nq-type');const skill=val('nq-skill');const xp=parseInt(val('nq-xp'))||10;if(!title){toast('Enter a title! ⚠️','red');return;}const{data}=await sb.from('daily_quests').insert({user_id:user.id,title,quest_type:type,skill_category:skill,xp_reward:xp,quest_date:today,is_completed:false}).select().single();if(data)dailyQuests.push(data);closeModal('add-quest-modal');id('nq-title').value='';toast('Quest created! 🎯','green');renderAll();};
+window.filterQ=function(f,btn){qFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderQuestsTab();};
+window.uploadAvatar=async function(e){const file=e.target.files[0];if(!file)return;toast('Uploading...','green');const ext=file.name.split('.').pop();const path=`${user.id}/avatar.${ext}`;const{error}=await sb.storage.from('avatars').upload(path,file,{upsert:true});if(error){toast('Upload failed: '+error.message,'red');return;}const{data:{publicUrl}}=sb.storage.from('avatars').getPublicUrl(path);const url=publicUrl+'?t='+Date.now();await sb.from('profiles').update({avatar_url:url}).eq('id',user.id);profile.avatar_url=url;toast('Avatar updated! 🎉','green');renderAll();};
+window.openBgPicker=function(){id('color-grid').innerHTML=BG_COLORS.map(c=>`<div class="color-swatch ${c===selectedBg?'selected':''}" style="background:${c}" onclick="pickBg('${c}',this)"></div>`).join('');show('bg-modal');};
+window.pickBg=function(c,el){selectedBg=c;document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('selected'));el.classList.add('selected');};
+window.saveBg=async function(){await sb.from('profiles').update({namecard_bg:selectedBg}).eq('id',user.id);profile.namecard_bg=selectedBg;closeModal('bg-modal');toast('Background saved! 🎨','green');renderAll();};
+window.toggleFemale=async function(){const btn=id('female-toggle');const isOn=!btn.classList.contains('on');btn.classList.toggle('on',isOn);profile.is_female_mode=isOn;if(isOn)show('female-section');else hide('female-section');await sb.from('profiles').update({is_female_mode:isOn}).eq('id',user.id);if(isOn)loadPeriodHistory();toast(isOn?'Female mode on 💜':'Female mode off','green');};
+window.logPeriod=async function(){const start=val('period-start');const end=val('period-end');if(!start){toast('Enter start date ⚠️','red');return;}await sb.from('period_tracking').insert({user_id:user.id,period_start:start,period_end:end||null});toast('Period logged 💜','green');id('period-start').value='';id('period-end').value='';loadPeriodHistory();};
+async function loadPeriodHistory(){const{data}=await sb.from('period_tracking').select('*').eq('user_id',user.id).order('period_start',{ascending:false}).limit(5);const el=id('period-history');if(!data||!data.length){el.innerHTML='<div style="font-size:12px;color:#444;margin-top:8px">No entries yet</div>';return;}el.innerHTML=data.map(p=>`<div class="period-entry">📅 ${p.period_start}${p.period_end?' → '+p.period_end:''}</div>`).join('');}
+window.showTab=async function(tab){document.querySelectorAll('.tab-content').forEach(t=>t.classList.add('hidden'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));show('tab-'+tab);const navBtn=id('nav-'+tab);if(navBtn)navBtn.classList.add('active');if(tab==='admin')await renderAdmin();if(tab==='quests')await renderQuestsTab();if(tab==='profile'){renderProfile();if(profile?.is_female_mode)loadPeriodHistory();}};
+async function renderAdmin(){const isAdmin=profile?.is_admin||user?.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();if(!isAdmin){id('admin-wrap').innerHTML=`<div class="empty" style="padding-top:80px"><div class="empty-icon">🔒</div><div style="color:var(--red);font-weight:700;font-size:18px;margin-bottom:8px">Access Denied</div><div>Host only area</div></div>`;return;}const{data:users}=await sb.from('profiles').select('*');const{data:squests}=await sb.from('system_quests').select('*');const{data:comps}=await sb.from('user_system_quests').select('*').eq('is_completed',true);const totalXP=(users||[]).reduce((a,u)=>a+(u.xp||0),0);id('admin-wrap').innerHTML=`<div class="admin-banner"><div class="admin-crown">👑</div><div><div class="admin-banner-title">HOST CONTROL PANEL</div><div class="admin-banner-sub">Welcome, ${profile.username}</div></div></div><div class="admin-stats"><div class="astat"><div class="astat-val">${(users||[]).length}</div><div class="astat-lbl">👥 PLAYERS</div></div><div class="astat"><div class="astat-val">${(squests||[]).length}</div><div class="astat-lbl">📋 QUESTS</div></div><div class="astat"><div class="astat-val">${(comps||[]).length}</div><div class="astat-lbl">✅ DONE</div></div><div class="astat"><div class="astat-val">${totalXP}</div><div class="astat-lbl">⚡ TOTAL XP</div></div></div><div class="admin-tabs"><button class="admin-tab active" onclick="switchAdminTab('quests',this)">📋 Quests</button><button class="admin-tab" onclick="switchAdminTab('players',this)">👥 Players</button></div><div class="admin-section active" id="asec-quests"><div class="form-card"><div class="form-card-title">➕ Create System Quest</div><div class="form-group"><label>Title</label><input type="text" id="sq-title" placeholder="e.g. No social media 3 hrs"/></div><div class="form-group"><label>Description</label><textarea id="sq-desc" placeholder="What the player must do..."></textarea></div><div class="form-group"><label>XP Reward</label><input type="number" id="sq-xp" value="50" min="1"/><div class="input-hint">💡 System quests give more XP!</div></div><div class="form-group"><label>Assign To</label><select id="sq-assign"><option value="">👥 All Players</option>${(users||[]).map(u=>`<option value="${u.id}">👤 ${u.username||'Unknown'}</option>`).join('')}</select></div><button class="btn-gold" onclick="createSQ()">👑 CREATE QUEST</button></div><div class="sec-title">Active Quests</div><div id="admin-sq-list">${(squests||[]).length===0?empty('📋','No system quests yet'):(squests||[]).map(q=>adminQCard(q,users)).join('')}</div></div><div class="admin-section" id="asec-players">${(users||[]).length===0?empty('👤','No players yet'):(users||[]).sort((a,b)=>(b.xp||0)-(a.xp||0)).map((u,i)=>`<div class="player-item"><div class="player-av">${u.avatar_url?`<img src="${u.avatar_url}"/>`:'🧙'}</div><div style="flex:1"><div class="player-name">${i===0?'🥇 ':''}${u.username||'Unknown'}${u.is_admin?' 👑':''}</div><div class="player-meta">🔥 ${u.streak||0} streak • ⚡ ${u.motivation||100} motivation</div></div><div><div class="player-xp">${u.xp||0} XP</div><div class="player-lv">Level ${getLevel(u.xp||0)}</div></div></div>`).join('')}</div>`;}
+function adminQCard(q,users){const assignedUser=q.assigned_to?(users||[]).find(u=>u.id===q.assigned_to):null;return`<div class="sq-item"><div class="sq-info"><div class="sq-title">${q.title}</div><div class="sq-desc">${q.description||'No description'}</div><div class="sq-badges"><div class="sq-xp-badge">+${q.xp_reward} XP</div><div class="sq-tag">${assignedUser?'👤 '+assignedUser.username:'👥 All Players'}</div><div class="sq-tag" style="color:${q.is_active?'var(--green)':'var(--red)'}">${q.is_active?'● Active':'● Inactive'}</div></div></div><div class="sq-actions"><button class="btn-icon del" onclick="deleteSQ('${q.id}')">🗑</button><button class="btn-icon tog" onclick="toggleSQ('${q.id}',${q.is_active})">${q.is_active?'✓':'○'}</button></div></div>`;}
+window.switchAdminTab=function(tab,btn){document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));id('asec-'+tab).classList.add('active');};
+window.createSQ=async function(){const title=val('sq-title');const desc=val('sq-desc');const xp=parseInt(val('sq-xp'))||50;const assign=val('sq-assign')||null;if(!title){toast('Enter a title! ⚠️','red');return;}await sb.from('system_quests').insert({title,description:desc,xp_reward:xp,is_active:true,assigned_to:assign});toast('Quest created! 👑','green');await loadAllData();renderAdmin();};
+window.deleteSQ=async function(id_){await sb.from('system_quests').delete().eq('id',id_);toast('Quest deleted 🗑');await loadAllData();renderAdmin();};
+window.toggleSQ=async function(id_,current){await sb.from('system_quests').update({is_active:!current}).eq('id',id_);toast(current?'⏸ Deactivated':'✅ Activated','green');await loadAllData();renderAdmin();};
+window.closeModal=function(modalId){hide(modalId);};
+window.closeModalBg=function(e,modalId){if(e.target.id===modalId)hide(modalId);};
+function toast(msg,type=''){const old=document.getElementById('_toast');if(old)old.remove();const t=document.createElement('div');t.id='_toast';t.className='toast '+type;t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2500);}
+function id(i){return document.getElementById(i);}
+function val(i){return id(i)?.value?.trim()||'';}
+function show(i){id(i)?.classList.remove('hidden');}
+function hide(i){id(i)?.classList.add('hidden');}
+function cap(s){return s?s[0].toUpperCase()+s.slice(1):s;}
+function empty(icon,msg){return`<div class="empty"><div class="empty-icon">${icon}</div>${msg}</div>`;}
+showTab('dashboard');
 </script>
 </body>
 </html>
