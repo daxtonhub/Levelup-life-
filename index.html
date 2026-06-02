@@ -2363,4 +2363,141 @@ window.createBoss = async function() {
   const hp=parseInt(val('boss-hp'))||1000, xpHit=parseInt(val('boss-xp-hit'))||10;
   const xpRew=parseInt(val('boss-xp-reward'))||500, coinsRew=parseInt(val('boss-coins-reward'))||200;
   const endDate=val('boss-end-date')||null;
-  if(!title){toast('Enter boss name! ⚠️','red'
+  if(!title){toast('Enter boss name! ⚠️','red');return;}
+  await sb.from('boss_fights').insert({title,description:desc,boss_icon:icon,total_hp:hp,current_hp:hp,xp_per_hit:xpHit,xp_reward:xpRew,coins_reward:coinsRew,end_date:endDate,start_date:today,is_active:true,is_defeated:false});
+  toast('🐉 Boss created!','green'); renderAdmin();
+};
+window.createEvent = async function() {
+  const title=val('ev-title'), desc=val('ev-desc'), type=val('ev-type');
+  const goal=parseInt(val('ev-goal'))||100, xpRew=parseInt(val('ev-xp'))||100, coinsRew=parseInt(val('ev-coins'))||50;
+  const startDate=val('ev-start')||today, endDate=val('ev-end')||null;
+if(!title){toast('Enter event title! ⚠️','red');return;}
+await sb.from('events').insert({title,description:desc,event_type:type,quest_requirement:goal,current_progress:0,xp_reward:xpRew,coins_reward:coinsRew,gems_reward:0,start_date:startDate,end_date:endDate,is_active:true});
+toast('🎪 Event created!','green'); renderAdmin();
+};
+window.viewPlayer = async function(userId) {
+const {data:p}=await sb.from('profiles').select('').eq('id',userId).single();
+const {data:quests}=await sb.from('daily_quests').select('').eq('user_id',userId).order('quest_date',{ascending:false}).limit(20);
+const {data:skills}=await sb.from('skills').select('*').eq('user_id',userId);
+const {data:jCount}=await sb.from('journal_entries').select('id').eq('user_id',userId).eq('is_deleted',false);
+if(!p) return;
+const todayQ=(quests||[]).filter(q=>q.quest_date===today), todayDone=todayQ.filter(q=>q.is_completed).length;
+const role=getRoleInfo(p.role||'warrior'), sorted=[...(skills||[])].sort((a,b)=>(b.skill_xp||0)-(a.skill_xp||0));
+id('admin-wrap').innerHTML=`←Back to Players
+�
+${p.avatar_url?`￼`:'🧙'}
+
+${p.username||'Unknown'}${p.is_admin?' 👑':''}${p.gender==='female'?' 🌸':''}
+
+${role.icon} ${role.name}
+
+Joined ${new Date(p.created_at).toLocaleDateString()} • 📖 ${(jCount||[]).length} entries
+
+${getLevel(p.xp||0)}
+
+LEVEL
+
+${p.xp||0}
+
+XP
+
+${p.streak||0}
+
+STREAK
+
+${p.coins||0}
+
+COINS
+
+📅 Today
+
+Completed today${todayDone}/${todayQ.length}
+
+🧠 Skills
+
+${sorted.map((s,i)=>`
+
+${i${['🥇','🥈','🥉'][i]}
+
+`:''}
+
+${SKILL_ICONS[s.skill_name]||'⭐'}
+
+${cap(s.skill_name)}
+
+LV ${s.skill_level}
+
+`).join('')} 
+
+⚡ Admin Actions
+
+🎁 Give Bonus to ${p.username}
+
+XP Amount
+
+Coins Bonus
+
+⚡ Give Reward
+
+`; }; window.giveBonusXP = async function(userId) { const xp=parseInt(val('bonus-xp-amount'))||50, coins=parseInt(document.getElementById('bonus-coins').value)||0; const {data:p}=await sb.from('profiles').select('xp,username,coins').eq('id',userId).single(); if(!p) return; await sb.from('profiles').update({xp:(p.xp||0)+xp,level:getLevel((p.xp||0)+xp),coins:(p.coins||0)+coins}).eq('id',userId); toast(`✅ Gave ${xp}XP 🪙${coins} to ${p.username}!`,'green'); viewPlayer(userId); };
+// ══════════════════════════════════
+// VIP SYSTEM
+// ══════════════════════════════════
+async function loadVIPList() {
+const {data:vips}=await sb.from('vip_players').select('').order('created_at',{ascending:false});
+const el=id('vip-list'); if(!el) return;
+if(!vips||!vips.length){el.innerHTML=empty('⭐','No VIP players yet');return;}
+el.innerHTML=vips.map(v=><div style="background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(96,165,250,.04));border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px"><div style="font-size:24px">⭐</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)">${v.email}</div><div style="font-size:11px;color:var(--text2);margin-top:2px">${v.notes||'No notes'} • Added ${new Date(v.created_at).toLocaleDateString()}</div></div><button class="btn-icon del" onclick="removeVIP('${v.id}')">🗑</button></div>).join('');
+}
+window.addVIPPlayer = async function() {
+const email=val('vip-email'), notes=val('vip-notes');
+if(!email){toast('Enter email! ⚠️','red');return;}
+try {
+await sb.from('vip_players').insert({email:email.toLowerCase(),added_by:user.id,notes:notes||null});
+toast(⭐ VIP granted to ${email}!,'gem');
+id('vip-email').value=''; id('vip-notes').value='';
+loadVIPList();
+} catch(e) { toast('Already VIP or error!','red'); }
+};
+window.removeVIP = async function(vipId) { await sb.from('vip_players').delete().eq('id',vipId); toast('VIP removed','red'); loadVIPList(); };
+window.readPlayerJournal = async function() {
+const email=val('journal-read-email');
+if(!email){toast('Enter email! ⚠️','red');return;}
+const {data:vip}=await sb.from('vip_players').select('').eq('email',email.toLowerCase()).single().catch(()=>({data:null}));
+if(!vip){toast('❌ Player is not VIP. Cannot access.','red');return;}
+const el=id('secret-journal-entries'); if(!el) return;
+// Get all journals - find by VIP user_id if available
+if(vip.user_id){
+const {data:journals}=await sb.from('journal_entries').select('*').eq('user_id',vip.user_id).eq('is_deleted',false).order('entry_date',{ascending:false}).limit(50);
+if(!journals||!journals.length){el.innerHTML=empty('📖','No journal entries found for this player');return;}
+el.innerHTML=<div style="margin-bottom:16px;padding:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:12px;color:var(--red)">🔒 Viewing private journals of ${email}</div>+journals.map(e=><div class="journal-entry-card" style="border-color:rgba(245,158,11,.2)" onclick="viewJournalEntry('${e.id}')"><div class="je-top"><div class="je-mood">${MOOD_ICONS[e.mood]||'🙂'}</div><div class="je-title">${e.title||'Untitled'}</div><div class="je-date">${formatDate(e.entry_date)}</div></div><div class="je-preview">${e.content||''}</div></div>).join('');
+} else {
+el.innerHTML=<div style="padding:12px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;font-size:12px;color:var(--gold)">⚠️ Player has not logged in yet after being added as VIP. They need to login first for journal access to work.</div>;
+}
+};
+// ══════════════════════════════════
+// MODALS
+// ══════════════════════════════════
+window.closeModal = function(modalId) { hide(modalId); };
+window.closeModalBg = function(e, modalId) { if(e.target.id===modalId) hide(modalId); };
+// ══════════════════════════════════
+// TOAST
+// ══════════════════════════════════
+function toast(msg, type='') {
+const old=document.getElementById('_toast'); if(old) old.remove();
+const t=document.createElement('div'); t.id='_toast'; t.className='toast '+type; t.textContent=msg;
+document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
+}
+// ══════════════════════════════════
+// HELPERS
+// ══════════════════════════════════
+function id(i) { return document.getElementById(i); }
+function val(i) { return id(i)?.value?.trim()||''; }
+function show(i) { id(i)?.classList.remove('hidden'); }
+function hide(i) { id(i)?.classList.add('hidden'); }
+function cap(s) { return s?s[0].toUpperCase()+s.slice(1):s; }
+function empty(icon, msg) { return <div class="empty"><div class="empty-icon">${icon}</div>${msg}</div>; }
+// Start
+showTab('dashboard');
+
+```
