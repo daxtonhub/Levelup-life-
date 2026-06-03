@@ -498,6 +498,54 @@ body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);mi
 </style>
 </head>
 <body>
+<script>
+window.onerror = function(msg, src, line, col, err) {
+  const ls = document.getElementById('loading-screen');
+  if (ls) {
+    ls.innerHTML += `
+      <div style="
+        color:#ef4444;
+        font-size:11px;
+        padding:12px 16px;
+        max-width:90%;
+        word-break:break-all;
+        text-align:center;
+        background:rgba(239,68,68,.1);
+        border:1px solid rgba(239,68,68,.3);
+        border-radius:10px;
+        margin-top:12px;
+        font-family:monospace;
+        line-height:1.5">
+        ❌ ERROR: ${msg}<br/>
+        Line ${line}
+      </div>`;
+  }
+  return false;
+};
+
+window.addEventListener('unhandledrejection', function(e) {
+  const ls = document.getElementById('loading-screen');
+  if (ls) {
+    ls.innerHTML += `
+      <div style="
+        color:#ef4444;
+        font-size:11px;
+        padding:12px 16px;
+        max-width:90%;
+        word-break:break-all;
+        text-align:center;
+        background:rgba(239,68,68,.1);
+        border:1px solid rgba(239,68,68,.3);
+        border-radius:10px;
+        margin-top:12px;
+        font-family:monospace;
+        line-height:1.5">
+        ❌ PROMISE ERROR:<br/>
+        ${e.reason?.message || e.reason || 'Unknown error'}
+      </div>`;
+  }
+});
+</script>
 <div id="app">
 
 <!-- LOADING -->
