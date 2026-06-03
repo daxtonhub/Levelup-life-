@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- v3.0 updated -->
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -1181,6 +1180,7 @@ if ('serviceWorker' in navigator) {
 // INIT
 // ══════════════════════════════════
 async function initApp() {
+  try {
   const {createClient} = supabase;
   sb = createClient(SUPABASE_URL, SUPABASE_KEY);
   const {data:{session}} = await sb.auth.getSession();
@@ -1198,7 +1198,11 @@ async function initApp() {
     show('auth-wrap');
     showAuthScreen('login');
   }
-}
+  } catch(err) {
+    console.error('initApp error:', err);
+    emergencyShowAuth();
+  }
+  }
 
 function fadeLoading() {
   const ls = id('loading-screen');
