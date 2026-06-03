@@ -1104,8 +1104,41 @@ const ADMIN_EMAIL  = 'daxtonhub6@gmail.com';
 // ══════════════════════════════════
 const _sb = document.createElement('script');
 _sb.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-_sb.onload = () => initApp();
+_sb.onload = () => {
+  initApp().catch(err => {
+    console.error('Init failed:', err);
+    emergencyShowAuth();
+  });
+};
+_sb.onerror = () => {
+  console.error('Supabase CDN failed to load');
+  emergencyShowAuth();
+};
 document.head.appendChild(_sb);
+
+// Safety net — if nothing happens in 10 seconds, show auth
+setTimeout(() => {
+  const mainApp = document.getElementById('main-app');
+  const authWrap = document.getElementById('auth-wrap');
+  const loading = document.getElementById('loading-screen');
+  if (loading && !loading.classList.contains('fade-out')) {
+    console.warn('Timeout: forcing auth screen');
+    emergencyShowAuth();
+  }
+}, 10000);
+
+function emergencyShowAuth() {
+  const ls = document.getElementById('loading-screen');
+  if (ls) { ls.classList.add('fade-out'); setTimeout(() => ls.style.display='none', 500); }
+  document.getElementById('terms-screen')?.classList.add('hidden');
+  document.getElementById('gender-screen')?.classList.add('hidden');
+  const aw = document.getElementById('auth-wrap');
+  if (aw) { aw.classList.remove('hidden'); }
+  ['login','signup','forgot'].forEach(s => {
+    document.getElementById(s+'-screen')?.classList.add('hidden');
+  });
+  document.getElementById('login-screen')?.classList.remove('hidden');
+  }
 
 // ══════════════════════════════════
 // CONSTANTS
