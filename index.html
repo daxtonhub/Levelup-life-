@@ -2421,28 +2421,41 @@ async function renderAdmin() {
     <div id="secret-journal-entries"></div>
   </div>`;
 }
+
 function adminQCard(q, users) {
   const au=q.assigned_to?(users||[]).find(u=>u.id===q.assigned_to):null;
   const subtype=q.quest_subtype||'challenge', stIcon=subtype==='habit'?'🔁':subtype==='todo'?'✅':'👑';
   return `<div class="sq-item"><div class="sq-info"><div class="sq-title">${q.title}</div><div class="sq-desc">${q.description||'No description'}</div><div class="sq-badges"><div class="sq-xp-badge">+${q.xp_reward} XP</div><div class="sq-tag">${stIcon} ${subtype}</div><div class="sq-tag">${au?'👤 '+au.username:'👥 All'}</div><div class="sq-tag" style="color:${q.is_active?'var(--green)':'var(--red)'}">● ${q.is_active?'Active':'Inactive'}</div></div></div><div class="sq-actions"><button class="btn-icon del" onclick="deleteSQ('${q.id}')">🗑</button><button class="btn-icon tog" onclick="toggleSQ('${q.id}',${q.is_active})">${q.is_active?'✓':'○'}</button></div></div>`;
 }
+
 window.switchAdminTab = function(tab, btn) {
   document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active');
   document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
   id('asec-'+tab)?.classList.add('active');
   if(tab==='vip') loadVIPList();
 };
+
 window.createSQ = async function() {
   const title=val('sq-title'), desc=val('sq-desc'), xp=parseInt(val('sq-xp'))||50;
   const type=val('sq-type')||'challenge', skill=val('sq-skill-cat')||'discipline', assign=val('sq-assign')||null;
   if(!title){toast('Enter a title! ⚠️','red');return;}
-  // ALL admin quests go to system_quests with subtype
   await sb.from('system_quests').insert({title,description:desc,xp_reward:xp,is_active:true,assigned_to:assign,quest_subtype:type,skill_category:skill});
   toast(`👑 ${type==='habit'?'🔁 Habit':type==='todo'?'✅ Task':'⚔️ Challenge'} created!`,'green');
   await loadAllData(); renderAdmin();
 };
-window.deleteSQ = async function(id_) { await sb.from('system_quests').delete().eq('id',id_); toast('Quest deleted 🗑'); await loadAllData(); renderAdmin(); };
-window.toggleSQ = async function(id_,curr) { await sb.from('system_quests').update({is_active:!curr}).eq('id',id_); toast(curr?'⏸ Deactivated':'✅ Activated','green'); await loadAllData(); renderAdmin(); };
+
+window.deleteSQ = async function(id_) {
+  await sb.from('system_quests').delete().eq('id',id_);
+  toast('Quest deleted 🗑');
+  await loadAllData(); renderAdmin();
+};
+
+window.toggleSQ = async function(id_,curr) {
+  await sb.from('system_quests').update({is_active:!curr}).eq('id',id_);
+  toast(curr?'⏸ Deactivated':'✅ Activated','green');
+  await loadAllData(); renderAdmin();
+};
+
 window.createBoss = async function() {
   const title=val('boss-name'), desc=val('boss-desc'), icon=val('boss-icon')||'🐉';
   const hp=parseInt(val('boss-hp'))||1000, xpHit=parseInt(val('boss-xp-hit'))||10;
@@ -2452,127 +2465,115 @@ window.createBoss = async function() {
   await sb.from('boss_fights').insert({title,description:desc,boss_icon:icon,total_hp:hp,current_hp:hp,xp_per_hit:xpHit,xp_reward:xpRew,coins_reward:coinsRew,end_date:endDate,start_date:today,is_active:true,is_defeated:false});
   toast('🐉 Boss created!','green'); renderAdmin();
 };
+
 window.createEvent = async function() {
   const title=val('ev-title'), desc=val('ev-desc'), type=val('ev-type');
   const goal=parseInt(val('ev-goal'))||100, xpRew=parseInt(val('ev-xp'))||100, coinsRew=parseInt(val('ev-coins'))||50;
   const startDate=val('ev-start')||today, endDate=val('ev-end')||null;
-if(!title){toast('Enter event title! ⚠️','red');return;}
-await sb.from('events').insert({title,description:desc,event_type:type,quest_requirement:goal,current_progress:0,xp_reward:xpRew,coins_reward:coinsRew,gems_reward:0,start_date:startDate,end_date:endDate,is_active:true});
-toast('🎪 Event created!','green'); renderAdmin();
+  if(!title){toast('Enter event title! ⚠️','red');return;}
+  await sb.from('events').insert({title,description:desc,event_type:type,quest_requirement:goal,current_progress:0,xp_reward:xpRew,coins_reward:coinsRew,gems_reward:0,start_date:startDate,end_date:endDate,is_active:true});
+  toast('🎪 Event created!','green'); renderAdmin();
 };
+
 window.viewPlayer = async function(userId) {
-const {data:p}=await sb.from('profiles').select('').eq('id',userId).single();
-const {data:quests}=await sb.from('daily_quests').select('').eq('user_id',userId).order('quest_date',{ascending:false}).limit(20);
-const {data:skills}=await sb.from('skills').select('*').eq('user_id',userId);
-const {data:jCount}=await sb.from('journal_entries').select('id').eq('user_id',userId).eq('is_deleted',false);
-if(!p) return;
-const todayQ=(quests||[]).filter(q=>q.quest_date===today), todayDone=todayQ.filter(q=>q.is_completed).length;
-const role=getRoleInfo(p.role||'warrior'), sorted=[...(skills||[])].sort((a,b)=>(b.skill_xp||0)-(a.skill_xp||0));
-id('admin-wrap').innerHTML=`←Back to Players
-�
-${p.avatar_url?`￼`:'🧙'}
+  const {data:p}=await sb.from('profiles').select('*').eq('id',userId).single();
+  const {data:quests}=await sb.from('daily_quests').select('*').eq('user_id',userId).order('quest_date',{ascending:false}).limit(20);
+  const {data:skills}=await sb.from('skills').select('*').eq('user_id',userId);
+  const {data:jCount}=await sb.from('journal_entries').select('id').eq('user_id',userId).eq('is_deleted',false);
+  if(!p) return;
+  const todayQ=(quests||[]).filter(q=>q.quest_date===today), todayDone=todayQ.filter(q=>q.is_completed).length;
+  const role=getRoleInfo(p.role||'warrior'), sorted=[...(skills||[])].sort((a,b)=>(b.skill_xp||0)-(a.skill_xp||0));
+  id('admin-wrap').innerHTML=`
+  <div style="display:flex;align-items:center;gap:12px;padding:16px 0;cursor:pointer" onclick="renderAdmin()">
+    <span style="color:var(--accent2);font-size:20px">←</span>
+    <span style="color:var(--text2);font-size:14px;font-weight:600">Back to Players</span>
+  </div>
+  <div class="profile-card" style="margin-bottom:16px"><div class="profile-bg"></div><div class="profile-avatar-wrap"><div class="profile-avatar">${p.avatar_url?`<img src="${p.avatar_url}"/>`:'🧙'}</div></div><div class="profile-name">${p.username||'Unknown'}${p.is_admin?' 👑':''}${p.gender==='female'?' 🌸':''}</div><div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-bottom:12px;color:${role.color};border:1px solid ${role.color}44;background:${role.color}11">${role.icon} ${role.name}</div><div class="profile-email">Joined ${new Date(p.created_at).toLocaleDateString()} • 📖 ${(jCount||[]).length} entries</div><div class="profile-stats"><div class="pstat"><div class="pstat-val">${getLevel(p.xp||0)}</div><div class="pstat-lbl">LEVEL</div></div><div class="pstat"><div class="pstat-val">${p.xp||0}</div><div class="pstat-lbl">XP</div></div><div class="pstat"><div class="pstat-val">${p.streak||0}</div><div class="pstat-lbl">STREAK</div></div><div class="pstat"><div class="pstat-val" style="color:var(--coin)">${p.coins||0}</div><div class="pstat-lbl">COINS</div></div></div></div>
+  <div class="sec-title">📅 Today</div>
+  <div class="form-card" style="margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:13px;color:var(--text2)">Completed today</span><span style="font-family:'Orbitron',monospace;color:var(--gold);font-weight:700">${todayDone}/${todayQ.length}</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:${todayQ.length>0?Math.round((todayDone/todayQ.length)*100):0}%"></div></div>
+  </div>
+  <div class="sec-title">🧠 Skills</div>
+  <div class="skills-grid" style="margin-bottom:16px">
+    ${sorted.map((s,i)=>`<div class="skill-card ${i===0?'perf-gold':i===1?'perf-silver':i===2?'perf-bronze':''}">${i<3?`<div class="skill-top-badge">${['🥇','🥈','🥉'][i]}</div>`:''}<div class="skill-icon">${SKILL_ICONS[s.skill_name]||'⭐'}</div><div class="skill-name">${cap(s.skill_name)}</div><div class="skill-lv">LV ${s.skill_level}</div><div class="skill-track"><div class="skill-fill" style="width:${(s.skill_xp||0)%100}%"></div></div></div>`).join('')}
+  </div>
+  <div class="sec-title">⚡ Admin Actions</div>
+  <div class="form-card">
+    <div class="form-card-title">🎁 Give Bonus to ${p.username}</div>
+    <div class="form-group"><label>XP Amount</label><input type="number" id="bonus-xp-amount" value="50"/></div>
+    <div class="form-group"><label>Coins Bonus</label><input type="number" id="bonus-coins" value="20"/></div>
+    <button class="btn-gold" onclick="giveBonusXP('${p.id}')">⚡ Give Reward</button>
+  </div>`;
+};
 
-${p.username||'Unknown'}${p.is_admin?' 👑':''}${p.gender==='female'?' 🌸':''}
+window.giveBonusXP = async function(userId) {
+  const xp=parseInt(val('bonus-xp-amount'))||50;
+  const coins=parseInt(document.getElementById('bonus-coins').value)||0;
+  const {data:p}=await sb.from('profiles').select('xp,username,coins').eq('id',userId).single();
+  if(!p) return;
+  await sb.from('profiles').update({xp:(p.xp||0)+xp,level:getLevel((p.xp||0)+xp),coins:(p.coins||0)+coins}).eq('id',userId);
+  toast(`✅ Gave ${xp}XP 🪙${coins} to ${p.username}!`,'green');
+  viewPlayer(userId);
+};
 
-${role.icon} ${role.name}
-
-Joined ${new Date(p.created_at).toLocaleDateString()} • 📖 ${(jCount||[]).length} entries
-
-${getLevel(p.xp||0)}
-
-LEVEL
-
-${p.xp||0}
-
-XP
-
-${p.streak||0}
-
-STREAK
-
-${p.coins||0}
-
-COINS
-
-📅 Today
-
-Completed today${todayDone}/${todayQ.length}
-
-🧠 Skills
-
-${sorted.map((s,i)=>`
-
-${i${['🥇','🥈','🥉'][i]}
-
-`:''}
-
-${SKILL_ICONS[s.skill_name]||'⭐'}
-
-${cap(s.skill_name)}
-
-LV ${s.skill_level}
-
-`).join('')} 
-
-⚡ Admin Actions
-
-🎁 Give Bonus to ${p.username}
-
-XP Amount
-
-Coins Bonus
-
-⚡ Give Reward
-
-`; }; window.giveBonusXP = async function(userId) { const xp=parseInt(val('bonus-xp-amount'))||50, coins=parseInt(document.getElementById('bonus-coins').value)||0; const {data:p}=await sb.from('profiles').select('xp,username,coins').eq('id',userId).single(); if(!p) return; await sb.from('profiles').update({xp:(p.xp||0)+xp,level:getLevel((p.xp||0)+xp),coins:(p.coins||0)+coins}).eq('id',userId); toast(`✅ Gave ${xp}XP 🪙${coins} to ${p.username}!`,'green'); viewPlayer(userId); };
 // ══════════════════════════════════
 // VIP SYSTEM
 // ══════════════════════════════════
 async function loadVIPList() {
-const {data:vips}=await sb.from('vip_players').select('').order('created_at',{ascending:false});
-const el=id('vip-list'); if(!el) return;
-if(!vips||!vips.length){el.innerHTML=empty('⭐','No VIP players yet');return;}
-el.innerHTML=vips.map(v=><div style="background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(96,165,250,.04));border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px"><div style="font-size:24px">⭐</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)">${v.email}</div><div style="font-size:11px;color:var(--text2);margin-top:2px">${v.notes||'No notes'} • Added ${new Date(v.created_at).toLocaleDateString()}</div></div><button class="btn-icon del" onclick="removeVIP('${v.id}')">🗑</button></div>).join('');
+  const {data:vips}=await sb.from('vip_players').select('*').order('created_at',{ascending:false});
+  const el=id('vip-list'); if(!el) return;
+  if(!vips||!vips.length){el.innerHTML=empty('⭐','No VIP players yet');return;}
+  el.innerHTML=vips.map(v=>`<div style="background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(96,165,250,.04));border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px"><div style="font-size:24px">⭐</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)">${v.email}</div><div style="font-size:11px;color:var(--text2);margin-top:2px">${v.notes||'No notes'} • Added ${new Date(v.created_at).toLocaleDateString()}</div></div><button class="btn-icon del" onclick="removeVIP('${v.id}')">🗑</button></div>`).join('');
 }
+
 window.addVIPPlayer = async function() {
-const email=val('vip-email'), notes=val('vip-notes');
-if(!email){toast('Enter email! ⚠️','red');return;}
-try {
-await sb.from('vip_players').insert({email:email.toLowerCase(),added_by:user.id,notes:notes||null});
-toast(⭐ VIP granted to ${email}!,'gem');
-id('vip-email').value=''; id('vip-notes').value='';
-loadVIPList();
-} catch(e) { toast('Already VIP or error!','red'); }
+  const email=val('vip-email'), notes=val('vip-notes');
+  if(!email){toast('Enter email! ⚠️','red');return;}
+  try {
+    await sb.from('vip_players').insert({email:email.toLowerCase(),added_by:user.id,notes:notes||null});
+    toast(`⭐ VIP granted to ${email}!`,'gem');
+    id('vip-email').value=''; id('vip-notes').value='';
+    loadVIPList();
+  } catch(e){ toast('Already VIP or error!','red'); }
 };
-window.removeVIP = async function(vipId) { await sb.from('vip_players').delete().eq('id',vipId); toast('VIP removed','red'); loadVIPList(); };
+
+window.removeVIP = async function(vipId) {
+  await sb.from('vip_players').delete().eq('id',vipId);
+  toast('VIP removed','red');
+  loadVIPList();
+};
+
 window.readPlayerJournal = async function() {
-const email=val('journal-read-email');
-if(!email){toast('Enter email! ⚠️','red');return;}
-const {data:vip}=await sb.from('vip_players').select('').eq('email',email.toLowerCase()).single().catch(()=>({data:null}));
-if(!vip){toast('❌ Player is not VIP. Cannot access.','red');return;}
-const el=id('secret-journal-entries'); if(!el) return;
-// Get all journals - find by VIP user_id if available
-if(vip.user_id){
-const {data:journals}=await sb.from('journal_entries').select('*').eq('user_id',vip.user_id).eq('is_deleted',false).order('entry_date',{ascending:false}).limit(50);
-if(!journals||!journals.length){el.innerHTML=empty('📖','No journal entries found for this player');return;}
-el.innerHTML=<div style="margin-bottom:16px;padding:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:12px;color:var(--red)">🔒 Viewing private journals of ${email}</div>+journals.map(e=><div class="journal-entry-card" style="border-color:rgba(245,158,11,.2)" onclick="viewJournalEntry('${e.id}')"><div class="je-top"><div class="je-mood">${MOOD_ICONS[e.mood]||'🙂'}</div><div class="je-title">${e.title||'Untitled'}</div><div class="je-date">${formatDate(e.entry_date)}</div></div><div class="je-preview">${e.content||''}</div></div>).join('');
-} else {
-el.innerHTML=<div style="padding:12px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;font-size:12px;color:var(--gold)">⚠️ Player has not logged in yet after being added as VIP. They need to login first for journal access to work.</div>;
-}
+  const email=val('journal-read-email');
+  if(!email){toast('Enter email! ⚠️','red');return;}
+  const {data:vip}=await sb.from('vip_players').select('*').eq('email',email.toLowerCase()).single().catch(()=>({data:null}));
+  if(!vip){toast('❌ Player is not VIP. Cannot access.','red');return;}
+  const el=id('secret-journal-entries'); if(!el) return;
+  if(vip.user_id){
+    const {data:journals}=await sb.from('journal_entries').select('*').eq('user_id',vip.user_id).eq('is_deleted',false).order('entry_date',{ascending:false}).limit(50);
+    if(!journals||!journals.length){el.innerHTML=empty('📖','No journal entries found');return;}
+    el.innerHTML=`<div style="margin-bottom:16px;padding:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:12px;color:var(--red)">🔒 Viewing private journals of ${email}</div>`+journals.map(e=>`<div class="journal-entry-card" style="border-color:rgba(245,158,11,.2)" onclick="viewJournalEntry('${e.id}')"><div class="je-top"><div class="je-mood">${MOOD_ICONS[e.mood]||'🙂'}</div><div class="je-title">${e.title||'Untitled'}</div><div class="je-date">${formatDate(e.entry_date)}</div></div><div class="je-preview">${e.content||''}</div></div>`).join('');
+  } else {
+    el.innerHTML=`<div style="padding:12px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;font-size:12px;color:var(--gold)">⚠️ Player has not logged in yet after being added as VIP.</div>`;
+  }
 };
+
 // ══════════════════════════════════
 // MODALS
 // ══════════════════════════════════
 window.closeModal = function(modalId) { hide(modalId); };
 window.closeModalBg = function(e, modalId) { if(e.target.id===modalId) hide(modalId); };
+
 // ══════════════════════════════════
 // TOAST
 // ══════════════════════════════════
 function toast(msg, type='') {
-const old=document.getElementById('_toast'); if(old) old.remove();
-const t=document.createElement('div'); t.id='_toast'; t.className='toast '+type; t.textContent=msg;
-document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
+  const old=document.getElementById('_toast'); if(old) old.remove();
+  const t=document.createElement('div'); t.id='_toast'; t.className='toast '+type; t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
 }
+
 // ══════════════════════════════════
 // HELPERS
 // ══════════════════════════════════
@@ -2581,8 +2582,10 @@ function val(i) { return id(i)?.value?.trim()||''; }
 function show(i) { id(i)?.classList.remove('hidden'); }
 function hide(i) { id(i)?.classList.add('hidden'); }
 function cap(s) { return s?s[0].toUpperCase()+s.slice(1):s; }
-function empty(icon, msg) { return <div class="empty"><div class="empty-icon">${icon}</div>${msg}</div>; }
+function empty(icon, msg) { return `<div class="empty"><div class="empty-icon">${icon}</div>${msg}</div>`; }
+
 // Start
 showTab('dashboard');
-
-```
+</script>
+</body>
+</html>
