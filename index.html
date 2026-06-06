@@ -2324,8 +2324,8 @@ window.saveBg = async function() {
 // NAVIGATION
 // ══════════════════════════════════
 window.showTab = async function(tab) {
-  document.querySelectorAll('.tab-content').forEach(t=>{t.classList.add('hidden');t.classList.remove('active')});
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.add('hidden');t.classList.remove('active');});
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
   const tabEl=id('tab-'+tab);
   if(tabEl){tabEl.classList.remove('hidden');tabEl.classList.add('active');}
   const navBtn=id('nav-'+tab); if(navBtn) navBtn.classList.add('active');
@@ -2340,120 +2340,153 @@ window.showTab = async function(tab) {
 // ADMIN
 // ══════════════════════════════════
 async function renderAdmin() {
-  const isAdmin=profile?.is_admin||user?.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();
-  if(!isAdmin){id('admin-wrap').innerHTML=`<div class="empty" style="padding-top:80px"><div class="empty-icon">🔒</div><div style="color:var(--red);font-family:'Orbitron',monospace;font-size:16px;font-weight:900;margin-bottom:8px">Access Denied</div><div>Host only area</div></div>`;return;}
+  const isAdmin=profile&&profile.is_admin||user&&user.email&&user.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();
+  if(!isAdmin){
+    id('admin-wrap').innerHTML='<div class="empty" style="padding-top:80px"><div class="empty-icon">🔒</div><div style="color:var(--red);font-family:Orbitron,monospace;font-size:16px;font-weight:900;margin-bottom:8px">Access Denied</div><div>Host only area</div></div>';
+    return;
+  }
   const {data:users}=await sb.from('profiles').select('*');
   const {data:squests}=await sb.from('system_quests').select('*');
   const {data:comps}=await sb.from('user_system_quests').select('*').eq('is_completed',true);
-  const totalXP=(users||[]).reduce((a,u)=>a+(u.xp||0),0);
-  id('admin-wrap').innerHTML=`
-  <div class="admin-banner"><div class="admin-crown">👑</div><div><div class="admin-banner-title">HOST CONTROL PANEL</div><div class="admin-banner-sub">Welcome, ${profile.username}</div></div></div>
-  <div class="admin-stats"><div class="astat"><div class="astat-val">${(users||[]).length}</div><div class="astat-lbl">👥 PLAYERS</div></div><div class="astat"><div class="astat-val">${(squests||[]).length}</div><div class="astat-lbl">📋 QUESTS</div></div><div class="astat"><div class="astat-val">${(comps||[]).length}</div><div class="astat-lbl">✅ DONE</div></div><div class="astat"><div class="astat-val">${totalXP}</div><div class="astat-lbl">⚡ TOTAL XP</div></div></div>
-  <div class="admin-tabs">
-    <button class="admin-tab active" onclick="switchAdminTab('quests',this)">📋 Quests</button>
-    <button class="admin-tab" onclick="switchAdminTab('players',this)">👥 Players</button>
-    <button class="admin-tab" onclick="switchAdminTab('bosses',this)">🐉 Bosses</button>
-    <button class="admin-tab" onclick="switchAdminTab('events',this)">🎪 Events</button>
-    <button class="admin-tab" onclick="switchAdminTab('vip',this)">⭐ VIP</button>
-  </div>
-  <div class="admin-section active" id="asec-quests">
-    <div class="form-card">
-      <div class="form-card-title">➕ Create System Quest</div>
-      <div class="form-group"><label>Title</label><input type="text" id="sq-title" placeholder="Quest title"/></div>
-      <div class="form-group"><label>Description</label><textarea id="sq-desc" placeholder="Quest description..."></textarea></div>
-      <div class="form-group"><label>XP Reward</label><input type="number" id="sq-xp" value="50" min="1"/></div>
-      <div class="form-group"><label>Type</label><select id="sq-type"><option value="challenge">⚔️ Challenge (System Quest)</option><option value="habit">🔁 Habit (daily)</option><option value="todo">✅ Task (one-time)</option></select></div>
-      <div class="form-group"><label>Skill</label><select id="sq-skill-cat"><option value="fitness">💪 Fitness</option><option value="mindset">🧠 Mindset</option><option value="knowledge">📚 Knowledge</option><option value="discipline">⚔️ Discipline</option><option value="creativity">🎨 Creativity</option><option value="social">🤝 Social</option></select></div>
-      <div class="form-group"><label>Assign To</label><select id="sq-assign"><option value="">👥 All Players</option>${(users||[]).map(u=>`<option value="${u.id}">👤 ${u.username||'Unknown'}</option>`).join('')}</select></div>
-      <button class="btn-gold" onclick="createSQ()">👑 CREATE QUEST</button>
-    </div>
-    <div class="sec-title">Active System Quests</div>
-    <div id="admin-sq-list">${(squests||[]).length===0?empty('📋','No system quests yet'):(squests||[]).map(q=>adminQCard(q,users)).join('')}</div>
-  </div>
-  <div class="admin-section" id="asec-players">
-    <div class="sec-title">All Players</div>
-    ${(users||[]).length===0?empty('👤','No players yet'):(users||[]).sort((a,b)=>(b.xp||0)-(a.xp||0)).map((u,i)=>`<div class="player-card" onclick="viewPlayer('${u.id}')"><div class="player-card-top"><div class="player-av">${u.avatar_url?`<img src="${u.avatar_url}"/>`:'🧙'}</div><div style="flex:1"><div class="player-name">${i===0?'🥇 ':''}${u.username||'Unknown'}${u.is_admin?' 👑':''}${u.gender==='female'?' 🌸':''}</div><div class="player-meta">${getRoleInfo(u.role||'warrior').icon} ${getRoleInfo(u.role||'warrior').name} • 🔥 ${u.streak||0} • 🪙${u.coins||0}</div></div><div class="player-xp">${u.xp||0} XP</div></div><div class="player-mini-stats"><div class="mini-stat"><div class="mini-val">${u.xp||0}</div><div class="mini-lbl">XP</div></div><div class="mini-stat"><div class="mini-val">${getLevel(u.xp||0)}</div><div class="mini-lbl">LV</div></div><div class="mini-stat"><div class="mini-val">${u.streak||0}</div><div class="mini-lbl">STREAK</div></div><div class="mini-stat"><div class="mini-val" style="color:var(--coin)">${u.coins||0}</div><div class="mini-lbl">COINS</div></div></div><div class="view-profile-btn">👁️ View Full Profile →</div></div>`).join('')}
-  </div>
-  <div class="admin-section" id="asec-bosses">
-    <div class="form-card">
-      <div class="form-card-title">🐉 Create Boss Fight</div>
-      <div class="form-group"><label>Boss Name</label><input type="text" id="boss-name" placeholder="e.g. The Procrastination Dragon"/></div>
-      <div class="form-group"><label>Description</label><textarea id="boss-desc" placeholder="What must players overcome?"></textarea></div>
-      <div class="form-group"><label>Boss Icon</label><input type="text" id="boss-icon" placeholder="🐉" maxlength="2"/></div>
-      <div class="form-group"><label>Total HP</label><input type="number" id="boss-hp" value="1000" min="100"/></div>
-      <div class="form-group"><label>XP Per Hit</label><input type="number" id="boss-xp-hit" value="10" min="1"/></div>
-      <div class="form-group"><label>Victory XP Reward</label><input type="number" id="boss-xp-reward" value="500" min="50"/></div>
-      <div class="form-group"><label>Victory Coins Reward</label><input type="number" id="boss-coins-reward" value="200" min="10"/></div>
-      <div class="form-group"><label>End Date</label><input type="date" id="boss-end-date"/></div>
-      <button class="btn-gold" onclick="createBoss()">🐉 CREATE BOSS</button>
-    </div>
-  </div>
-  <div class="admin-section" id="asec-events">
-    <div class="form-card">
-      <div class="form-card-title">🎪 Create Event</div>
-      <div class="form-group"><label>Event Title</label><input type="text" id="ev-title" placeholder="e.g. 7-Day Focus Challenge"/></div>
-      <div class="form-group"><label>Description</label><textarea id="ev-desc" placeholder="What is this event about?"></textarea></div>
-      <div class="form-group"><label>Type</label><select id="ev-type"><option value="community">👥 Community</option><option value="guild">⚔️ Guild</option><option value="seasonal">🌟 Seasonal</option></select></div>
-      <div class="form-group"><label>Progress Goal</label><input type="number" id="ev-goal" value="100" min="1"/></div>
-      <div class="form-group"><label>XP Reward</label><input type="number" id="ev-xp" value="100" min="10"/></div>
-      <div class="form-group"><label>Coins Reward</label><input type="number" id="ev-coins" value="50" min="5"/></div>
-      <div class="form-group"><label>Start Date</label><input type="date" id="ev-start"/></div>
-      <div class="form-group"><label>End Date</label><input type="date" id="ev-end"/></div>
-      <button class="btn-gold" onclick="createEvent()">🎪 CREATE EVENT</button>
-    </div>
-  </div>
-  <div class="admin-section" id="asec-vip">
-    <div class="form-card">
-      <div class="form-card-title">⭐ Add VIP Player</div>
-      <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">VIP players get all Premium+AI features free. You can also read their private journal entries.</div>
-      <div class="form-group"><label>Player Email</label><input type="email" id="vip-email" placeholder="player@email.com"/></div>
-      <div class="form-group"><label>Notes (private)</label><input type="text" id="vip-notes" placeholder="Why VIP? (optional)"/></div>
-      <button class="btn-gold" onclick="addVIPPlayer()">⭐ GRANT VIP ACCESS</button>
-    </div>
-    <div class="sec-title">VIP Players</div>
-    <div id="vip-list"></div>
-    <div class="sec-title" style="color:var(--red);margin-top:20px">🔍 Secret Journal Access</div>
-    <div class="form-card" style="border-color:rgba(239,68,68,.2)">
-      <div class="form-card-title" style="color:var(--red)">Read Player's Private Journal</div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Only works for VIP players.</div>
-      <div class="form-group"><label>Player Email</label><input type="email" id="journal-read-email" placeholder="vip@email.com"/></div>
-      <button style="width:100%;padding:13px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:12px;color:var(--red);font-size:14px;font-weight:700;cursor:pointer" onclick="readPlayerJournal()">🔍 ACCESS JOURNAL</button>
-    </div>
-    <div id="secret-journal-entries"></div>
-  </div>`;
+  const totalXP=(users||[]).reduce(function(a,u){return a+(u.xp||0);},0);
+  let assignOptions='<option value="">All Players</option>';
+  (users||[]).forEach(function(u){assignOptions+='<option value="'+u.id+'">'+( u.username||'Unknown')+'</option>';});
+  let sqHtml=(squests||[]).length===0?empty('📋','No system quests yet'):'';
+  (squests||[]).forEach(function(q){sqHtml+=adminQCard(q,users);});
+  let playersHtml=(users||[]).length===0?empty('👤','No players yet'):'';
+  const sortedUsers=[...(users||[])].sort(function(a,b){return (b.xp||0)-(a.xp||0);});
+  sortedUsers.forEach(function(u,i){
+    const role=getRoleInfo(u.role||'warrior');
+    playersHtml+='<div class="player-card" onclick="viewPlayer(\''+u.id+'\')">';
+    playersHtml+='<div class="player-card-top">';
+    playersHtml+='<div class="player-av">'+(u.avatar_url?'<img src="'+u.avatar_url+'"/>'  :'🧙')+'</div>';
+    playersHtml+='<div style="flex:1"><div class="player-name">'+(i===0?'🥇 ':'')+( u.username||'Unknown')+(u.is_admin?' 👑':'')+(u.gender==='female'?' 🌸':'')+'</div>';
+    playersHtml+='<div class="player-meta">'+role.icon+' '+role.name+' • 🔥 '+(u.streak||0)+' • 🪙'+(u.coins||0)+'</div></div>';
+    playersHtml+='<div class="player-xp">'+(u.xp||0)+' XP</div>';
+    playersHtml+='</div>';
+    playersHtml+='<div class="player-mini-stats">';
+    playersHtml+='<div class="mini-stat"><div class="mini-val">'+(u.xp||0)+'</div><div class="mini-lbl">XP</div></div>';
+    playersHtml+='<div class="mini-stat"><div class="mini-val">'+getLevel(u.xp||0)+'</div><div class="mini-lbl">LV</div></div>';
+    playersHtml+='<div class="mini-stat"><div class="mini-val">'+(u.streak||0)+'</div><div class="mini-lbl">STREAK</div></div>';
+    playersHtml+='<div class="mini-stat"><div class="mini-val" style="color:var(--coin)">'+(u.coins||0)+'</div><div class="mini-lbl">COINS</div></div>';
+    playersHtml+='</div>';
+    playersHtml+='<div class="view-profile-btn">View Full Profile →</div>';
+    playersHtml+='</div>';
+  });
+  let html='';
+  html+='<div class="admin-banner"><div class="admin-crown">👑</div><div><div class="admin-banner-title">HOST CONTROL PANEL</div><div class="admin-banner-sub">Welcome, '+profile.username+'</div></div></div>';
+  html+='<div class="admin-stats">';
+  html+='<div class="astat"><div class="astat-val">'+(users||[]).length+'</div><div class="astat-lbl">PLAYERS</div></div>';
+  html+='<div class="astat"><div class="astat-val">'+(squests||[]).length+'</div><div class="astat-lbl">QUESTS</div></div>';
+  html+='<div class="astat"><div class="astat-val">'+(comps||[]).length+'</div><div class="astat-lbl">DONE</div></div>';
+  html+='<div class="astat"><div class="astat-val">'+totalXP+'</div><div class="astat-lbl">TOTAL XP</div></div>';
+  html+='</div>';
+  html+='<div class="admin-tabs">';
+  html+='<button class="admin-tab active" onclick="switchAdminTab(\'quests\',this)">📋 Quests</button>';
+  html+='<button class="admin-tab" onclick="switchAdminTab(\'players\',this)">👥 Players</button>';
+  html+='<button class="admin-tab" onclick="switchAdminTab(\'bosses\',this)">🐉 Bosses</button>';
+  html+='<button class="admin-tab" onclick="switchAdminTab(\'events\',this)">🎪 Events</button>';
+  html+='<button class="admin-tab" onclick="switchAdminTab(\'vip\',this)">⭐ VIP</button>';
+  html+='</div>';
+  html+='<div class="admin-section active" id="asec-quests">';
+  html+='<div class="form-card"><div class="form-card-title">Create System Quest</div>';
+  html+='<div class="form-group"><label>Title</label><input type="text" id="sq-title" placeholder="Quest title"/></div>';
+  html+='<div class="form-group"><label>Description</label><textarea id="sq-desc" placeholder="Quest description..."></textarea></div>';
+  html+='<div class="form-group"><label>XP Reward</label><input type="number" id="sq-xp" value="50" min="1"/></div>';
+  html+='<div class="form-group"><label>Type</label><select id="sq-type"><option value="challenge">Challenge</option><option value="habit">Habit (daily)</option><option value="todo">Task (one-time)</option></select></div>';
+  html+='<div class="form-group"><label>Skill</label><select id="sq-skill-cat"><option value="fitness">Fitness</option><option value="mindset">Mindset</option><option value="knowledge">Knowledge</option><option value="discipline">Discipline</option><option value="creativity">Creativity</option><option value="social">Social</option></select></div>';
+  html+='<div class="form-group"><label>Assign To</label><select id="sq-assign">'+assignOptions+'</select></div>';
+  html+='<button class="btn-gold" onclick="createSQ()">CREATE QUEST</button></div>';
+  html+='<div class="sec-title">Active System Quests</div>';
+  html+='<div id="admin-sq-list">'+sqHtml+'</div>';
+  html+='</div>';
+  html+='<div class="admin-section" id="asec-players"><div class="sec-title">All Players</div>'+playersHtml+'</div>';
+  html+='<div class="admin-section" id="asec-bosses">';
+  html+='<div class="form-card"><div class="form-card-title">Create Boss Fight</div>';
+  html+='<div class="form-group"><label>Boss Name</label><input type="text" id="boss-name" placeholder="e.g. The Procrastination Dragon"/></div>';
+  html+='<div class="form-group"><label>Description</label><textarea id="boss-desc" placeholder="What must players overcome?"></textarea></div>';
+  html+='<div class="form-group"><label>Boss Icon</label><input type="text" id="boss-icon" placeholder="🐉" maxlength="2"/></div>';
+  html+='<div class="form-group"><label>Total HP</label><input type="number" id="boss-hp" value="1000" min="100"/></div>';
+  html+='<div class="form-group"><label>XP Per Hit</label><input type="number" id="boss-xp-hit" value="10" min="1"/></div>';
+  html+='<div class="form-group"><label>Victory XP Reward</label><input type="number" id="boss-xp-reward" value="500" min="50"/></div>';
+  html+='<div class="form-group"><label>Victory Coins Reward</label><input type="number" id="boss-coins-reward" value="200" min="10"/></div>';
+  html+='<div class="form-group"><label>End Date</label><input type="date" id="boss-end-date"/></div>';
+  html+='<button class="btn-gold" onclick="createBoss()">CREATE BOSS</button></div></div>';
+  html+='<div class="admin-section" id="asec-events">';
+  html+='<div class="form-card"><div class="form-card-title">Create Event</div>';
+  html+='<div class="form-group"><label>Event Title</label><input type="text" id="ev-title" placeholder="e.g. 7-Day Focus Challenge"/></div>';
+  html+='<div class="form-group"><label>Description</label><textarea id="ev-desc" placeholder="What is this event about?"></textarea></div>';
+  html+='<div class="form-group"><label>Type</label><select id="ev-type"><option value="community">Community</option><option value="guild">Guild</option><option value="seasonal">Seasonal</option></select></div>';
+  html+='<div class="form-group"><label>Progress Goal</label><input type="number" id="ev-goal" value="100" min="1"/></div>';
+  html+='<div class="form-group"><label>XP Reward</label><input type="number" id="ev-xp" value="100" min="10"/></div>';
+  html+='<div class="form-group"><label>Coins Reward</label><input type="number" id="ev-coins" value="50" min="5"/></div>';
+  html+='<div class="form-group"><label>Start Date</label><input type="date" id="ev-start"/></div>';
+  html+='<div class="form-group"><label>End Date</label><input type="date" id="ev-end"/></div>';
+  html+='<button class="btn-gold" onclick="createEvent()">CREATE EVENT</button></div></div>';
+  html+='<div class="admin-section" id="asec-vip">';
+  html+='<div class="form-card"><div class="form-card-title">Add VIP Player</div>';
+  html+='<div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">VIP players get all Premium+AI features free. You can also read their private journal entries.</div>';
+  html+='<div class="form-group"><label>Player Email</label><input type="email" id="vip-email" placeholder="player@email.com"/></div>';
+  html+='<div class="form-group"><label>Notes (private)</label><input type="text" id="vip-notes" placeholder="Why VIP? (optional)"/></div>';
+  html+='<button class="btn-gold" onclick="addVIPPlayer()">GRANT VIP ACCESS</button></div>';
+  html+='<div class="sec-title">VIP Players</div><div id="vip-list"></div>';
+  html+='<div class="sec-title" style="color:var(--red);margin-top:20px">Secret Journal Access</div>';
+  html+='<div class="form-card" style="border-color:rgba(239,68,68,.2)"><div class="form-card-title" style="color:var(--red)">Read Player Private Journal</div>';
+  html+='<div style="font-size:12px;color:var(--text2);margin-bottom:12px">Only works for VIP players.</div>';
+  html+='<div class="form-group"><label>Player Email</label><input type="email" id="journal-read-email" placeholder="vip@email.com"/></div>';
+  html+='<button style="width:100%;padding:13px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:12px;color:var(--red);font-size:14px;font-weight:700;cursor:pointer" onclick="readPlayerJournal()">ACCESS JOURNAL</button></div>';
+  html+='<div id="secret-journal-entries"></div></div>';
+  id('admin-wrap').innerHTML=html;
 }
 
 function adminQCard(q, users) {
-  const au=q.assigned_to?(users||[]).find(u=>u.id===q.assigned_to):null;
-  const subtype=q.quest_subtype||'challenge', stIcon=subtype==='habit'?'🔁':subtype==='todo'?'✅':'👑';
-  return `<div class="sq-item"><div class="sq-info"><div class="sq-title">${q.title}</div><div class="sq-desc">${q.description||'No description'}</div><div class="sq-badges"><div class="sq-xp-badge">+${q.xp_reward} XP</div><div class="sq-tag">${stIcon} ${subtype}</div><div class="sq-tag">${au?'👤 '+au.username:'👥 All'}</div><div class="sq-tag" style="color:${q.is_active?'var(--green)':'var(--red)'}">● ${q.is_active?'Active':'Inactive'}</div></div></div><div class="sq-actions"><button class="btn-icon del" onclick="deleteSQ('${q.id}')">🗑</button><button class="btn-icon tog" onclick="toggleSQ('${q.id}',${q.is_active})">${q.is_active?'✓':'○'}</button></div></div>`;
+  const au=q.assigned_to?(users||[]).find(function(u){return u.id===q.assigned_to;}):null;
+  const subtype=q.quest_subtype||'challenge';
+  const stIcon=subtype==='habit'?'🔁':subtype==='todo'?'✅':'👑';
+  let html='<div class="sq-item">';
+  html+='<div class="sq-info">';
+  html+='<div class="sq-title">'+q.title+'</div>';
+  html+='<div class="sq-desc">'+(q.description||'No description')+'</div>';
+  html+='<div class="sq-badges">';
+  html+='<div class="sq-xp-badge">+'+q.xp_reward+' XP</div>';
+  html+='<div class="sq-tag">'+stIcon+' '+subtype+'</div>';
+  html+='<div class="sq-tag">'+(au?'👤 '+au.username:'👥 All')+'</div>';
+  html+='<div class="sq-tag" style="color:'+(q.is_active?'var(--green)':'var(--red)')+'">● '+(q.is_active?'Active':'Inactive')+'</div>';
+  html+='</div></div>';
+  html+='<div class="sq-actions">';
+  html+='<button class="btn-icon del" onclick="deleteSQ(\''+q.id+'\')">🗑</button>';
+  html+='<button class="btn-icon tog" onclick="toggleSQ(\''+q.id+'\','+q.is_active+')">'+(q.is_active?'✓':'○')+'</button>';
+  html+='</div></div>';
+  return html;
 }
 
 window.switchAdminTab = function(tab, btn) {
-  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active');
-  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
-  id('asec-'+tab)?.classList.add('active');
+  document.querySelectorAll('.admin-tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  document.querySelectorAll('.admin-section').forEach(function(s){s.classList.remove('active');});
+  const sec=id('asec-'+tab); if(sec) sec.classList.add('active');
   if(tab==='vip') loadVIPList();
 };
 
 window.createSQ = async function() {
   const title=val('sq-title'), desc=val('sq-desc'), xp=parseInt(val('sq-xp'))||50;
   const type=val('sq-type')||'challenge', skill=val('sq-skill-cat')||'discipline', assign=val('sq-assign')||null;
-  if(!title){toast('Enter a title! ⚠️','red');return;}
-  await sb.from('system_quests').insert({title,description:desc,xp_reward:xp,is_active:true,assigned_to:assign,quest_subtype:type,skill_category:skill});
-  toast(`👑 ${type==='habit'?'🔁 Habit':type==='todo'?'✅ Task':'⚔️ Challenge'} created!`,'green');
+  if(!title){toast('Enter a title!','red');return;}
+  await sb.from('system_quests').insert({title:title,description:desc,xp_reward:xp,is_active:true,assigned_to:assign,quest_subtype:type,skill_category:skill});
+  const label=type==='habit'?'Habit':type==='todo'?'Task':'Challenge';
+  toast(label+' created!','green');
   await loadAllData(); renderAdmin();
 };
 
 window.deleteSQ = async function(id_) {
   await sb.from('system_quests').delete().eq('id',id_);
-  toast('Quest deleted 🗑');
+  toast('Quest deleted');
   await loadAllData(); renderAdmin();
 };
 
 window.toggleSQ = async function(id_,curr) {
   await sb.from('system_quests').update({is_active:!curr}).eq('id',id_);
-  toast(curr?'⏸ Deactivated':'✅ Activated','green');
+  toast(curr?'Deactivated':'Activated','green');
   await loadAllData(); renderAdmin();
 };
 
@@ -2462,18 +2495,18 @@ window.createBoss = async function() {
   const hp=parseInt(val('boss-hp'))||1000, xpHit=parseInt(val('boss-xp-hit'))||10;
   const xpRew=parseInt(val('boss-xp-reward'))||500, coinsRew=parseInt(val('boss-coins-reward'))||200;
   const endDate=val('boss-end-date')||null;
-  if(!title){toast('Enter boss name! ⚠️','red');return;}
-  await sb.from('boss_fights').insert({title,description:desc,boss_icon:icon,total_hp:hp,current_hp:hp,xp_per_hit:xpHit,xp_reward:xpRew,coins_reward:coinsRew,end_date:endDate,start_date:today,is_active:true,is_defeated:false});
-  toast('🐉 Boss created!','green'); renderAdmin();
+  if(!title){toast('Enter boss name!','red');return;}
+  await sb.from('boss_fights').insert({title:title,description:desc,boss_icon:icon,total_hp:hp,current_hp:hp,xp_per_hit:xpHit,xp_reward:xpRew,coins_reward:coinsRew,end_date:endDate,start_date:today,is_active:true,is_defeated:false});
+  toast('Boss created!','green'); renderAdmin();
 };
 
 window.createEvent = async function() {
   const title=val('ev-title'), desc=val('ev-desc'), type=val('ev-type');
   const goal=parseInt(val('ev-goal'))||100, xpRew=parseInt(val('ev-xp'))||100, coinsRew=parseInt(val('ev-coins'))||50;
   const startDate=val('ev-start')||today, endDate=val('ev-end')||null;
-  if(!title){toast('Enter event title! ⚠️','red');return;}
-  await sb.from('events').insert({title,description:desc,event_type:type,quest_requirement:goal,current_progress:0,xp_reward:xpRew,coins_reward:coinsRew,gems_reward:0,start_date:startDate,end_date:endDate,is_active:true});
-  toast('🎪 Event created!','green'); renderAdmin();
+  if(!title){toast('Enter event title!','red');return;}
+  await sb.from('events').insert({title:title,description:desc,event_type:type,quest_requirement:goal,current_progress:0,xp_reward:xpRew,coins_reward:coinsRew,gems_reward:0,start_date:startDate,end_date:endDate,is_active:true});
+  toast('Event created!','green'); renderAdmin();
 };
 
 window.viewPlayer = async function(userId) {
@@ -2482,69 +2515,76 @@ window.viewPlayer = async function(userId) {
   const {data:skills}=await sb.from('skills').select('*').eq('user_id',userId);
   const {data:jCount}=await sb.from('journal_entries').select('id').eq('user_id',userId).eq('is_deleted',false);
   if(!p) return;
-  const todayQ=(quests||[]).filter(q=>q.quest_date===today), todayDone=todayQ.filter(q=>q.is_completed).length;
-  const role=getRoleInfo(p.role||'warrior'), sorted=[...(skills||[])].sort((a,b)=>(b.skill_xp||0)-(a.skill_xp||0));
-  id('admin-wrap').innerHTML=`
-  <div style="display:flex;align-items:center;gap:12px;padding:16px 0;cursor:pointer" onclick="renderAdmin()">
-    <span style="color:var(--accent2);font-size:20px">←</span>
-    <span style="color:var(--text2);font-size:14px;font-weight:600">Back to Players</span>
-  </div>
-  <div class="profile-card" style="margin-bottom:16px"><div class="profile-bg"></div><div class="profile-avatar-wrap"><div class="profile-avatar">${p.avatar_url?`<img src="${p.avatar_url}"/>`:'🧙'}</div></div><div class="profile-name">${p.username||'Unknown'}${p.is_admin?' 👑':''}${p.gender==='female'?' 🌸':''}</div><div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-bottom:12px;color:${role.color};border:1px solid ${role.color}44;background:${role.color}11">${role.icon} ${role.name}</div><div class="profile-email">Joined ${new Date(p.created_at).toLocaleDateString()} • 📖 ${(jCount||[]).length} entries</div><div class="profile-stats"><div class="pstat"><div class="pstat-val">${getLevel(p.xp||0)}</div><div class="pstat-lbl">LEVEL</div></div><div class="pstat"><div class="pstat-val">${p.xp||0}</div><div class="pstat-lbl">XP</div></div><div class="pstat"><div class="pstat-val">${p.streak||0}</div><div class="pstat-lbl">STREAK</div></div><div class="pstat"><div class="pstat-val" style="color:var(--coin)">${p.coins||0}</div><div class="pstat-lbl">COINS</div></div></div></div>
-  <div class="sec-title">📅 Today</div>
-  <div class="form-card" style="margin-bottom:16px">
-    <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:13px;color:var(--text2)">Completed today</span><span style="font-family:'Orbitron',monospace;color:var(--gold);font-weight:700">${todayDone}/${todayQ.length}</span></div>
-    <div class="progress-track"><div class="progress-fill" style="width:${todayQ.length>0?Math.round((todayDone/todayQ.length)*100):0}%"></div></div>
-  </div>
-  <div class="sec-title">🧠 Skills</div>
-  <div class="skills-grid" style="margin-bottom:16px">
-    ${sorted.map((s,i)=>`<div class="skill-card ${i===0?'perf-gold':i===1?'perf-silver':i===2?'perf-bronze':''}">${i<3?`<div class="skill-top-badge">${['🥇','🥈','🥉'][i]}</div>`:''}<div class="skill-icon">${SKILL_ICONS[s.skill_name]||'⭐'}</div><div class="skill-name">${cap(s.skill_name)}</div><div class="skill-lv">LV ${s.skill_level}</div><div class="skill-track"><div class="skill-fill" style="width:${(s.skill_xp||0)%100}%"></div></div></div>`).join('')}
-  </div>
-  <div class="sec-title">⚡ Admin Actions</div>
-<div class="form-card">
-    <div class="form-card-title">🎁 Give Bonus to ${p.username}</div>
-    <div class="form-group"><label>XP Amount</label><input type="number" id="bonus-xp-amount" value="50" min="0"/></div>
-    <div class="form-group"><label>💎 Gems (premium currency)</label><input type="number" id="bonus-gems-amount" value="0" min="0"/></div>
-    <div class="form-group"><label>🪙 Coins</label><input type="number" id="bonus-coins" value="20" min="0"/></div>
-    <button class="btn-gold" onclick="giveBonusXP('${p.id}')">⚡ Give Reward</button>
-  </div>;
+  const todayQ=(quests||[]).filter(function(q){return q.quest_date===today;});
+  const todayDone=todayQ.filter(function(q){return q.is_completed;}).length;
+  const role=getRoleInfo(p.role||'warrior');
+  const sorted=[...(skills||[])].sort(function(a,b){return (b.skill_xp||0)-(a.skill_xp||0);});
+  let html='';
+  html+='<div style="display:flex;align-items:center;gap:12px;padding:16px 0;cursor:pointer" onclick="renderAdmin()">';
+  html+='<span style="color:var(--accent2);font-size:20px">←</span>';
+  html+='<span style="color:var(--text2);font-size:14px;font-weight:600">Back to Players</span></div>';
+  html+='<div class="profile-card" style="margin-bottom:16px"><div class="profile-bg"></div>';
+  html+='<div class="profile-avatar-wrap"><div class="profile-avatar">'+(p.avatar_url?'<img src="'+p.avatar_url+'"/>'  :'🧙')+'</div></div>';
+  html+='<div class="profile-name">'+(p.username||'Unknown')+(p.is_admin?' 👑':'')+(p.gender==='female'?' 🌸':'')+'</div>';
+  html+='<div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-bottom:12px;color:'+role.color+';border:1px solid '+role.color+'44;background:'+role.color+'11">'+role.icon+' '+role.name+'</div>';
+  html+='<div class="profile-email">Joined '+new Date(p.created_at).toLocaleDateString()+' • '+( jCount||[]).length+' journal entries</div>';
+  html+='<div class="profile-stats">';
+  html+='<div class="pstat"><div class="pstat-val">'+getLevel(p.xp||0)+'</div><div class="pstat-lbl">LEVEL</div></div>';
+  html+='<div class="pstat"><div class="pstat-val">'+(p.xp||0)+'</div><div class="pstat-lbl">XP</div></div>';
+  html+='<div class="pstat"><div class="pstat-val">'+(p.streak||0)+'</div><div class="pstat-lbl">STREAK</div></div>';
+  html+='<div class="pstat"><div class="pstat-val" style="color:var(--coin)">'+(p.coins||0)+'</div><div class="pstat-lbl">COINS</div></div>';
+  html+='<div class="pstat"><div class="pstat-val" style="color:var(--gem)">'+(p.gems||0)+'</div><div class="pstat-lbl">GEMS</div></div>';
+  html+='</div></div>';
+  html+='<div class="sec-title">Today</div>';
+  html+='<div class="form-card" style="margin-bottom:16px">';
+  html+='<div style="display:flex;justify-content:space-between;margin-bottom:10px">';
+  html+='<span style="font-size:13px;color:var(--text2)">Completed today</span>';
+  html+='<span style="font-family:Orbitron,monospace;color:var(--gold);font-weight:700">'+todayDone+'/'+todayQ.length+'</span></div>';
+  const todayPct=todayQ.length>0?Math.round((todayDone/todayQ.length)*100):0;
+  html+='<div class="progress-track"><div class="progress-fill" style="width:'+todayPct+'%"></div></div></div>';
+  html+='<div class="sec-title">Skills</div>';
+  html+='<div class="skills-grid" style="margin-bottom:16px">';
+  sorted.forEach(function(s,i){
+    const badges=['🥇','🥈','🥉'];
+    const perfClass=i===0?'perf-gold':i===1?'perf-silver':i===2?'perf-bronze':'';
+    html+='<div class="skill-card '+perfClass+'">';
+    if(i<3) html+='<div class="skill-top-badge">'+badges[i]+'</div>';
+    html+='<div class="skill-icon">'+(SKILL_ICONS[s.skill_name]||'⭐')+'</div>';
+    html+='<div class="skill-name">'+cap(s.skill_name)+'</div>';
+    html+='<div class="skill-lv">LV '+s.skill_level+'</div>';
+    html+='<div class="skill-track"><div class="skill-fill" style="width:'+((s.skill_xp||0)%100)+'%"></div></div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  html+='<div class="sec-title">Admin Actions</div>';
+  html+='<div class="form-card">';
+  html+='<div class="form-card-title">Give Bonus to '+(p.username||'Player')+'</div>';
+  html+='<div class="form-group"><label>XP Amount</label><input type="number" id="bonus-xp-amount" value="50" min="0"/></div>';
+  html+='<div class="form-group"><label>Gems (premium currency)</label><input type="number" id="bonus-gems-amount" value="0" min="0"/></div>';
+  html+='<div class="form-group"><label>Coins</label><input type="number" id="bonus-coins" value="20" min="0"/></div>';
+  html+='<button class="btn-gold" onclick="giveBonusXP(\''+p.id+'\')">Give Reward</button>';
+  html+='</div>';
+  id('admin-wrap').innerHTML=html;
 };
 
 window.giveBonusXP = async function(userId) {
-  const xp = parseInt(
-    val('bonus-xp-amount')) || 0;
-  const gemsEl = document.getElementById(
-    'bonus-gems-amount');
-  const coinsEl = document.getElementById(
-    'bonus-coins');
-  const gems = gemsEl
-    ? parseInt(gemsEl.value) || 0 : 0;
-  const coins = coinsEl
-    ? parseInt(coinsEl.value) || 0 : 0;
-
-  const {data:p} = await sb
-    .from('profiles')
-    .select('xp,username,gems,coins')
-    .eq('id', userId).single();
-  if (!p) return;
-
-  const newXP = (p.xp||0) + xp;
-  const newGems = (p.gems||0) + gems;
-  const newCoins = (p.coins||0) + coins;
-
-  await sb.from('profiles').update({
-    xp: newXP,
-    level: getLevel(newXP),
-    gems: newGems,
-    coins: newCoins
-  }).eq('id', userId);
-
-  let msg = 'Gave';
-  if (xp > 0) msg += ' ' + xp + ' XP';
-  if (gems > 0) msg += ' + ' + gems + ' gems';
-  if (coins > 0) msg += ' + ' + coins + ' coins';
-  msg += ' to ' + p.username;
-
-  toast(msg, 'green');
+  const xp=parseInt(val('bonus-xp-amount'))||0;
+  const gemsEl=document.getElementById('bonus-gems-amount');
+  const coinsEl=document.getElementById('bonus-coins');
+  const gems=gemsEl?parseInt(gemsEl.value)||0:0;
+  const coins=coinsEl?parseInt(coinsEl.value)||0:0;
+  const {data:p}=await sb.from('profiles').select('xp,username,gems,coins').eq('id',userId).single();
+  if(!p) return;
+  const newXP=(p.xp||0)+xp;
+  const newGems=(p.gems||0)+gems;
+  const newCoins=(p.coins||0)+coins;
+  await sb.from('profiles').update({xp:newXP,level:getLevel(newXP),gems:newGems,coins:newCoins}).eq('id',userId);
+  let msg='Gave';
+  if(xp>0) msg+=' '+xp+' XP';
+  if(gems>0) msg+=' + '+gems+' gems';
+  if(coins>0) msg+=' + '+coins+' coins';
+  msg+=' to '+(p.username||'player');
+  toast(msg,'green');
   viewPlayer(userId);
 };
 
@@ -2552,38 +2592,36 @@ window.giveBonusXP = async function(userId) {
 // VIP SYSTEM
 // ══════════════════════════════════
 async function loadVIPList() {
-  const {data:vips} = await sb.from('vip_players').select('*').order('created_at',{ascending:false});
-  const el = id('vip-list');
-  if (!el) return;
-  if (!vips||!vips.length) { el.innerHTML = empty('⭐','No VIP players yet'); return; }
-  let html = '';
-  for (let i = 0; i < vips.length; i++) {
-    const v = vips[i];
-    const date = new Date(v.created_at).toLocaleDateString();
-    const notes = v.notes || 'No notes';
-    html += '<div style="background:var(--bg3);border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px">';
-    html += '<div style="font-size:24px">⭐</div>';
-    html += '<div style="flex:1">';
-    html += '<div style="font-size:14px;font-weight:700;color:var(--text)">' + v.email + '</div>';
-    html += '<div style="font-size:11px;color:var(--text2);margin-top:2px">' + notes + ' • Added ' + date + '</div>';
-    html += '</div>';
-    html += '<button class="btn-icon del" onclick="removeVIP(\'' + v.id + '\')">🗑</button>';
-    html += '</div>';
+  const {data:vips}=await sb.from('vip_players').select('*').order('created_at',{ascending:false});
+  const el=id('vip-list');
+  if(!el) return;
+  if(!vips||!vips.length){el.innerHTML=empty('⭐','No VIP players yet');return;}
+  let html='';
+  for(let i=0;i<vips.length;i++){
+    const v=vips[i];
+    const date=new Date(v.created_at).toLocaleDateString();
+    const notes=v.notes||'No notes';
+    html+='<div style="background:var(--bg3);border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px">';
+    html+='<div style="font-size:24px">⭐</div>';
+    html+='<div style="flex:1">';
+    html+='<div style="font-size:14px;font-weight:700;color:var(--text)">'+v.email+'</div>';
+    html+='<div style="font-size:11px;color:var(--text2);margin-top:2px">'+notes+' • Added '+date+'</div>';
+    html+='</div>';
+    html+='<button class="btn-icon del" onclick="removeVIP(\''+v.id+'\')">🗑</button>';
+    html+='</div>';
   }
-  el.innerHTML = html;
+  el.innerHTML=html;
 }
 
 window.addVIPPlayer = async function() {
-  const email = val('vip-email');
-  const notes = val('vip-notes');
-  if (!email) { toast('Enter email!','red'); return; }
-  try {
+  const email=val('vip-email'), notes=val('vip-notes');
+  if(!email){toast('Enter email!','red');return;}
+  try{
     await sb.from('vip_players').insert({email:email.toLowerCase(),added_by:user.id,notes:notes||null});
-    toast('VIP granted to ' + email + '!','gem');
-    id('vip-email').value = '';
-    id('vip-notes').value = '';
+    toast('VIP granted to '+email+'!','gem');
+    id('vip-email').value=''; id('vip-notes').value='';
     loadVIPList();
-  } catch(e) { toast('Already VIP or error!','red'); }
+  }catch(e){toast('Already VIP or error!','red');}
 };
 
 window.removeVIP = async function(vipId) {
@@ -2593,47 +2631,47 @@ window.removeVIP = async function(vipId) {
 };
 
 window.readPlayerJournal = async function() {
-  const email = val('journal-read-email');
-  if (!email) { toast('Enter email!','red'); return; }
-  const el = id('secret-journal-entries');
-  if (!el) return;
-  el.innerHTML = '<div style="color:var(--text2);padding:12px">Searching...</div>';
-  const {data:vips} = await sb.from('vip_players').select('*');
-  const vip = (vips||[]).find(function(v) { return v.email.toLowerCase() === email.toLowerCase().trim(); });
-  if (!vip) {
-    el.innerHTML = '<div style="padding:12px;border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:13px;color:var(--red)">Not a VIP player. Add them first.</div>';
+  const email=val('journal-read-email');
+  if(!email){toast('Enter email!','red');return;}
+  const el=id('secret-journal-entries');
+  if(!el) return;
+  el.innerHTML='<div style="color:var(--text2);padding:12px">Searching...</div>';
+  const {data:vips}=await sb.from('vip_players').select('*');
+  const vip=(vips||[]).find(function(v){return v.email.toLowerCase()===email.toLowerCase().trim();});
+  if(!vip){
+    el.innerHTML='<div style="padding:12px;border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:13px;color:var(--red)">Not a VIP player. Add them first.</div>';
     return;
   }
-  if (!vip.user_id) {
-    el.innerHTML = '<div style="padding:12px;border:1px solid rgba(245,158,11,.2);border-radius:10px;font-size:13px;color:var(--gold)">VIP player has not opened the app yet. Ask them to open it once first.</div>';
+  if(!vip.user_id){
+    el.innerHTML='<div style="padding:12px;border:1px solid rgba(245,158,11,.2);border-radius:10px;font-size:13px;color:var(--gold)">VIP player has not opened the app yet. Ask them to open it once first.</div>';
     return;
   }
-  const {data:journals} = await sb.from('journal_entries').select('*').eq('user_id',vip.user_id).order('entry_date',{ascending:false});
-  if (!journals||!journals.length) {
-    el.innerHTML = '<div style="padding:12px;color:var(--text2);font-size:13px">No journal entries found.</div>';
+  const {data:journals}=await sb.from('journal_entries').select('*').eq('user_id',vip.user_id).order('entry_date',{ascending:false});
+  if(!journals||!journals.length){
+    el.innerHTML='<div style="padding:12px;color:var(--text2);font-size:13px">No journal entries found.</div>';
     return;
   }
-  let html = '<div style="padding:10px;border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:12px;color:var(--red);margin-bottom:12px">Viewing ' + journals.length + ' entries of ' + email + '</div>';
-  for (let i = 0; i < journals.length; i++) {
-    const e = journals[i];
-    const mood = MOOD_ICONS[e.mood] || '🙂';
-    const title = e.title || 'Untitled';
-    const date = formatDate(e.entry_date);
-    const preview = (e.content||'').substring(0,80);
-    const deleted = e.is_deleted ? ' 🗑' : '';
-    const op = e.is_deleted ? '0.6' : '1';
-    html += '<div onclick="viewJournalEntry(\'' + e.id + '\')" style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:8px;cursor:pointer;opacity:' + op + '">';
-    html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">';
-    html += '<span style="font-size:20px">' + mood + '</span>';
-    html += '<span style="font-size:13px;font-weight:700;color:var(--text);flex:1">' + title + deleted + '</span>';
-    html += '<span style="font-size:11px;color:var(--text3)">' + date + '</span>';
-    html += '</div>';
-    html += '<div style="font-size:12px;color:var(--text2)">' + preview + '</div>';
-    html += '</div>';
+  let html='<div style="padding:10px;border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:12px;color:var(--red);margin-bottom:12px">Viewing '+journals.length+' entries of '+email+'</div>';
+  for(let i=0;i<journals.length;i++){
+    const e=journals[i];
+    const mood=MOOD_ICONS[e.mood]||'🙂';
+    const title=e.title||'Untitled';
+    const date=formatDate(e.entry_date);
+    const preview=(e.content||'').substring(0,80);
+    const deleted=e.is_deleted?' 🗑':'';
+    const op=e.is_deleted?'0.6':'1';
+    html+='<div onclick="viewJournalEntry(\''+e.id+'\')" style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:8px;cursor:pointer;opacity:'+op+'">';
+    html+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">';
+    html+='<span style="font-size:20px">'+mood+'</span>';
+    html+='<span style="font-size:13px;font-weight:700;color:var(--text);flex:1">'+title+deleted+'</span>';
+    html+='<span style="font-size:11px;color:var(--text3)">'+date+'</span>';
+    html+='</div>';
+    html+='<div style="font-size:12px;color:var(--text2)">'+preview+'</div>';
+    html+='</div>';
   }
-  el.innerHTML = html;
+  el.innerHTML=html;
 };
-  
+
 // ══════════════════════════════════
 // MODALS
 // ══════════════════════════════════
@@ -2644,26 +2682,21 @@ window.closeModalBg = function(e, modalId) { if(e.target.id===modalId) hide(moda
 // TOAST
 // ══════════════════════════════════
 function toast(msg, type) {
-  if (!type) type = '';
-  const old = document.getElementById('_toast');
-  if (old) old.remove();
-  const t = document.createElement('div');
-  t.id = '_toast';
-  t.className = 'toast ' + type;
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(function() { t.remove(); }, 2800);
+  if(!type) type='';
+  const old=document.getElementById('_toast'); if(old) old.remove();
+  const t=document.createElement('div'); t.id='_toast'; t.className='toast '+type; t.textContent=msg;
+  document.body.appendChild(t); setTimeout(function(){t.remove();},2800);
 }
 
 // ══════════════════════════════════
 // HELPERS
 // ══════════════════════════════════
-function id(i) { return document.getElementById(i); }
-function val(i) { const el = document.getElementById(i); return el ? el.value.trim() : ''; }
-function show(i) { const el = document.getElementById(i); if(el) el.classList.remove('hidden'); }
-function hide(i) { const el = document.getElementById(i); if(el) el.classList.add('hidden'); }
-function cap(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
-function empty(icon, msg) { return '<div class="empty"><div class="empty-icon">' + icon + '</div>' + msg + '</div>'; }
+function id(i){return document.getElementById(i);}
+function val(i){const el=document.getElementById(i);return el?el.value.trim():'';}
+function show(i){const el=document.getElementById(i);if(el)el.classList.remove('hidden');}
+function hide(i){const el=document.getElementById(i);if(el)el.classList.add('hidden');}
+function cap(s){return s?s[0].toUpperCase()+s.slice(1):s;}
+function empty(icon,msg){return '<div class="empty"><div class="empty-icon">'+icon+'</div>'+msg+'</div>';}
 
 // Start
 showTab('dashboard');
