@@ -2643,21 +2643,27 @@ window.closeModalBg = function(e, modalId) { if(e.target.id===modalId) hide(moda
 // ══════════════════════════════════
 // TOAST
 // ══════════════════════════════════
-function toast(msg, type='') {
-  const old=document.getElementById('_toast'); if(old) old.remove();
-  const t=document.createElement('div'); t.id='_toast'; t.className='toast '+type; t.textContent=msg;
-  document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
+function toast(msg, type) {
+  if (!type) type = '';
+  const old = document.getElementById('_toast');
+  if (old) old.remove();
+  const t = document.createElement('div');
+  t.id = '_toast';
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 2800);
 }
 
 // ══════════════════════════════════
 // HELPERS
 // ══════════════════════════════════
 function id(i) { return document.getElementById(i); }
-function val(i) { return id(i)?.value?.trim()||''; }
-function show(i) { id(i)?.classList.remove('hidden'); }
-function hide(i) { id(i)?.classList.add('hidden'); }
-function cap(s) { return s?s[0].toUpperCase()+s.slice(1):s; }
-function empty(icon, msg) { return `<div class="empty"><div class="empty-icon">${icon}</div>${msg}</div>`; }
+function val(i) { const el = document.getElementById(i); return el ? el.value.trim() : ''; }
+function show(i) { const el = document.getElementById(i); if(el) el.classList.remove('hidden'); }
+function hide(i) { const el = document.getElementById(i); if(el) el.classList.add('hidden'); }
+function cap(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
+function empty(icon, msg) { return '<div class="empty"><div class="empty-icon">' + icon + '</div>' + msg + '</div>'; }
 
 // Start
 showTab('dashboard');
