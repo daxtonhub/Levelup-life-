@@ -2577,62 +2577,43 @@ window.removeVIP = async function(vipId) {
 
 window.readPlayerJournal = async function() {
   const email = val('journal-read-email');
-  if (!email) {
-    toast('Enter email!', 'red'); return;
-  }
-
+  if (!email) { toast('Enter email!','red'); return; }
   const el = id('secret-journal-entries');
   if (!el) return;
-  el.innerHTML = '<div style="color:var(--text2);font-size:13px;padding:12px">Searching...</div>';
-
-  const {data:vips} = await sb
-    .from('vip_players').select('*');
-  const vip = (vips||[]).find(v =>
-    v.email.toLowerCase() ===
-    email.toLowerCase().trim()
-  );
-
+  el.innerHTML = '<div style="color:var(--text2);padding:12px">Searching...</div>';
+  const {data:vips} = await sb.from('vip_players').select('*');
+  const vip = (vips||[]).find(v => v.email.toLowerCase() === email.toLowerCase().trim());
   if (!vip) {
-    el.innerHTML = '<div style="padding:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:13px;color:var(--red)">Not a VIP player. Add them first.</div>';
+    el.innerHTML = '<div style="padding:12px;border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:13px;color:var(--red)">Not a VIP player. Add them first.</div>';
     return;
   }
-
   if (!vip.user_id) {
-    el.innerHTML = '<div style="padding:12px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;font-size:13px;color:var(--gold)">VIP player has not opened the app yet. Ask them to open it once.</div>';
+    el.innerHTML = '<div style="padding:12px;border:1px solid rgba(245,158,11,.2);border-radius:10px;font-size:13px;color:var(--gold)">VIP player has not opened the app yet. Ask them to open it once first.</div>';
     return;
   }
-
-  const {data:journals} = await sb
-    .from('journal_entries')
-    .select('*')
-    .eq('user_id', vip.user_id)
-    .order('entry_date', {ascending:false});
-
-  if (!journals || !journals.length) {
-    el.innerHTML = '<div style="padding:12px;color:var(--text2);font-size:13px">No journal entries found for this player.</div>';
+  const {data:journals} = await sb.from('journal_entries').select('*').eq('user_id',vip.user_id).order('entry_date',{ascending:false});
+  if (!journals||!journals.length) {
+    el.innerHTML = '<div style="padding:12px;color:var(--text2);font-size:13px">No journal entries found.</div>';
     return;
   }
-
-  let html = '<div style="padding:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:12px;color:var(--red);margin-bottom:12px">Viewing private journals of ' + email + ' — ' + journals.length + ' total entries</div>';
-
-  journals.forEach(function(e) {
-    const deletedBadge = e.is_deleted
-      ? ' <span style="font-size:10px;color:var(--red)">(deleted)</span>'
-      : '';
-    const opacity = e.is_deleted ? '.6' : '1';
-    const borderColor = e.is_deleted
-      ? 'rgba(239,68,68,.2)'
-      : 'rgba(245,158,11,.2)';
-    html += '<div class="journal-entry-card" style="border-color:' + borderColor + ';opacity:' + opacity + '" onclick="viewJournalEntry(\'' + e.id + '\')">';
-    html += '<div class="je-top">';
-    html += '<div class="je-mood">' + (MOOD_ICONS[e.mood]||'🙂') + '</div>';
-    html += '<div class="je-title">' + (e.title||'Untitled') + deletedBadge + '</div>';
-    html += '<div class="je-date">' + formatDate(e.entry_date) + '</div>';
+  let html = '<div style="padding:10px;border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:12px;color:var(--red);margin-bottom:12px">Viewing ' + journals.length + ' entries of ' + email + '</div>';
+  for (let i = 0; i < journals.length; i++) {
+    const e = journals[i];
+    const mood = MOOD_ICONS[e.mood] || '🙂';
+    const title = e.title || 'Untitled';
+    const date = formatDate(e.entry_date);
+    const preview = (e.content || '').substring(0,80);
+    const deleted = e.is_deleted ? ' 🗑' : '';
+    const op = e.is_deleted ? '0.6' : '1';
+    html += '<div onclick="viewJournalEntry(\'' + e.id + '\')" style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:8px;cursor:pointer;opacity:' + op + '">';
+    html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">';
+    html += '<span style="font-size:20px">' + mood + '</span>';
+    html += '<span style="font-size:13px;font-weight:700;color:var(--text);flex:1">' + title + deleted + '</span>';
+    html += '<span style="font-size:11px;color:var(--text3)">' + date + '</span>';
     html += '</div>';
-    html += '<div class="je-preview">' + (e.content||'') + '</div>';
+    html += '<div style="font-size:12px;color:var(--text2)">' + preview + '</div>';
     html += '</div>';
-  });
-
+  }
   el.innerHTML = html;
 };
   
