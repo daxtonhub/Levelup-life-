@@ -2512,22 +2512,24 @@ window.viewPlayer = async function(userId) {
 window.giveBonusXP = async function(userId) {
   const xp = parseInt(
     val('bonus-xp-amount')) || 0;
-  const gems = parseInt(
-    document.getElementById(
-      'bonus-gems-amount').value) || 0;
-  const coins = parseInt(
-    document.getElementById(
-      'bonus-coins').value) || 0;
+  const gemsEl = document.getElementById(
+    'bonus-gems-amount');
+  const coinsEl = document.getElementById(
+    'bonus-coins');
+  const gems = gemsEl
+    ? parseInt(gemsEl.value) || 0 : 0;
+  const coins = coinsEl
+    ? parseInt(coinsEl.value) || 0 : 0;
 
-  const { data: p } = await sb
+  const {data:p} = await sb
     .from('profiles')
     .select('xp,username,gems,coins')
     .eq('id', userId).single();
   if (!p) return;
 
-  const newXP = (p.xp || 0) + xp;
-  const newGems = (p.gems || 0) + gems;
-  const newCoins = (p.coins || 0) + coins;
+  const newXP = (p.xp||0) + xp;
+  const newGems = (p.gems||0) + gems;
+  const newCoins = (p.coins||0) + coins;
 
   await sb.from('profiles').update({
     xp: newXP,
@@ -2536,13 +2538,13 @@ window.giveBonusXP = async function(userId) {
     coins: newCoins
   }).eq('id', userId);
 
-  const parts = [];
-  if (xp > 0) parts.push(`${xp} XP`);
-  if (gems > 0) parts.push(`💎 ${gems} gems`);
-  if (coins > 0) parts.push(`🪙 ${coins} coins`);
+  let msg = 'Gave';
+  if (xp > 0) msg += ' ' + xp + ' XP';
+  if (gems > 0) msg += ' + ' + gems + ' gems';
+  if (coins > 0) msg += ' + ' + coins + ' coins';
+  msg += ' to ' + p.username;
 
-  toast(`✅ Gave ${parts.join(' + ')} to
-    ${p.username}!`, 'green');
+  toast(msg, 'green');
   viewPlayer(userId);
 };
 
@@ -2575,118 +2577,65 @@ window.removeVIP = async function(vipId) {
 
 window.readPlayerJournal = async function() {
   const email = val('journal-read-email');
-  if (!email) { toast('Enter email! ⚠️', 'red'); return; }
+  if (!email) {
+    toast('Enter email!', 'red'); return;
+  }
 
   const el = id('secret-journal-entries');
   if (!el) return;
+  el.innerHTML = '<div style="color:var(--text2);font-size:13px;padding:12px">Searching...</div>';
 
-  el.innerHTML = `<div style="padding:12px;
-    color:var(--text2);font-size:13px">
-    🔍 Searching...</div>`;
-
-  // Check VIP list
-  const { data: vips } = await sb
+  const {data:vips} = await sb
     .from('vip_players').select('*');
-  const vip = (vips || []).find(v =>
+  const vip = (vips||[]).find(v =>
     v.email.toLowerCase() ===
     email.toLowerCase().trim()
   );
 
   if (!vip) {
-    el.innerHTML = `<div style="padding:12px;
-      background:rgba(239,68,68,.08);
-      border:1px solid rgba(239,68,68,.2);
-      border-radius:10px;font-size:13px;
-      color:var(--red)">
-      ❌ This email is not in the VIP list.
-      Add them as VIP first.
-    </div>`;
+    el.innerHTML = '<div style="padding:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:13px;color:var(--red)">Not a VIP player. Add them first.</div>';
     return;
   }
 
-  // Try to get user_id from vip record
-  let targetUserId = vip.user_id || null;
-
-  // If no user_id saved yet, try to find
-  // from profiles by matching auth users
-  // Since we don't store email in profiles,
-  // show helpful message
-  if (!targetUserId) {
-    el.innerHTML = `<div style="padding:12px;
-      background:rgba(245,158,11,.08);
-      border:1px solid rgba(245,158,11,.2);
-      border-radius:10px;font-size:13px;
-      color:var(--gold)">
-      ⚠️ <strong>${email}</strong> is VIP but
-      has not opened the app yet after being
-      added. Ask them to open the app once —
-      their journal will appear here after
-      that.
-    </div>`;
+  if (!vip.user_id) {
+    el.innerHTML = '<div style="padding:12px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;font-size:13px;color:var(--gold)">VIP player has not opened the app yet. Ask them to open it once.</div>';
     return;
   }
 
-  // Fetch ALL their journals (active + deleted)
-  const { data: journals } = await sb
+  const {data:journals} = await sb
     .from('journal_entries')
     .select('*')
-    .eq('user_id', targetUserId)
-    .order('entry_date', { ascending: false });
+    .eq('user_id', vip.user_id)
+    .order('entry_date', {ascending:false});
 
   if (!journals || !journals.length) {
-    el.innerHTML = `<div style="padding:12px;
-      background:rgba(96,165,250,.08);
-      border:1px solid rgba(96,165,250,.2);
-      border-radius:10px;font-size:13px;
-      color:var(--gem)">
-      📖 ${email} has not written any journal
-      entries yet.
-    </div>`;
+    el.innerHTML = '<div style="padding:12px;color:var(--text2);font-size:13px">No journal entries found for this player.</div>';
     return;
   }
 
-  const active = journals.filter(
-    j => !j.is_deleted);
-  const deleted = journals.filter(
-    j => j.is_deleted);
+  let html = '<div style="padding:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:12px;color:var(--red);margin-bottom:12px">Viewing private journals of ' + email + ' — ' + journals.length + ' total entries</div>';
 
-  el.innerHTML = `
-    <div style="padding:12px;
-      background:rgba(239,68,68,.08);
-      border:1px solid rgba(239,68,68,.2);
-      border-radius:10px;font-size:12px;
-      color:var(--red);margin-bottom:12px">
-      🔒 Private journals of ${email}
-      • ${active.length} entries
-      • ${deleted.length} deleted
-    </div>
-    ${journals.map(e => `
-      <div class="journal-entry-card"
-        style="border-color:${e.is_deleted
-          ? 'rgba(239,68,68,.2)'
-          : 'rgba(245,158,11,.2)'};
-          opacity:${e.is_deleted ? '.6' : '1'}"
-        onclick="viewJournalEntry('${e.id}')">
-        <div class="je-top">
-          <div class="je-mood">
-            ${MOOD_ICONS[e.mood] || '🙂'}
-          </div>
-          <div class="je-title">
-            ${e.title || 'Untitled'}
-            ${e.is_deleted
-              ? '<span style="font-size:10px;color:var(--red);margin-left:6px">🗑 deleted</span>'
-              : ''}
-          </div>
-          <div class="je-date">
-            ${formatDate(e.entry_date)}
-          </div>
-        </div>
-        <div class="je-preview">
-          ${e.content || ''}
-        </div>
-      </div>`).join('')}`;
+  journals.forEach(function(e) {
+    const deletedBadge = e.is_deleted
+      ? ' <span style="font-size:10px;color:var(--red)">(deleted)</span>'
+      : '';
+    const opacity = e.is_deleted ? '.6' : '1';
+    const borderColor = e.is_deleted
+      ? 'rgba(239,68,68,.2)'
+      : 'rgba(245,158,11,.2)';
+    html += '<div class="journal-entry-card" style="border-color:' + borderColor + ';opacity:' + opacity + '" onclick="viewJournalEntry(\'' + e.id + '\')">';
+    html += '<div class="je-top">';
+    html += '<div class="je-mood">' + (MOOD_ICONS[e.mood]||'🙂') + '</div>';
+    html += '<div class="je-title">' + (e.title||'Untitled') + deletedBadge + '</div>';
+    html += '<div class="je-date">' + formatDate(e.entry_date) + '</div>';
+    html += '</div>';
+    html += '<div class="je-preview">' + (e.content||'') + '</div>';
+    html += '</div>';
+  });
+
+  el.innerHTML = html;
 };
-
+  
 // ══════════════════════════════════
 // MODALS
 // ══════════════════════════════════
