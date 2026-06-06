@@ -2574,14 +2574,16 @@ async function loadVIPList() {
 }
 
 window.addVIPPlayer = async function() {
-  const email=val('vip-email'), notes=val('vip-notes');
-  if(!email){toast('Enter email! ⚠️','red');return;}
+  const email = val('vip-email');
+  const notes = val('vip-notes');
+  if (!email) { toast('Enter email!','red'); return; }
   try {
     await sb.from('vip_players').insert({email:email.toLowerCase(),added_by:user.id,notes:notes||null});
-    toast(`⭐ VIP granted to ${email}!`,'gem');
-    id('vip-email').value=''; id('vip-notes').value='';
+    toast('VIP granted to ' + email + '!','gem');
+    id('vip-email').value = '';
+    id('vip-notes').value = '';
     loadVIPList();
-  } catch(e){ toast('Already VIP or error!','red'); }
+  } catch(e) { toast('Already VIP or error!','red'); }
 };
 
 window.removeVIP = async function(vipId) {
@@ -2597,7 +2599,7 @@ window.readPlayerJournal = async function() {
   if (!el) return;
   el.innerHTML = '<div style="color:var(--text2);padding:12px">Searching...</div>';
   const {data:vips} = await sb.from('vip_players').select('*');
-  const vip = (vips||[]).find(v => v.email.toLowerCase() === email.toLowerCase().trim());
+  const vip = (vips||[]).find(function(v) { return v.email.toLowerCase() === email.toLowerCase().trim(); });
   if (!vip) {
     el.innerHTML = '<div style="padding:12px;border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:13px;color:var(--red)">Not a VIP player. Add them first.</div>';
     return;
@@ -2617,7 +2619,7 @@ window.readPlayerJournal = async function() {
     const mood = MOOD_ICONS[e.mood] || '🙂';
     const title = e.title || 'Untitled';
     const date = formatDate(e.entry_date);
-    const preview = (e.content || '').substring(0,80);
+    const preview = (e.content||'').substring(0,80);
     const deleted = e.is_deleted ? ' 🗑' : '';
     const op = e.is_deleted ? '0.6' : '1';
     html += '<div onclick="viewJournalEntry(\'' + e.id + '\')" style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:8px;cursor:pointer;opacity:' + op + '">';
