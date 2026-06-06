@@ -2500,21 +2500,49 @@ window.viewPlayer = async function(userId) {
     ${sorted.map((s,i)=>`<div class="skill-card ${i===0?'perf-gold':i===1?'perf-silver':i===2?'perf-bronze':''}">${i<3?`<div class="skill-top-badge">${['🥇','🥈','🥉'][i]}</div>`:''}<div class="skill-icon">${SKILL_ICONS[s.skill_name]||'⭐'}</div><div class="skill-name">${cap(s.skill_name)}</div><div class="skill-lv">LV ${s.skill_level}</div><div class="skill-track"><div class="skill-fill" style="width:${(s.skill_xp||0)%100}%"></div></div></div>`).join('')}
   </div>
   <div class="sec-title">⚡ Admin Actions</div>
-  <div class="form-card">
+<div class="form-card">
     <div class="form-card-title">🎁 Give Bonus to ${p.username}</div>
-    <div class="form-group"><label>XP Amount</label><input type="number" id="bonus-xp-amount" value="50"/></div>
-    <div class="form-group"><label>Coins Bonus</label><input type="number" id="bonus-coins" value="20"/></div>
+    <div class="form-group"><label>XP Amount</label><input type="number" id="bonus-xp-amount" value="50" min="0"/></div>
+    <div class="form-group"><label>💎 Gems (premium currency)</label><input type="number" id="bonus-gems-amount" value="0" min="0"/></div>
+    <div class="form-group"><label>🪙 Coins</label><input type="number" id="bonus-coins" value="20" min="0"/></div>
     <button class="btn-gold" onclick="giveBonusXP('${p.id}')">⚡ Give Reward</button>
-  </div>`;
+  </div>;
 };
 
 window.giveBonusXP = async function(userId) {
-  const xp=parseInt(val('bonus-xp-amount'))||50;
-  const coins=parseInt(document.getElementById('bonus-coins').value)||0;
-  const {data:p}=await sb.from('profiles').select('xp,username,coins').eq('id',userId).single();
-  if(!p) return;
-  await sb.from('profiles').update({xp:(p.xp||0)+xp,level:getLevel((p.xp||0)+xp),coins:(p.coins||0)+coins}).eq('id',userId);
-  toast(`✅ Gave ${xp}XP 🪙${coins} to ${p.username}!`,'green');
+  const xp = parseInt(
+    val('bonus-xp-amount')) || 0;
+  const gems = parseInt(
+    document.getElementById(
+      'bonus-gems-amount').value) || 0;
+  const coins = parseInt(
+    document.getElementById(
+      'bonus-coins').value) || 0;
+
+  const { data: p } = await sb
+    .from('profiles')
+    .select('xp,username,gems,coins')
+    .eq('id', userId).single();
+  if (!p) return;
+
+  const newXP = (p.xp || 0) + xp;
+  const newGems = (p.gems || 0) + gems;
+  const newCoins = (p.coins || 0) + coins;
+
+  await sb.from('profiles').update({
+    xp: newXP,
+    level: getLevel(newXP),
+    gems: newGems,
+    coins: newCoins
+  }).eq('id', userId);
+
+  const parts = [];
+  if (xp > 0) parts.push(`${xp} XP`);
+  if (gems > 0) parts.push(`💎 ${gems} gems`);
+  if (coins > 0) parts.push(`🪙 ${coins} coins`);
+
+  toast(`✅ Gave ${parts.join(' + ')} to
+    ${p.username}!`, 'green');
   viewPlayer(userId);
 };
 
@@ -2546,18 +2574,117 @@ window.removeVIP = async function(vipId) {
 };
 
 window.readPlayerJournal = async function() {
-  const email=val('journal-read-email');
-  if(!email){toast('Enter email! ⚠️','red');return;}
-  const {data:vip}=await sb.from('vip_players').select('*').eq('email',email.toLowerCase()).single().catch(()=>({data:null}));
-  if(!vip){toast('❌ Player is not VIP. Cannot access.','red');return;}
-  const el=id('secret-journal-entries'); if(!el) return;
-  if(vip.user_id){
-    const {data:journals}=await sb.from('journal_entries').select('*').eq('user_id',vip.user_id).eq('is_deleted',false).order('entry_date',{ascending:false}).limit(50);
-    if(!journals||!journals.length){el.innerHTML=empty('📖','No journal entries found');return;}
-    el.innerHTML=`<div style="margin-bottom:16px;padding:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:12px;color:var(--red)">🔒 Viewing private journals of ${email}</div>`+journals.map(e=>`<div class="journal-entry-card" style="border-color:rgba(245,158,11,.2)" onclick="viewJournalEntry('${e.id}')"><div class="je-top"><div class="je-mood">${MOOD_ICONS[e.mood]||'🙂'}</div><div class="je-title">${e.title||'Untitled'}</div><div class="je-date">${formatDate(e.entry_date)}</div></div><div class="je-preview">${e.content||''}</div></div>`).join('');
-  } else {
-    el.innerHTML=`<div style="padding:12px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;font-size:12px;color:var(--gold)">⚠️ Player has not logged in yet after being added as VIP.</div>`;
+  const email = val('journal-read-email');
+  if (!email) { toast('Enter email! ⚠️', 'red'); return; }
+
+  const el = id('secret-journal-entries');
+  if (!el) return;
+
+  el.innerHTML = `<div style="padding:12px;
+    color:var(--text2);font-size:13px">
+    🔍 Searching...</div>`;
+
+  // Check VIP list
+  const { data: vips } = await sb
+    .from('vip_players').select('*');
+  const vip = (vips || []).find(v =>
+    v.email.toLowerCase() ===
+    email.toLowerCase().trim()
+  );
+
+  if (!vip) {
+    el.innerHTML = `<div style="padding:12px;
+      background:rgba(239,68,68,.08);
+      border:1px solid rgba(239,68,68,.2);
+      border-radius:10px;font-size:13px;
+      color:var(--red)">
+      ❌ This email is not in the VIP list.
+      Add them as VIP first.
+    </div>`;
+    return;
   }
+
+  // Try to get user_id from vip record
+  let targetUserId = vip.user_id || null;
+
+  // If no user_id saved yet, try to find
+  // from profiles by matching auth users
+  // Since we don't store email in profiles,
+  // show helpful message
+  if (!targetUserId) {
+    el.innerHTML = `<div style="padding:12px;
+      background:rgba(245,158,11,.08);
+      border:1px solid rgba(245,158,11,.2);
+      border-radius:10px;font-size:13px;
+      color:var(--gold)">
+      ⚠️ <strong>${email}</strong> is VIP but
+      has not opened the app yet after being
+      added. Ask them to open the app once —
+      their journal will appear here after
+      that.
+    </div>`;
+    return;
+  }
+
+  // Fetch ALL their journals (active + deleted)
+  const { data: journals } = await sb
+    .from('journal_entries')
+    .select('*')
+    .eq('user_id', targetUserId)
+    .order('entry_date', { ascending: false });
+
+  if (!journals || !journals.length) {
+    el.innerHTML = `<div style="padding:12px;
+      background:rgba(96,165,250,.08);
+      border:1px solid rgba(96,165,250,.2);
+      border-radius:10px;font-size:13px;
+      color:var(--gem)">
+      📖 ${email} has not written any journal
+      entries yet.
+    </div>`;
+    return;
+  }
+
+  const active = journals.filter(
+    j => !j.is_deleted);
+  const deleted = journals.filter(
+    j => j.is_deleted);
+
+  el.innerHTML = `
+    <div style="padding:12px;
+      background:rgba(239,68,68,.08);
+      border:1px solid rgba(239,68,68,.2);
+      border-radius:10px;font-size:12px;
+      color:var(--red);margin-bottom:12px">
+      🔒 Private journals of ${email}
+      • ${active.length} entries
+      • ${deleted.length} deleted
+    </div>
+    ${journals.map(e => `
+      <div class="journal-entry-card"
+        style="border-color:${e.is_deleted
+          ? 'rgba(239,68,68,.2)'
+          : 'rgba(245,158,11,.2)'};
+          opacity:${e.is_deleted ? '.6' : '1'}"
+        onclick="viewJournalEntry('${e.id}')">
+        <div class="je-top">
+          <div class="je-mood">
+            ${MOOD_ICONS[e.mood] || '🙂'}
+          </div>
+          <div class="je-title">
+            ${e.title || 'Untitled'}
+            ${e.is_deleted
+              ? '<span style="font-size:10px;color:var(--red);margin-left:6px">🗑 deleted</span>'
+              : ''}
+          </div>
+          <div class="je-date">
+            ${formatDate(e.entry_date)}
+          </div>
+        </div>
+        <div class="je-preview">
+          ${e.content || ''}
+        </div>
+      </div>`).join('')}`;
 };
 
 // ══════════════════════════════════
