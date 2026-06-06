@@ -1,15 +1,16 @@
-const CACHE = 'levelup-v2';
+const CACHE = 'levelup-v3';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.png'
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.png'
 ];
 
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE)
-      .then(cache => cache.addAll(ASSETS))
+      .then(cache => cache.addAll(ASSETS)
+        .catch(() => {}))
   );
   self.skipWaiting();
 });
@@ -29,12 +30,9 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   e.respondWith(
     caches.match(e.request)
-      .then(response => {
-        return response ||
-          fetch(e.request)
-            .catch(() =>
-              caches.match('/index.html')
-            );
-      })
+      .then(response => response ||
+        fetch(e.request)
+          .catch(() => caches.match('./index.html'))
+      )
   );
 });
