@@ -2552,10 +2552,25 @@ window.giveBonusXP = async function(userId) {
 // VIP SYSTEM
 // ══════════════════════════════════
 async function loadVIPList() {
-  const {data:vips}=await sb.from('vip_players').select('*').order('created_at',{ascending:false});
-  const el=id('vip-list'); if(!el) return;
-  if(!vips||!vips.length){el.innerHTML=empty('⭐','No VIP players yet');return;}
-  el.innerHTML=vips.map(v=>`<div style="background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(96,165,250,.04));border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px"><div style="font-size:24px">⭐</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)">${v.email}</div><div style="font-size:11px;color:var(--text2);margin-top:2px">${v.notes||'No notes'} • Added ${new Date(v.created_at).toLocaleDateString()}</div></div><button class="btn-icon del" onclick="removeVIP('${v.id}')">🗑</button></div>`).join('');
+  const {data:vips} = await sb.from('vip_players').select('*').order('created_at',{ascending:false});
+  const el = id('vip-list');
+  if (!el) return;
+  if (!vips||!vips.length) { el.innerHTML = empty('⭐','No VIP players yet'); return; }
+  let html = '';
+  for (let i = 0; i < vips.length; i++) {
+    const v = vips[i];
+    const date = new Date(v.created_at).toLocaleDateString();
+    const notes = v.notes || 'No notes';
+    html += '<div style="background:var(--bg3);border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px">';
+    html += '<div style="font-size:24px">⭐</div>';
+    html += '<div style="flex:1">';
+    html += '<div style="font-size:14px;font-weight:700;color:var(--text)">' + v.email + '</div>';
+    html += '<div style="font-size:11px;color:var(--text2);margin-top:2px">' + notes + ' • Added ' + date + '</div>';
+    html += '</div>';
+    html += '<button class="btn-icon del" onclick="removeVIP(\'' + v.id + '\')">🗑</button>';
+    html += '</div>';
+  }
+  el.innerHTML = html;
 }
 
 window.addVIPPlayer = async function() {
