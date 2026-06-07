@@ -599,7 +599,223 @@ body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);mi
   cursor:pointer;margin-top:4px}
 .manual-override-btn:active{
   color:var(--text2)}
-  
+/* ══ AVATAR FRAMES ══ */
+.frame-wrap{position:relative;
+  display:inline-block;}
+.avatar-frame-ring{
+  position:absolute;inset:-4px;
+  border-radius:50%;pointer-events:none;
+  z-index:2;}
+
+/* Bronze Frame */
+.frame-bronze .hero-avatar,
+.frame-bronze .profile-avatar{
+  box-shadow:
+    0 0 0 3px #5c3317,
+    0 0 0 6px #cd7f32,
+    0 0 0 8px #5c3317,
+    0 0 12px rgba(205,127,50,.3)!important}
+
+/* Silver Frame */
+.frame-silver .hero-avatar,
+.frame-silver .profile-avatar{
+  box-shadow:
+    0 0 0 3px #636363,
+    0 0 0 6px #e8e8e8,
+    0 0 0 8px #636363,
+    0 0 15px rgba(192,192,192,.4)!important}
+
+/* Platinum Frame */
+.frame-platinum .hero-avatar,
+.frame-platinum .profile-avatar{
+  box-shadow:
+    0 0 0 3px #3b82f6,
+    0 0 0 6px #bfdbfe,
+    0 0 0 8px #3b82f6,
+    0 0 20px rgba(96,165,250,.5)!important}
+
+/* Master Frame */
+.frame-master .hero-avatar,
+.frame-master .profile-avatar{
+  box-shadow:
+    0 0 0 3px #6366f1,
+    0 0 0 6px #1e1b4b,
+    0 0 0 9px #6366f1,
+    0 0 25px rgba(99,102,241,.6)!important}
+
+/* Legendary Frame */
+.frame-legendary .hero-avatar,
+.frame-legendary .profile-avatar{
+  box-shadow:
+    0 0 0 2px #92400e,
+    0 0 0 5px #f59e0b,
+    0 0 0 8px #92400e,
+    0 0 0 11px rgba(245,158,11,.3),
+    0 0 30px rgba(245,158,11,.6)!important}
+
+/* Ascended Frame */
+.frame-ascended .hero-avatar,
+.frame-ascended .profile-avatar{
+  animation:breathe 4s ease-in-out infinite,
+    frameRainbow 3s linear infinite!important}
+@keyframes frameRainbow{
+  0%{box-shadow:0 0 0 3px #92400e,
+    0 0 0 6px #f59e0b,0 0 30px
+    rgba(245,158,11,.6)}
+  25%{box-shadow:0 0 0 3px #5b21b6,
+    0 0 0 6px #a855f7,0 0 30px
+    rgba(168,85,247,.6)}
+  50%{box-shadow:0 0 0 3px #1e40af,
+    0 0 0 6px #60a5fa,0 0 30px
+    rgba(96,165,250,.6)}
+  75%{box-shadow:0 0 0 3px #065f46,
+    0 0 0 6px #10b981,0 0 30px
+    rgba(16,185,129,.6)}
+  100%{box-shadow:0 0 0 3px #92400e,
+    0 0 0 6px #f59e0b,0 0 30px
+    rgba(245,158,11,.6)}}
+
+/* ══ SHOP ══ */
+.shop-summon-card{background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:18px;overflow:hidden;
+  margin-bottom:12px;
+  animation:fadeUp .3s ease;
+  transition:transform .15s}
+.shop-summon-card:active{
+  transform:scale(.98)}
+.shop-summon-card.rarity-rare{
+  border-color:rgba(96,165,250,.3);
+  background:rgba(96,165,250,.03)}
+.shop-summon-card.rarity-epic{
+  border-color:rgba(168,85,247,.3);
+  background:rgba(168,85,247,.03)}
+.shop-summon-card.rarity-legendary{
+  border-color:rgba(245,158,11,.4);
+  background:rgba(245,158,11,.04)}
+.summon-img{width:80px;height:80px;
+  border-radius:14px;object-fit:cover;
+  flex-shrink:0}
+.summon-img-placeholder{
+  width:80px;height:80px;
+  border-radius:14px;background:var(--bg);
+  border:1px solid var(--border);
+  display:flex;align-items:center;
+  justify-content:center;font-size:32px;
+  flex-shrink:0}
+.rarity-badge{font-size:10px;
+  font-weight:700;border-radius:5px;
+  padding:2px 7px;border:1px solid;
+  display:inline-block}
+.rarity-common{color:#94a3b8;
+  border-color:rgba(148,163,184,.3);
+  background:rgba(148,163,184,.08)}
+.rarity-rare{color:var(--gem);
+  border-color:rgba(96,165,250,.3);
+  background:rgba(96,165,250,.08)}
+.rarity-epic{color:var(--accent2);
+  border-color:rgba(168,85,247,.3);
+  background:rgba(168,85,247,.08)}
+.rarity-legendary{color:var(--gold);
+  border-color:rgba(245,158,11,.3);
+  background:rgba(245,158,11,.08)}
+.effect-tag{font-size:11px;
+  color:var(--green);
+  background:rgba(16,185,129,.08);
+  border:1px solid rgba(16,185,129,.2);
+  border-radius:6px;padding:3px 8px;
+  display:inline-block;margin-top:4px}
+.lock-tag{font-size:11px;
+  color:var(--text3);
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:6px;padding:3px 8px;
+  display:inline-block;margin-top:4px}
+.btn-purchase{padding:10px 16px;
+  background:linear-gradient(135deg,
+    var(--accent),var(--accent2));
+  border:none;border-radius:10px;
+  color:#fff;font-family:'Rajdhani',
+  sans-serif;font-size:13px;
+  font-weight:700;cursor:pointer;
+  white-space:nowrap;flex-shrink:0;
+  transition:transform .15s}
+.btn-purchase:active{transform:scale(.97)}
+.btn-purchase.gems{
+  background:linear-gradient(135deg,
+    #1e40af,var(--gem))}
+.btn-purchase.owned{
+  background:rgba(16,185,129,.1);
+  color:var(--green);
+  border:1px solid rgba(16,185,129,.3)}
+.btn-purchase.locked{
+  background:var(--bg);
+  color:var(--text3);
+  border:1px solid var(--border);
+  cursor:not-allowed}
+
+/* ══ SUMMON INVENTORY ══ */
+.inv-summon-card{background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:16px;padding:14px;
+  margin-bottom:10px;display:flex;
+  align-items:center;gap:14px;
+  transition:transform .15s;
+  cursor:pointer;
+  animation:fadeUp .3s ease}
+.inv-summon-card:active{
+  transform:scale(.98)}
+.inv-summon-card.active-summon{
+  border-color:var(--accent2);
+  background:rgba(168,85,247,.05)}
+.inv-summon-img{width:60px;height:60px;
+  border-radius:12px;object-fit:cover;
+  flex-shrink:0;
+  border:2px solid var(--border)}
+.inv-summon-card.active-summon
+  .inv-summon-img{
+  border-color:var(--accent2);
+  box-shadow:0 0 12px rgba(168,85,247,.4)}
+.active-badge{font-size:10px;
+  font-weight:700;color:var(--accent2);
+  background:rgba(168,85,247,.1);
+  border:1px solid rgba(168,85,247,.3);
+  border-radius:5px;padding:2px 7px;
+  display:inline-block}
+.bond-mini-track{height:4px;
+  background:rgba(0,0,0,.4);
+  border-radius:2px;overflow:hidden;
+  margin-top:5px}
+.bond-mini-fill{height:100%;
+  border-radius:2px;
+  background:linear-gradient(90deg,
+    var(--pink),var(--accent2))}
+
+/* ══ FRAME SELECTOR ══ */
+.frame-option{width:60px;height:60px;
+  border-radius:50%;background:var(--bg);
+  border:2px solid var(--border);
+  display:flex;align-items:center;
+  justify-content:center;cursor:pointer;
+  transition:all .2s;flex-shrink:0;
+  font-size:20px;position:relative}
+.frame-option.selected::after{
+  content:'✓';position:absolute;
+  bottom:-2px;right:-2px;
+  width:18px;height:18px;
+  border-radius:50%;
+  background:var(--green);
+  color:#fff;font-size:10px;
+  display:flex;align-items:center;
+  justify-content:center;
+  font-weight:700}
+.frames-row{display:flex;gap:10px;
+  overflow-x:auto;padding:8px 0;
+  scrollbar-width:none}
+.frames-row::-webkit-scrollbar{display:none}
+.frame-label{font-size:9px;
+  color:var(--text3);margin-top:4px;
+  text-align:center;letter-spacing:.5px}
 /* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(18,18,26,.97);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(20px)}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0;border:none;background:transparent;color:var(--text3);font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;gap:4px;cursor:pointer;transition:color .2s}
@@ -937,6 +1153,15 @@ window.addEventListener('unhandledrejection', function(e) {
         <div class="edit-name-btn" onclick="openNameChange()">✏️</div>
       </div>
       <div id="profile-role-badge" class="profile-role-badge"><div id="rank-badge-display"
+  style="display:inline-flex;
+    align-items:center;gap:4px;
+    font-size:10px;font-weight:700;
+    border-radius:6px;padding:2px 8px;
+    border:1px solid rgba(205,127,50,.3);
+    background:rgba(205,127,50,.1);
+    color:#cd7f32;margin-left:6px">
+  🥉 Bronze
+      </div><div id="rank-badge-display"
   class="rank-badge"
   style="color:#cd7f32;
     border-color:rgba(205,127,50,.3);
@@ -1042,23 +1267,113 @@ window.addEventListener('unhandledrejection', function(e) {
       </div>
     </div>
 
-    <!-- SHOP -->
+    <!-- SHOP / SUMMON STORE -->
     <div class="me-section">
-      <div class="me-section-header" onclick="toggleSection('shop-content','shop-arrow')">
+      <div class="me-section-header"
+        onclick="toggleSection(
+          'shop-content','shop-arrow')">
         <div class="me-section-icon">🏪</div>
-        <div style="flex:1"><div class="me-section-label">Hero Shop</div><div class="me-section-sub">💎 Gems • 🪙 Coins</div></div>
-        <div class="me-section-arrow" id="shop-arrow">›</div>
+        <div style="flex:1">
+          <div class="me-section-label">
+            Summon Store
+          </div>
+          <div class="me-section-sub">
+            💎 Gems •
+            🪙 Coins available
+          </div>
+        </div>
+        <div class="me-section-arrow"
+          id="shop-arrow">›</div>
       </div>
-      <div id="shop-content" class="me-section-content hidden">
-        <div style="text-align:center;padding:20px 0">
-          <div style="font-size:50px;margin-bottom:12px;animation:float 3s ease-in-out infinite">🏪</div>
-          <div style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--gold)">HERO SHOP</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:8px">New items coming soon!</div>
+      <div id="shop-content"
+        class="me-section-content hidden">
+        <div style="display:flex;gap:8px;
+          padding:12px 0 8px;
+          overflow-x:auto;
+          scrollbar-width:none"
+          id="shop-rarity-filters">
+          <button class="filter-btn active"
+            onclick="filterShop('all',this)">
+            All
+          </button>
+          <button class="filter-btn"
+            onclick="filterShop(
+              'common',this)">
+            Common
+          </button>
+          <button class="filter-btn"
+            onclick="filterShop('rare',this)">
+            Rare
+          </button>
+          <button class="filter-btn"
+            onclick="filterShop('epic',this)">
+            Epic
+          </button>
+          <button class="filter-btn"
+            onclick="filterShop(
+              'legendary',this)">
+            Legendary
+          </button>
+          <button class="filter-btn"
+            onclick="filterShop(
+              'premium',this)">
+            💎 Premium
+          </button>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;position:relative;overflow:hidden"><div style="font-size:30px;margin-bottom:8px">🎭</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Avatar Frame</div><div style="font-size:11px;color:var(--text3)">💎 50 gems</div><div style="position:absolute;inset:0;background:rgba(10,10,15,.85);display:flex;align-items:center;justify-content:center;border-radius:14px"><div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--accent2);letter-spacing:2px;font-weight:700">COMING SOON</div></div></div>
-          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;position:relative;overflow:hidden"><div style="font-size:30px;margin-bottom:8px">🔮</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Summon Stone</div><div style="font-size:11px;color:var(--text3)">💎 120 gems</div><div style="position:absolute;inset:0;background:rgba(10,10,15,.85);display:flex;align-items:center;justify-content:center;border-radius:14px"><div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--accent2);letter-spacing:2px;font-weight:700">COMING SOON</div></div></div>
+        <div id="shop-summons-list"
+          style="padding-top:4px">
         </div>
+      </div>
+    </div>
+
+    <!-- SUMMON INVENTORY -->
+    <div class="me-section">
+      <div class="me-section-header"
+        onclick="toggleSection(
+          'inventory-content',
+          'inventory-arrow')">
+        <div class="me-section-icon">🎒</div>
+        <div style="flex:1">
+          <div class="me-section-label">
+            Summon Inventory
+          </div>
+          <div class="me-section-sub"
+            id="inventory-sub">
+            Your companions
+          </div>
+        </div>
+        <div class="me-section-arrow"
+          id="inventory-arrow">›</div>
+      </div>
+      <div id="inventory-content"
+        class="me-section-content hidden">
+        <div id="inventory-list"
+          style="padding-top:12px"></div>
+      </div>
+    </div>
+
+    <!-- AVATAR FRAMES -->
+    <div class="me-section">
+      <div class="me-section-header"
+        onclick="toggleSection(
+          'frames-content','frames-arrow')">
+        <div class="me-section-icon">🖼️</div>
+        <div style="flex:1">
+          <div class="me-section-label">
+            Avatar Frames
+          </div>
+          <div class="me-section-sub"
+            id="frame-sub">
+            Choose your frame
+          </div>
+        </div>
+        <div class="me-section-arrow"
+          id="frames-arrow">›</div>
+      </div>
+      <div id="frames-content"
+        class="me-section-content hidden">
+        <div id="frames-list"
+          style="padding-top:12px"></div>
       </div>
     </div>
      <!-- SUMMONS -->
@@ -1861,6 +2176,7 @@ function renderMeTab() {
   const gd=id('gender-display'); if(gd) gd.textContent=profile?.gender==='female'?'🌸 Female':profile?.gender==='male'?'⚔️ Male':'Not set';
 applyRankFrame();
   loadUserSummon();
+applyFrame();
 }
 
 // ══════════════════════════════════
@@ -1873,6 +2189,18 @@ window.toggleSection = function(contentId, arrowId) {
   const arrow = id(arrowId); if (arrow) arrow.textContent = isHidden ? '‹' : '›';
   if (isHidden) {
     if(contentId==='summons-content') {
+      renderSummonSection();
+    }
+    if(contentId==='shop-content'){
+      renderShopSection();
+    }
+    if(contentId==='inventory-content'){
+      renderSummonInventory();
+    }
+    if(contentId==='frames-content'){
+      renderFramesSection();
+    }
+    if(contentId==='summons-content'){
       renderSummonSection();
     }
     if (contentId==='glory-content') renderGlory();
@@ -1932,6 +2260,7 @@ window.completeQuest = async function(
     await awardCurrency(0, dc.coins);
     await checkStreak();
     await checkAchievements();
+    growSummonBond(5);
     growSummonBond(5);
   } catch(e) {
     console.error('Quest update error:',e);
@@ -3120,6 +3449,707 @@ async function growSummonBond(amount) {
   } catch(e) {}
   }
 // ══════════════════════════════════
+// RANK & FRAME SYSTEM
+// ══════════════════════════════════
+const RANKS = {
+  bronze:{name:'Bronze',icon:'🥉',
+    color:'#cd7f32',frame:'frame-bronze',min:0},
+  silver:{name:'Silver',icon:'🥈',
+    color:'#c0c0c0',frame:'frame-silver',min:500},
+  platinum:{name:'Platinum',icon:'💎',
+    color:'#60a5fa',frame:'frame-platinum',
+    min:1500},
+  master:{name:'Master',icon:'⚔️',
+    color:'#6366f1',frame:'frame-master',
+    min:3000},
+  legendary:{name:'Legendary',icon:'🌟',
+    color:'#f59e0b',frame:'frame-legendary',
+    min:5000},
+  ascended:{name:'Ascended',icon:'👑',
+    color:'#a855f7',frame:'frame-ascended',
+    min:8000}
+};
+
+const PREDEFINED_FRAMES = [
+  {id:'frame-bronze',name:'Bronze',
+    icon:'🥉',desc:'Rank: Bronze',
+    rankRequired:'bronze'},
+  {id:'frame-silver',name:'Silver',
+    icon:'🥈',desc:'Rank: Silver',
+    rankRequired:'silver'},
+  {id:'frame-platinum',name:'Platinum',
+    icon:'💎',desc:'Rank: Platinum',
+    rankRequired:'platinum'},
+  {id:'frame-master',name:'Master',
+    icon:'⚔️',desc:'Rank: Master',
+    rankRequired:'master'},
+  {id:'frame-legendary',name:'Legendary',
+    icon:'🌟',desc:'Rank: Legendary',
+    rankRequired:'legendary'},
+  {id:'frame-ascended',name:'Ascended',
+    icon:'👑',desc:'Rank: Ascended',
+    rankRequired:'ascended'}
+];
+
+function getUserRank(xp, streak) {
+  var score=(xp||0)+((streak||0)*50);
+  if(score>=8000) return 'ascended';
+  if(score>=5000) return 'legendary';
+  if(score>=3000) return 'master';
+  if(score>=1500) return 'platinum';
+  if(score>=500) return 'silver';
+  return 'bronze';
+}
+
+function getRankInfo(rank) {
+  return RANKS[rank]||RANKS.bronze;
+}
+
+function getRankOrder(rank) {
+  var keys=Object.keys(RANKS);
+  return keys.indexOf(rank);
+}
+
+function applyFrame() {
+  if(!profile) return;
+  var activeFrame=profile.active_frame||'rank';
+  var rank=getUserRank(
+    profile.xp||0, profile.streak||0);
+  var rankInfo=getRankInfo(rank);
+  var frameClass=activeFrame==='rank'
+    ?rankInfo.frame:activeFrame;
+  var heroCard=document.querySelector('.hero-card');
+  var profileCard=document.querySelector('.profile-card');
+  var allFrames=Object.values(RANKS)
+    .map(function(r){return r.frame;});
+  allFrames.push('frame-custom');
+  allFrames.forEach(function(fc){
+    if(heroCard) heroCard.classList.remove(fc);
+    if(profileCard) profileCard.classList.remove(fc);
+  });
+  if(heroCard) heroCard.classList.add(frameClass);
+  if(profileCard) profileCard.classList.add(frameClass);
+  var rb=id('rank-badge-display');
+  if(rb){
+    rb.textContent=rankInfo.icon+' '+rankInfo.name;
+    rb.style.color=rankInfo.color;
+    rb.style.borderColor=rankInfo.color+'44';
+    rb.style.background=rankInfo.color+'11';
+  }
+}
+
+async function renderFramesSection() {
+  var el=id('frames-list'); if(!el) return;
+  var rank=getUserRank(
+    profile.xp||0, profile.streak||0);
+  var rankOrder=getRankOrder(rank);
+  var unlockedFrames=profile.unlocked_frames||[];
+  if(typeof unlockedFrames==='string') {
+    try{unlockedFrames=JSON.parse(unlockedFrames);}
+    catch(e){unlockedFrames=[];}
+  }
+  var activeFrame=profile.active_frame||'rank';
+  var html='<div style="font-size:13px;'+
+    'color:var(--text2);margin-bottom:12px">'+
+    'Your rank: '+getRankInfo(rank).icon+' '+
+    getRankInfo(rank).name+
+    '<br/><span style="font-size:11px;'+
+    'color:var(--text3)">'+
+    'Higher rank = better frames unlocked.'+
+    '</span></div>';
+  html+='<div style="font-size:11px;'+
+    'color:var(--text2);margin-bottom:8px;'+
+    'letter-spacing:1px;font-family:'+
+    'Orbitron,monospace">RANK FRAMES</div>';
+  html+='<div class="frames-row">';
+  PREDEFINED_FRAMES.forEach(function(f){
+    var frameRankOrder=getRankOrder(
+      f.rankRequired);
+    var isUnlocked=rankOrder>=frameRankOrder;
+    var isActive=activeFrame===f.id||
+      (activeFrame==='rank'&&
+        f.id===getRankInfo(rank).frame);
+    var opacity=isUnlocked?'1':'0.35';
+    var cursor=isUnlocked?'pointer':'not-allowed';
+    html+='<div style="text-align:center;'+
+      'flex-shrink:0">';
+    html+='<div class="frame-option '+
+      f.id+(isActive?' selected':'')+'" '+
+      'style="opacity:'+opacity+';'+
+      'cursor:'+cursor+'" '+
+      (isUnlocked
+        ?'onclick="setActiveFrame(\''+f.id+'\')"'
+        :'')+'>'+
+      f.icon+'</div>';
+    html+='<div class="frame-label">'+
+      f.name+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  if(unlockedFrames.length>0){
+    html+='<div style="font-size:11px;'+
+      'color:var(--text2);margin:12px 0 8px;'+
+      'letter-spacing:1px;font-family:'+
+      'Orbitron,monospace">'+
+      'SPECIAL FRAMES</div>';
+    html+='<div class="frames-row">';
+    unlockedFrames.forEach(function(fid){
+      var isActive=activeFrame===fid;
+      html+='<div style="text-align:center;'+
+        'flex-shrink:0">';
+      html+='<div class="frame-option '+fid+
+        (isActive?' selected':'')+'" '+
+        'onclick="setActiveFrame(\''+fid+'\')">'+
+        '✨</div>';
+      html+='<div class="frame-label">'+
+        fid.replace('frame-','')+'</div>';
+      html+='</div>';
+    });
+    html+='</div>';
+  }
+  html+='<div style="margin-top:12px">'+
+    '<button class="btn-secondary" '+
+    'onclick="setActiveFrame(\'rank\')" '+
+    'style="margin-top:0">'+
+    '↩ Use Rank Frame (auto)</button></div>';
+  el.innerHTML=html;
+  var sub=id('frame-sub');
+  if(sub){
+    var af=activeFrame==='rank'?
+      'Auto: '+getRankInfo(rank).name:
+      activeFrame.replace('frame-','');
+    sub.textContent='Active: '+af;
+  }
+}
+
+window.setActiveFrame=async function(frameId){
+  await sb.from('profiles')
+    .update({active_frame:frameId})
+    .eq('id',user.id);
+  profile.active_frame=frameId;
+  applyFrame();
+  renderFramesSection();
+  toast('Frame updated!','green');
+};
+
+async function unlockFrame(frameId) {
+  if(!profile) return;
+  var frames=profile.unlocked_frames||[];
+  if(typeof frames==='string'){
+    try{frames=JSON.parse(frames);}
+    catch(e){frames=[];}
+  }
+  if(frames.indexOf(frameId)>-1) return;
+  frames.push(frameId);
+  await sb.from('profiles')
+    .update({unlocked_frames:frames})
+    .eq('id',user.id);
+  profile.unlocked_frames=frames;
+  toast('🖼️ New frame unlocked: '+frameId+
+    '!','gem');
+}
+
+// ══════════════════════════════════
+// SHOP SYSTEM
+// ══════════════════════════════════
+var shopFilter='all';
+var shopSummons=[];
+var playerOwnedSummons=[];
+
+async function renderShopSection() {
+  var el=id('shop-summons-list');
+  if(!el) return;
+  el.innerHTML='<div style="color:var(--text2);'+
+    'font-size:13px;padding:12px;'+
+    'text-align:center">Loading...</div>';
+  try{
+    var sRes=await sb.from('shop_summons')
+      .select('*').eq('is_available',true)
+      .order('rarity');
+    shopSummons=sRes.data||[];
+    var pRes=await sb.from('player_summons')
+      .select('*,shop_summons(*)')
+      .eq('user_id',user.id);
+    playerOwnedSummons=pRes.data||[];
+    var ownedIds=playerOwnedSummons
+      .map(function(p){return p.summon_id;});
+    var filtered=shopSummons;
+    if(shopFilter!=='all'){
+      if(shopFilter==='premium'){
+        filtered=shopSummons.filter(
+          function(s){return s.is_premium;});
+      } else {
+        filtered=shopSummons.filter(
+          function(s){
+            return s.rarity===shopFilter;
+          });
+      }
+    }
+    if(!filtered.length){
+      el.innerHTML=empty('🔮',
+        'No summons in this category yet');
+      return;
+    }
+    var html='<div style="display:flex;'+
+      'justify-content:space-between;'+
+      'font-size:12px;color:var(--text2);'+
+      'padding:4px 0 12px">'+
+      '<span>Your balance:</span>'+
+      '<span>💎 '+(profile.gems||0)+
+      ' • 🪙 '+(profile.coins||0)+'</span>'+
+      '</div>';
+    filtered.forEach(function(s){
+      var owned=ownedIds.indexOf(s.id)>-1;
+      var rank=getUserRank(
+        profile.xp||0, profile.streak||0);
+      var rankOrder=getRankOrder(rank);
+      var meetsXP=(profile.xp||0)>=
+        (s.unlock_xp||0);
+      var meetsLevel=getLevel(
+        profile.xp||0)>=(s.unlock_level||1);
+      var meetsStreak=(profile.streak||0)>=
+        (s.unlock_streak||0);
+      var isUnlocked=meetsXP&&
+        meetsLevel&&meetsStreak;
+      var imgHtml=s.image_url
+        ?'<img class="summon-img" '+
+          'src="'+s.image_url+'"/>'
+        :'<div class="summon-img-placeholder">'+
+          '🔮</div>';
+      var rarityClass='rarity-'+s.rarity;
+      html+='<div class="shop-summon-card '+
+        rarityClass+'">';
+      html+='<div style="display:flex;'+
+        'gap:14px;padding:14px;'+
+        'align-items:flex-start">';
+      html+=imgHtml;
+      html+='<div style="flex:1;min-width:0">';
+      html+='<div style="display:flex;'+
+        'align-items:center;gap:8px;'+
+        'margin-bottom:4px">';
+      html+='<span style="font-family:'+
+        'Orbitron,monospace;font-size:14px;'+
+        'font-weight:900;color:var(--text)">'+
+        s.name+'</span>';
+      html+='<span class="rarity-badge '+
+        rarityClass+'">'+
+        cap(s.rarity)+'</span>';
+      html+='</div>';
+      html+='<div style="font-size:11px;'+
+        'color:var(--text2);margin-bottom:3px">'+
+        '⚔️ '+s.class+' • 🧬 '+s.race+'</div>';
+      html+='<div style="font-size:12px;'+
+        'color:var(--text2);margin-bottom:6px;'+
+        'line-height:1.5">'+(s.description||'')+
+        '</div>';
+      if(s.special_effect){
+        html+='<div class="effect-tag">'+
+          '✨ '+(s.special_effect)+'</div>';
+      }
+      if(!isUnlocked&&s.unlock_description){
+        html+='<div class="lock-tag">'+
+          '🔒 '+(s.unlock_description)+'</div>';
+      }
+      html+='</div>';
+      html+='<div style="display:flex;'+
+        'flex-direction:column;gap:6px;'+
+        'align-items:flex-end;'+
+        'flex-shrink:0;min-width:70px">';
+      if(owned){
+        html+='<button class="btn-purchase '+
+          'owned">✅ Owned</button>';
+      } else if(!isUnlocked){
+        html+='<button class="btn-purchase '+
+          'locked">🔒 Locked</button>';
+      } else if(s.is_premium&&s.price_gems>0){
+        html+='<button class="btn-purchase gems" '+
+          'onclick="purchaseSummon(\''+s.id+'\')">'+
+          '💎 '+s.price_gems+'</button>';
+      } else {
+        html+='<button class="btn-purchase" '+
+          'onclick="purchaseSummon(\''+s.id+'\')">'+
+          '🪙 '+s.price_coins+'</button>';
+      }
+      html+='</div>';
+      html+='</div></div>';
+    });
+    el.innerHTML=html;
+  } catch(e){
+    el.innerHTML=empty('🔮','Failed to load shop');
+    console.error(e);
+  }
+}
+
+window.filterShop=function(filter, btn){
+  shopFilter=filter;
+  document.querySelectorAll(
+    '#shop-rarity-filters .filter-btn')
+    .forEach(function(b){
+      b.classList.remove('active');
+    });
+  btn.classList.add('active');
+  renderShopSection();
+};
+
+window.purchaseSummon=async function(
+  summonId){
+  var summon=shopSummons.find(
+    function(s){return s.id===summonId;});
+  if(!summon) return;
+  var isPremium=summon.is_premium&&
+    summon.price_gems>0;
+  if(isPremium){
+    if((profile.gems||0)<summon.price_gems){
+      toast('Not enough gems! Need 💎'+
+        summon.price_gems,'red');
+      return;
+    }
+    await awardCurrency(
+      -summon.price_gems,0);
+    toast('💎 -'+summon.price_gems+' gems');
+  } else {
+    if((profile.coins||0)<summon.price_coins){
+      toast('Not enough coins! Need 🪙'+
+        summon.price_coins,'red');
+      return;
+    }
+    await awardCurrency(
+      0,-summon.price_coins);
+    toast('🪙 -'+summon.price_coins+' coins');
+  }
+  await sb.from('player_summons').insert({
+    user_id:user.id,
+    summon_id:summonId,
+    is_active:false,
+    bond_level:1,
+    bond_xp:0,
+    obtained_from:'shop'
+  });
+  if(summon.frame_id){
+    await unlockFrame(summon.frame_id);
+  }
+  toast('🔮 '+summon.name+' acquired!','gem');
+  renderTopbar();
+  renderHeroCard();
+  renderShopSection();
+  renderSummonInventory();
+  var sub=id('inventory-sub');
+  if(sub) sub.textContent=
+    'New summon added!';
+};
+
+// ══════════════════════════════════
+// SUMMON INVENTORY
+// ══════════════════════════════════
+async function renderSummonInventory() {
+  var el=id('inventory-list'); if(!el) return;
+  try{
+    var res=await sb.from('player_summons')
+      .select('*,shop_summons(*)')
+      .eq('user_id',user.id)
+      .order('obtained_at',{ascending:false});
+    var owned=res.data||[];
+    var sub=id('inventory-sub');
+    if(sub) sub.textContent=
+      owned.length+' companion'+(
+      owned.length!==1?'s':'');
+    if(!owned.length){
+      el.innerHTML='<div class="empty">'+
+        '<div class="empty-icon">🔮</div>'+
+        '<div>No summons yet.</div>'+
+        '<div style="font-size:12px;'+
+        'color:var(--text3);margin-top:6px">'+
+        'Purchase summons from the shop!'+
+        '</div></div>';
+      return;
+    }
+    var html='';
+    owned.forEach(function(ps){
+      var s=ps.shop_summons;
+      if(!s) return;
+      var bondPct=Math.min(100,
+        (ps.bond_xp||0)%100);
+      var imgHtml=s.image_url
+        ?'<img class="inv-summon-img" '+
+          'src="'+s.image_url+'"/>'
+        :'<div class="inv-summon-img" '+
+          'style="background:var(--bg);'+
+          'display:flex;align-items:center;'+
+          'justify-content:center;'+
+          'font-size:24px">🔮</div>';
+      var rarityClass='rarity-'+
+        (s.rarity||'common');
+      html+='<div class="inv-summon-card '+
+        (ps.is_active?'active-summon':'')+'"'+
+        ' onclick="toggleActiveSummon(\''+
+        ps.id+'\','+ps.is_active+')">';
+      html+=imgHtml;
+      html+='<div style="flex:1;min-width:0">';
+      html+='<div style="display:flex;'+
+        'align-items:center;gap:8px;'+
+        'margin-bottom:2px">';
+      html+='<span style="font-size:14px;'+
+        'font-weight:700;color:var(--text)">'+
+        s.name+'</span>';
+      html+='<span class="rarity-badge '+
+        rarityClass+'">'+cap(s.rarity)+
+        '</span>';
+      if(ps.is_active){
+        html+='<span class="active-badge">'+
+          'ACTIVE</span>';
+      }
+      html+='</div>';
+      html+='<div style="font-size:11px;'+
+        'color:var(--text2);margin-bottom:2px">'+
+        '⚔️ '+s.class+' • 🧬 '+s.race+'</div>';
+      if(s.special_effect){
+        html+='<div style="font-size:11px;'+
+          'color:var(--green)">✨ '+
+          s.special_effect+'</div>';
+      }
+      html+='<div style="font-size:10px;'+
+        'color:var(--text3);margin-top:4px">'+
+        'Bond Lv '+ps.bond_level+
+        ' — '+ps.bond_xp+' XP</div>';
+      html+='<div class="bond-mini-track">'+
+        '<div class="bond-mini-fill" '+
+        'style="width:'+bondPct+'%"></div>'+
+        '</div>';
+      html+='</div>';
+      html+='<div style="flex-shrink:0;'+
+        'font-size:20px;'+
+        'color:var(--text3)">'+
+        (ps.is_active?'✅':'○')+'</div>';
+      html+='</div>';
+    });
+    el.innerHTML=html;
+  } catch(e){
+    el.innerHTML=empty('🔮',
+      'Failed to load inventory');
+    console.error(e);
+  }
+}
+
+window.toggleActiveSummon=async function(
+  psId, isCurrentlyActive){
+  if(isCurrentlyActive){
+    await sb.from('player_summons')
+      .update({is_active:false})
+      .eq('id',psId);
+    await sb.from('profiles')
+      .update({active_summon_id:null})
+      .eq('id',user.id);
+    profile.active_summon_id=null;
+    toast('Summon deactivated');
+  } else {
+    await sb.from('player_summons')
+      .update({is_active:false})
+      .eq('user_id',user.id);
+    await sb.from('player_summons')
+      .update({is_active:true})
+      .eq('id',psId);
+    await sb.from('profiles')
+      .update({active_summon_id:psId})
+      .eq('id',user.id);
+    profile.active_summon_id=psId;
+    toast('🔮 Summon activated!','green');
+  }
+  renderSummonInventory();
+};
+
+async function growSummonBond(amount) {
+  if(!user||!profile.active_summon_id) return;
+  try{
+    var res=await sb.from('player_summons')
+      .select('*').eq('id',
+        profile.active_summon_id).single();
+    if(!res.data) return;
+    var ps=res.data;
+    var newBondXP=(ps.bond_xp||0)+amount;
+    var newBondLv=Math.floor(newBondXP/100)+1;
+    var leveledUp=newBondLv>ps.bond_level;
+    await sb.from('player_summons')
+      .update({bond_xp:newBondXP,
+        bond_level:newBondLv})
+      .eq('id',ps.id);
+    if(leveledUp){
+      var sRes=await sb.from('shop_summons')
+        .select('name').eq('id',ps.summon_id)
+        .single();
+      var name=sRes.data
+        ?sRes.data.name:'Companion';
+      toast('🔮 '+name+' Bond Lv '+
+        newBondLv+'!','gem');
+    }
+  } catch(e){}
+}
+
+// ══════════════════════════════════
+// ADMIN SUMMON MANAGEMENT
+// ══════════════════════════════════
+var adminSummonImageUrl=null;
+
+async function loadAdminSummonsList() {
+  var el=id('admin-summons-list');
+  if(!el) return;
+  var {data:summons}=await sb
+    .from('shop_summons').select('*')
+    .order('created_at',{ascending:false});
+  if(!summons||!summons.length){
+    el.innerHTML=empty('🔮',
+      'No summons added yet');
+    return;
+  }
+  var html='';
+  summons.forEach(function(s){
+    var imgHtml=s.image_url
+      ?'<img src="'+s.image_url+'" '+
+        'style="width:40px;height:40px;'+
+        'border-radius:8px;object-fit:cover;'+
+        'flex-shrink:0"/>'
+      :'<div style="width:40px;height:40px;'+
+        'border-radius:8px;background:var(--bg);'+
+        'border:1px solid var(--border);'+
+        'display:flex;align-items:center;'+
+        'justify-content:center;'+
+        'font-size:18px;flex-shrink:0">'+
+        '🔮</div>';
+    html+='<div class="sq-item">';
+    html+=imgHtml;
+    html+='<div class="sq-info">';
+    html+='<div class="sq-title">'+s.name+
+      '</div>';
+    html+='<div class="sq-desc">'+
+      s.class+' — '+cap(s.rarity)+
+      (s.is_premium?' 💎 Premium':'')+
+      '</div>';
+    html+='<div class="sq-badges">';
+    html+='<div class="sq-xp-badge">'+
+      (s.price_gems>0
+        ?'💎 '+s.price_gems+' gems'
+        :'🪙 '+s.price_coins+' coins')+
+      '</div>';
+    html+='<div class="sq-tag" '+
+      'style="color:'+(s.is_available
+        ?'var(--green)':'var(--red)')+'">'+
+      '● '+(s.is_available
+        ?'Available':'Hidden')+'</div>';
+    html+='</div></div>';
+    html+='<div class="sq-actions">';
+    html+='<button class="btn-icon del" '+
+      'onclick="adminDeleteSummon(\''+
+      s.id+'\')">🗑</button>';
+    html+='<button class="btn-icon tog" '+
+      'onclick="adminToggleSummon(\''+
+      s.id+'\','+s.is_available+')">'+
+      (s.is_available?'✓':'○')+'</button>';
+    html+='</div></div>';
+  });
+  el.innerHTML=html;
+}
+
+document.addEventListener('change',
+  function(e){
+    if(e.target&&e.target.id===
+      'admin-summon-img'){
+      var file=e.target.files[0];
+      if(!file) return;
+      var preview=id('admin-summon-preview');
+      if(preview){
+        var reader=new FileReader();
+        reader.onload=function(ev){
+          preview.innerHTML=
+            '<img src="'+ev.target.result+
+            '" style="width:80px;height:80px;'+
+            'border-radius:12px;'+
+            'object-fit:cover;'+
+            'border:2px solid var(--accent2)"/>';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  });
+
+window.adminAddSummon=async function(){
+  var imgInput=id('admin-summon-img');
+  var name=val('as-name');
+  var cls=val('as-class');
+  var race=val('as-race');
+  var desc=val('as-desc');
+  var rarity=val('as-rarity')||'common';
+  var priceCoins=parseInt(
+    val('as-price-coins'))||0;
+  var priceGems=parseInt(
+    val('as-price-gems'))||0;
+  var unlockXP=parseInt(val('as-xp'))||0;
+  var unlockLv=parseInt(val('as-level'))||1;
+  var unlockStreak=parseInt(
+    val('as-streak'))||0;
+  var unlockDesc=val('as-unlock-desc');
+  var effect=val('as-effect');
+  var effectType=val('as-effect-type')||'none';
+  var effectVal=parseInt(
+    val('as-effect-val'))||0;
+  var frameId=val('as-frame')||null;
+  var isPremium=priceGems>0;
+  if(!name){
+    toast('Enter a name!','red');return;
+  }
+  toast('Uploading...','green');
+  var imageUrl=null;
+  if(imgInput&&imgInput.files&&
+    imgInput.files[0]){
+    var file=imgInput.files[0];
+    var ext=file.name.split('.').pop()||'jpg';
+    var path='summons/'+Date.now()+'.'+ext;
+    var upRes=await sb.storage
+      .from('avatars')
+      .upload(path,file,{upsert:true});
+    if(!upRes.error){
+      var pubRes=sb.storage
+        .from('avatars').getPublicUrl(path);
+      imageUrl=pubRes.data.publicUrl;
+    }
+  }
+  await sb.from('shop_summons').insert({
+    name:name,description:desc,
+    class:cls,race:race,
+    image_url:imageUrl,
+    rarity:rarity,
+    price_coins:priceCoins,
+    price_gems:priceGems,
+    is_premium:isPremium,
+    unlock_xp:unlockXP,
+    unlock_level:unlockLv,
+    unlock_streak:unlockStreak,
+    unlock_description:unlockDesc||null,
+    special_effect:effect||null,
+    effect_type:effectType,
+    effect_value:effectVal,
+    frame_id:frameId,
+    is_available:true,
+    added_by:user.id
+  });
+  toast('🔮 '+name+' added to shop!','green');
+  loadAdminSummonsList();
+};
+
+window.adminDeleteSummon=async function(id_){
+  await sb.from('shop_summons').delete()
+    .eq('id',id_);
+  toast('Summon deleted','red');
+  loadAdminSummonsList();
+};
+
+window.adminToggleSummon=async function(
+  id_,curr){
+  await sb.from('shop_summons')
+    .update({is_available:!curr}).eq('id',id_);
+  toast(curr?'Summon hidden':'Summon visible',
+    'green');
+  loadAdminSummonsList();
+};
+// ══════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════
 window.showTab = async function(tab) {
@@ -3186,6 +4216,7 @@ async function renderAdmin() {
   html+='<button class="admin-tab" onclick="switchAdminTab(\'bosses\',this)">🐉 Bosses</button>';
   html+='<button class="admin-tab" onclick="switchAdminTab(\'events\',this)">🎪 Events</button>';
   html+='<button class="admin-tab" onclick="switchAdminTab(\'vip\',this)">⭐ VIP</button>';
+  html+='<button class="admin-tab" onclick="switchAdminTab(\'summons\',this)">🔮 Summons</button>';
   html+='</div>';
   html+='<div class="admin-section active" id="asec-quests">';
   html+='<div class="form-card"><div class="form-card-title">Create System Quest</div>';
@@ -3222,6 +4253,30 @@ async function renderAdmin() {
   html+='<div class="form-group"><label>Start Date</label><input type="date" id="ev-start"/></div>';
   html+='<div class="form-group"><label>End Date</label><input type="date" id="ev-end"/></div>';
   html+='<button class="btn-gold" onclick="createEvent()">CREATE EVENT</button></div></div>';
+  html+='<div class="admin-section" id="asec-summons">';
+  html+='<div class="form-card"><div class="form-card-title">🔮 Add New Summon</div>';
+  html+='<div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Upload an image first, then fill in the details.</div>';
+  html+='<div class="form-group"><label>Summon Image</label>';
+  html+='<input type="file" id="admin-summon-img" accept="image/*" style="width:100%;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text)"/>';
+  html+='<div id="admin-summon-preview" style="margin-top:8px"></div></div>';
+  html+='<div class="form-group"><label>Name</label><input type="text" id="as-name" placeholder="e.g. Shadow Wolf"/></div>';
+  html+='<div class="form-group"><label>Class</label><select id="as-class"><option>Warrior</option><option>Mage</option><option>Assassin</option><option>Healer</option><option>Creator</option><option>Strategist</option><option>Guardian</option><option>Shadow</option></select></div>';
+  html+='<div class="form-group"><label>Race</label><select id="as-race"><option>Human</option><option>Beast</option><option>Spirit</option><option>Dragon</option><option>Hybrid</option><option>Ancient</option><option>Phantom</option></select></div>';
+  html+='<div class="form-group"><label>Description</label><textarea id="as-desc" placeholder="Describe this summon..." style="min-height:70px"></textarea></div>';
+  html+='<div class="form-group"><label>Rarity</label><select id="as-rarity"><option value="common">Common</option><option value="rare">Rare</option><option value="epic">Epic</option><option value="legendary">Legendary</option></select></div>';
+  html+='<div class="form-group"><label>Price (Coins) — 0 = free</label><input type="number" id="as-price-coins" value="500" min="0"/></div>';
+  html+='<div class="form-group"><label>Price (Gems) — set for premium</label><input type="number" id="as-price-gems" value="0" min="0"/></div>';
+  html+='<div class="form-group"><label>Min XP to unlock (0 = no req)</label><input type="number" id="as-xp" value="0" min="0"/></div>';
+  html+='<div class="form-group"><label>Min Level to unlock</label><input type="number" id="as-level" value="1" min="1"/></div>';
+  html+='<div class="form-group"><label>Min Streak to unlock (0 = no req)</label><input type="number" id="as-streak" value="0" min="0"/></div>';
+  html+='<div class="form-group"><label>Unlock Description (shown to player)</label><input type="text" id="as-unlock-desc" placeholder="e.g. Reach Level 5 and 7-day streak"/></div>';
+  html+='<div class="form-group"><label>Special Effect Description</label><input type="text" id="as-effect" placeholder="e.g. +10% XP from fitness quests"/></div>';
+  html+='<div class="form-group"><label>Effect Type</label><select id="as-effect-type"><option value="none">None</option><option value="xp_boost">XP Boost %</option><option value="coin_boost">Coin Boost %</option><option value="streak_shield">Streak Shield</option><option value="bond_growth">Bond Growth +</option></select></div>';
+  html+='<div class="form-group"><label>Effect Value (number)</label><input type="number" id="as-effect-val" value="0" min="0"/></div>';
+  html+='<div class="form-group"><label>Frame ID (leave blank = no frame)</label><input type="text" id="as-frame" placeholder="e.g. summon_shadowwolf"/></div>';
+  html+='<button class="btn-gold" onclick="adminAddSummon()">🔮 ADD SUMMON TO SHOP</button></div>';
+  html+='<div class="sec-title">Current Summons</div>';
+  html+='<div id="admin-summons-list"></div></div>';
   html+='<div class="admin-section" id="asec-vip">';
   html+='<div class="form-card"><div class="form-card-title">Add VIP Player</div>';
   html+='<div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">VIP players get all Premium+AI features free. You can also read their private journal entries.</div>';
@@ -3260,6 +4315,7 @@ function adminQCard(q, users) {
 }
 
 window.switchAdminTab = function(tab, btn) {
+  if(tab==='summons') loadAdminSummonsList();
   document.querySelectorAll('.admin-tab').forEach(function(t){t.classList.remove('active');});
   btn.classList.add('active');
   document.querySelectorAll('.admin-section').forEach(function(s){s.classList.remove('active');});
