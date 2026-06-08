@@ -2555,8 +2555,6 @@ function renderHeroCard() {
   const role = getRoleInfo(profile.role||'warrior');
   id('hero-name').textContent = profile.username||'Hero';
   id('hero-role').style.color = role.color; id('hero-role').textContent = `${role.icon} ${role.name}`;
-  var rs=getRankStage(profile.xp||0);
-  var pct=getRankProgress(profile.xp||0);
   id('hero-badge').textContent=rs.stage;
   id('xp-fill').style.width=pct+'%';
   id('xp-nums').textContent=
