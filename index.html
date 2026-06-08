@@ -4082,14 +4082,20 @@ window.adminAddSummon=async function(){
     imgInput.files[0]){
     var file=imgInput.files[0];
     var ext=file.name.split('.').pop()||'jpg';
-    var path='summons/'+Date.now()+'.'+ext;
+    var path=Date.now()+'-'+
+      name.replace(/\s/g,'_')+'.'+ext;
     var upRes=await sb.storage
-      .from('avatars')
+      .from('summons')
       .upload(path,file,{upsert:true});
-    if(!upRes.error){
+    if(upRes.error){
+      toast('Image upload failed: '+
+        upRes.error.message,'red');
+    } else {
       var pubRes=sb.storage
-        .from('avatars').getPublicUrl(path);
+        .from('summons')
+        .getPublicUrl(path);
       imageUrl=pubRes.data.publicUrl;
+      toast('Image uploaded ✅','green');
     }
   }
   await sb.from('shop_summons').insert({
