@@ -224,10 +224,15 @@ body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);mi
 .quest-card.done .qtitle{text-decoration:line-through;color:var(--text2)}
 .qmeta{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .diff-badge{font-size:10px;font-weight:700;border-radius:5px;padding:2px 6px;border:1px solid}
-.diff-spark{color:#94a3b8;background:rgba(148,163,184,.08);border-color:rgba(148,163,184,.3)}
-.diff-charged{color:var(--green);background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.3)}
-.diff-epic{color:var(--accent2);background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.3)}
-.diff-legendary{color:var(--gold);background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3)}
+.diff-easy{color:#94a3b8;
+  background:rgba(148,163,184,.08);
+  border-color:rgba(148,163,184,.3)}
+.diff-medium{color:#fbbf24;
+  background:rgba(251,191,36,.08);
+  border-color:rgba(251,191,36,.3)}
+.diff-hard{color:#ef4444;
+  background:rgba(239,68,68,.08);
+  border-color:rgba(239,68,68,.3)}
 .qright{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
 .qxp{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--gold);background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:3px 8px;white-space:nowrap}
 
@@ -463,48 +468,296 @@ body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);mi
 .lb-me-rank{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:12px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
 .lb-me-position{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:var(--accent2)}
 
-/* RANK FRAMES */
-.rank-bronze .hero-avatar,
-.rank-bronze .profile-avatar{
-  box-shadow:0 0 0 3px #cd7f32,
-    0 0 15px rgba(205,127,50,.4)!important}
-.rank-silver .hero-avatar,
-.rank-silver .profile-avatar{
-  box-shadow:0 0 0 3px #c0c0c0,
+/* ══ ALL RANK FRAMES ══ */
+.frame-bronze .hero-avatar,
+.frame-bronze .profile-avatar{
+  box-shadow:0 0 0 3px #5c3317,
+    0 0 0 6px #cd7f32,0 0 0 8px #5c3317,
+    0 0 12px rgba(205,127,50,.3)!important}
+.frame-silver .hero-avatar,
+.frame-silver .profile-avatar{
+  box-shadow:0 0 0 3px #636363,
+    0 0 0 6px #e8e8e8,0 0 0 8px #636363,
     0 0 15px rgba(192,192,192,.4)!important}
-.rank-platinum .hero-avatar,
-.rank-platinum .profile-avatar{
-  box-shadow:0 0 0 3px #60a5fa,
+.frame-gold .hero-avatar,
+.frame-gold .profile-avatar{
+  box-shadow:0 0 0 3px #b7860b,
+    0 0 0 6px #ffd700,0 0 0 8px #b7860b,
+    0 0 20px rgba(255,215,0,.5)!important}
+.frame-platinum .hero-avatar,
+.frame-platinum .profile-avatar{
+  box-shadow:0 0 0 3px #3b82f6,
+    0 0 0 6px #bfdbfe,0 0 0 8px #3b82f6,
     0 0 20px rgba(96,165,250,.5)!important}
-.rank-master .hero-avatar,
-.rank-master .profile-avatar{
-  box-shadow:0 0 0 3px #6366f1,
-    0 0 25px rgba(99,102,241,.6)!important}
-.rank-legendary .hero-avatar,
-.rank-legendary .profile-avatar{
-  box-shadow:0 0 0 3px #f59e0b,
-    0 0 30px rgba(245,158,11,.7),
-    0 0 0 6px rgba(245,158,11,.15)!important}
-.rank-ascended .hero-avatar,
-.rank-ascended .profile-avatar{
+.frame-diamond .hero-avatar,
+.frame-diamond .profile-avatar{
+  box-shadow:0 0 0 3px #0891b2,
+    0 0 0 6px #67e8f9,0 0 0 8px #0891b2,
+    0 0 25px rgba(103,232,249,.6)!important}
+.frame-master .hero-avatar,
+.frame-master .profile-avatar{
+  box-shadow:0 0 0 3px #4338ca,
+    0 0 0 6px #818cf8,0 0 0 9px #4338ca,
+    0 0 25px rgba(99,102,241,.7)!important}
+.frame-grandmaster .hero-avatar,
+.frame-grandmaster .profile-avatar{
+  box-shadow:0 0 0 3px #5b21b6,
+    0 0 0 6px #a855f7,0 0 0 9px #5b21b6,
+    0 0 30px rgba(124,58,237,.7)!important}
+.frame-legendary .hero-avatar,
+.frame-legendary .profile-avatar{
+  box-shadow:0 0 0 2px #92400e,
+    0 0 0 5px #f59e0b,0 0 0 8px #92400e,
+    0 0 0 11px rgba(245,158,11,.3),
+    0 0 30px rgba(245,158,11,.7)!important}
+.frame-mythic .hero-avatar,
+.frame-mythic .profile-avatar{
+  box-shadow:0 0 0 3px #991b1b,
+    0 0 0 6px #ef4444,0 0 0 9px #991b1b,
+    0 0 35px rgba(239,68,68,.7)!important}
+.frame-ascended .hero-avatar,
+.frame-ascended .profile-avatar{
   animation:breathe 4s ease-in-out infinite,
-    rainbowGlow 3s linear infinite!important}
-@keyframes rainbowGlow{
-  0%{box-shadow:0 0 0 3px #f59e0b,
-    0 0 30px rgba(245,158,11,.7)}
-  25%{box-shadow:0 0 0 3px #a855f7,
-    0 0 30px rgba(168,85,247,.7)}
-  50%{box-shadow:0 0 0 3px #60a5fa,
-    0 0 30px rgba(96,165,250,.7)}
-  75%{box-shadow:0 0 0 3px #10b981,
-    0 0 30px rgba(16,185,129,.7)}
-  100%{box-shadow:0 0 0 3px #f59e0b,
-    0 0 30px rgba(245,158,11,.7)}}
-.rank-badge{display:inline-flex;
-  align-items:center;gap:4px;
-  font-size:10px;font-weight:700;
-  border-radius:6px;padding:2px 8px;
-  border:1px solid;margin-left:6px}
+    frameRainbow 3s linear infinite!important}
+
+/* ══ ONBOARDING ══ */
+#onboarding-screen{
+  position:fixed;inset:0;
+  background:radial-gradient(
+    ellipse at 50% 20%,#1a0a3a,var(--bg));
+  z-index:7500;display:flex;
+  flex-direction:column;
+  align-items:center;padding:0;
+  overflow-y:auto}
+.ob-container{
+  width:100%;max-width:420px;
+  min-height:100vh;display:flex;
+  flex-direction:column;padding:24px}
+.ob-progress{
+  display:flex;gap:6px;
+  justify-content:center;
+  margin-bottom:32px;padding-top:16px}
+.ob-dot{width:8px;height:8px;
+  border-radius:50%;
+  background:var(--border);
+  transition:all .3s}
+.ob-dot.active{
+  background:var(--accent2);
+  width:24px;border-radius:4px}
+.ob-dot.done{background:var(--green)}
+.ob-title{
+  font-family:'Orbitron',monospace;
+  font-size:22px;font-weight:900;
+  color:var(--text);text-align:center;
+  margin-bottom:8px;line-height:1.3}
+.ob-sub{
+  font-size:14px;color:var(--text2);
+  text-align:center;margin-bottom:32px;
+  line-height:1.6}
+.struggle-card{
+  background:var(--bg3);
+  border:2px solid var(--border);
+  border-radius:20px;padding:22px;
+  margin-bottom:14px;
+  display:flex;align-items:center;
+  gap:16px;cursor:pointer;
+  transition:all .2s}
+.struggle-card:active{
+  transform:scale(.97)}
+.struggle-card.selected{
+  border-color:var(--accent2);
+  background:rgba(168,85,247,.1)}
+.struggle-icon{font-size:36px;
+  flex-shrink:0}
+.struggle-name{
+  font-family:'Orbitron',monospace;
+  font-size:15px;font-weight:700;
+  color:var(--text);margin-bottom:4px}
+.struggle-desc{font-size:12px;
+  color:var(--text2);line-height:1.4}
+.ob-ai-loading{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:20px;padding:40px 0}
+.ob-ai-icon{font-size:60px;
+  animation:obPulse 1.5s ease-in-out infinite}
+@keyframes obPulse{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(1.1);opacity:.7}}
+.ob-ai-text{
+  font-family:'Orbitron',monospace;
+  font-size:13px;color:var(--accent2);
+  letter-spacing:2px;text-align:center;
+  animation:glowText 1.5s
+    ease-in-out infinite}
+.ob-quest-preview{
+  background:var(--bg3);
+  border:1px solid rgba(168,85,247,.3);
+  border-radius:16px;padding:16px;
+  margin-bottom:12px}
+.ob-quest-num{
+  font-size:10px;color:var(--text3);
+  letter-spacing:2px;
+  font-family:'Orbitron',monospace;
+  margin-bottom:6px}
+.ob-quest-title{
+  font-size:15px;font-weight:700;
+  color:var(--text);margin-bottom:4px}
+.ob-quest-xp{
+  font-size:12px;color:var(--gold);
+  font-family:'Orbitron',monospace}
+.ob-pet-reveal{
+  background:linear-gradient(135deg,
+    #1a0a3a,#0a1a2e);
+  border:1px solid rgba(168,85,247,.4);
+  border-radius:22px;padding:28px;
+  text-align:center;margin-bottom:20px}
+.ob-pet-img{
+  width:120px;height:120px;
+  border-radius:24px;object-fit:cover;
+  border:3px solid var(--accent2);
+  box-shadow:0 0 30px rgba(168,85,247,.5);
+  margin-bottom:16px}
+.ob-pet-placeholder{
+  width:120px;height:120px;
+  border-radius:24px;
+  background:var(--bg);
+  border:3px solid var(--accent2);
+  display:flex;align-items:center;
+  justify-content:center;font-size:56px;
+  margin:0 auto 16px;
+  box-shadow:0 0 30px rgba(168,85,247,.5)}
+.ob-pet-name{
+  font-family:'Orbitron',monospace;
+  font-size:20px;font-weight:900;
+  color:var(--accent2);margin-bottom:6px}
+.ob-pet-desc{font-size:13px;
+  color:var(--text2);line-height:1.6}
+.ob-warning{
+  background:rgba(239,68,68,.06);
+  border:1px solid rgba(239,68,68,.25);
+  border-radius:16px;padding:20px;
+  margin-bottom:20px}
+.ob-warning-icon{font-size:32px;
+  text-align:center;margin-bottom:12px}
+.ob-warning-title{
+  font-family:'Orbitron',monospace;
+  font-size:13px;color:var(--red);
+  font-weight:700;letter-spacing:1px;
+  text-align:center;margin-bottom:12px}
+.ob-warning-item{
+  display:flex;gap:10px;
+  align-items:flex-start;
+  margin-bottom:10px;font-size:13px;
+  color:var(--text2);line-height:1.5}
+.ob-warning-item span:first-child{
+  flex-shrink:0}
+
+/* ══ LOOT BOX ══ */
+.loot-box-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.9);
+  z-index:8000;display:flex;
+  align-items:center;justify-content:center;
+  backdrop-filter:blur(10px)}
+.loot-box-card{
+  background:linear-gradient(135deg,
+    #1a0a3a,#0d1a2e);
+  border:1px solid rgba(168,85,247,.4);
+  border-radius:24px;padding:32px 24px;
+  text-align:center;width:90%;
+  max-width:340px;
+  animation:zoomIn .4s
+    cubic-bezier(.4,0,.2,1)}
+.loot-reward-icon{
+  font-size:64px;margin-bottom:16px;
+  animation:rewardBounce .6s
+    cubic-bezier(.4,0,.2,1)}
+@keyframes rewardBounce{
+  0%{transform:scale(0);opacity:0}
+  60%{transform:scale(1.2)}
+  100%{transform:scale(1);opacity:1}}
+.loot-reward-label{
+  font-family:'Orbitron',monospace;
+  font-size:11px;color:var(--text2);
+  letter-spacing:2px;margin-bottom:8px}
+.loot-reward-value{
+  font-family:'Orbitron',monospace;
+  font-size:28px;font-weight:900;
+  color:var(--gold);margin-bottom:20px}
+
+/* ══ LOGIN REWARD ══ */
+.login-reward-days{
+  display:flex;gap:6px;
+  justify-content:center;
+  flex-wrap:wrap;margin:16px 0}
+.lr-day{width:40px;text-align:center;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:10px;padding:8px 4px}
+.lr-day.claimed{
+  background:rgba(16,185,129,.1);
+  border-color:var(--green)}
+.lr-day.today{
+  background:rgba(124,58,237,.15);
+  border-color:var(--accent2);
+  transform:scale(1.1)}
+.lr-day-num{font-size:9px;
+  color:var(--text3);margin-bottom:4px;
+  letter-spacing:1px}
+.lr-day-icon{font-size:18px}
+.lr-day-val{font-size:9px;
+  color:var(--text2);margin-top:2px}
+
+/* ══ SUMMON PULL ══ */
+.summon-pull-screen{
+  position:fixed;inset:0;
+  background:#000;z-index:8000;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  overflow:hidden}
+.pull-particles{
+  position:absolute;inset:0;
+  pointer-events:none}
+.pull-card{
+  background:linear-gradient(135deg,
+    #1a0a3a,#0d1a2e);
+  border:2px solid var(--accent2);
+  border-radius:24px;padding:28px;
+  text-align:center;width:85%;
+  max-width:320px;position:relative;
+  z-index:1;
+  animation:cardReveal .5s
+    cubic-bezier(.4,0,.2,1)}
+@keyframes cardReveal{
+  0%{transform:rotateY(90deg);opacity:0}
+  100%{transform:rotateY(0);opacity:1}}
+.pull-rarity-glow{
+  position:absolute;inset:0;
+  border-radius:24px;opacity:.3;
+  z-index:0}
+.pull-summon-img{
+  width:110px;height:110px;
+  border-radius:20px;object-fit:cover;
+  margin-bottom:16px;
+  box-shadow:0 0 30px rgba(168,85,247,.5)}
+.pull-rarity-badge{
+  display:inline-block;
+  font-size:11px;font-weight:700;
+  border-radius:6px;padding:3px 10px;
+  border:1px solid;margin-bottom:8px}
+.pull-summon-name{
+  font-family:'Orbitron',monospace;
+  font-size:18px;font-weight:900;
+  color:var(--text);margin-bottom:4px}
+.pull-summon-class{
+  font-size:12px;color:var(--text2);
+  margin-bottom:12px}
+.pull-summon-effect{
+  font-size:12px;color:var(--green);
+  background:rgba(16,185,129,.08);
+  border:1px solid rgba(16,185,129,.2);
+  border-radius:8px;padding:8px 12px}
 
 /* SUMMON SYSTEM */
 .summon-card{background:linear-gradient(
@@ -965,6 +1218,241 @@ window.addEventListener('unhandledrejection', function(e) {
   </div>
   <div class="gender-note">You can change this later in Settings. This information is private and never shared.</div>
   <button class="btn-primary" id="gender-confirm-btn" onclick="confirmGender()" style="max-width:300px;margin-top:24px;opacity:.5" disabled>CONFIRM</button>
+</div>
+
+<!-- ONBOARDING -->
+<div id="onboarding-screen" class="hidden">
+  <div class="ob-container">
+    <div class="ob-progress">
+      <div class="ob-dot active"
+        id="ob-dot-1"></div>
+      <div class="ob-dot" id="ob-dot-2">
+      </div>
+      <div class="ob-dot" id="ob-dot-3">
+      </div>
+      <div class="ob-dot" id="ob-dot-4">
+      </div>
+      <div class="ob-dot" id="ob-dot-5">
+      </div>
+    </div>
+
+    <!-- STEP 1: STRUGGLE -->
+    <div id="ob-step-1">
+      <div class="ob-title">
+        What holds you back?
+      </div>
+      <div class="ob-sub">
+        Be honest. We'll build your plan
+        around this.
+      </div>
+      <div class="struggle-card"
+        id="s-phone"
+        onclick="selectStruggle(
+          'phone_addiction',this)">
+        <div class="struggle-icon">📵</div>
+        <div>
+          <div class="struggle-name">
+            Phone Addiction
+          </div>
+          <div class="struggle-desc">
+            Can't stop scrolling.
+            Phone controls your day.
+          </div>
+        </div>
+      </div>
+      <div class="struggle-card"
+        id="s-lazy"
+        onclick="selectStruggle(
+          'laziness',this)">
+        <div class="struggle-icon">😴</div>
+        <div>
+          <div class="struggle-name">
+            Laziness
+          </div>
+          <div class="struggle-desc">
+            Hard to start. Easy to quit.
+            Energy is low.
+          </div>
+        </div>
+      </div>
+      <div class="struggle-card"
+        id="s-focus"
+        onclick="selectStruggle(
+          'focus',this)">
+        <div class="struggle-icon">🎯</div>
+        <div>
+          <div class="struggle-name">
+            Focus Issues
+          </div>
+          <div class="struggle-desc">
+            Mind wanders. Hard to stay
+            on task.
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary"
+        id="ob-next-1"
+        onclick="obStep1Continue()"
+        style="margin-top:8px;opacity:.5"
+        disabled>
+        BUILD MY PLAN →
+      </button>
+    </div>
+
+    <!-- STEP 2: AI LOADING -->
+    <div id="ob-step-2" class="hidden">
+      <div class="ob-ai-loading">
+        <div class="ob-ai-icon">🤖</div>
+        <div class="ob-ai-text">
+          ANALYZING YOUR STRUGGLE...
+        </div>
+        <div style="font-size:13px;
+          color:var(--text2);
+          text-align:center">
+          Creating your personal
+          starter plan
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: QUEST PREVIEW -->
+    <div id="ob-step-3" class="hidden">
+      <div class="ob-title">
+        Your First Quests
+      </div>
+      <div class="ob-sub">
+        These are built for you.
+        Start small. Build momentum.
+      </div>
+      <div id="ob-quests-list"></div>
+      <button class="btn-primary"
+        onclick="obStep3Continue()">
+        LOOKS GOOD →
+      </button>
+    </div>
+
+    <!-- STEP 4: PET REVEAL -->
+    <div id="ob-step-4" class="hidden">
+      <div class="ob-title">
+        Your Starter Companion
+      </div>
+      <div class="ob-sub">
+        This companion will grow with you.
+        Keep them happy.
+      </div>
+      <div class="ob-pet-reveal">
+        <div id="ob-pet-display"></div>
+      </div>
+      <button class="btn-primary"
+        onclick="obStep4Continue()">
+        MEET MY COMPANION →
+      </button>
+    </div>
+
+    <!-- STEP 5: WARNING -->
+    <div id="ob-step-5" class="hidden">
+      <div class="ob-title">
+        Before You Begin
+      </div>
+      <div class="ob-warning">
+        <div class="ob-warning-icon">⚠️</div>
+        <div class="ob-warning-title">
+          YOUR COMPANION IS ALIVE
+        </div>
+        <div class="ob-warning-item">
+          <span>✅</span>
+          <span>Completing quests increases
+            your bond</span>
+        </div>
+        <div class="ob-warning-item">
+          <span>📉</span>
+          <span>Missing days reduces bond
+            — your companion weakens</span>
+        </div>
+        <div class="ob-warning-item">
+          <span>💔</span>
+          <span>If bond reaches 0% — your
+            companion leaves temporarily</span>
+        </div>
+        <div class="ob-warning-item">
+          <span>🔄</span>
+          <span>Complete comeback quests
+            to bring them back</span>
+        </div>
+      </div>
+      <div style="font-size:13px;
+        color:var(--text2);
+        text-align:center;
+        margin-bottom:20px;line-height:1.6">
+        This isn't just a game.
+        <br/>It's your life.
+        <br/>Show up every day.
+      </div>
+      <button class="btn-primary"
+        onclick="obFinish()"
+        style="background:linear-gradient(
+          135deg,var(--green),#34d399)">
+        ⚔️ BEGIN MY JOURNEY
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- LOOT BOX OVERLAY -->
+<div id="loot-box-overlay"
+  class="loot-box-overlay hidden">
+  <div class="loot-box-card">
+    <div style="font-family:'Orbitron',
+      monospace;font-size:11px;
+      color:var(--text2);
+      letter-spacing:2px;
+      margin-bottom:16px">
+      📦 LOOT BOX
+    </div>
+    <div id="loot-reward-icon"
+      class="loot-reward-icon">🎁</div>
+    <div id="loot-reward-label"
+      class="loot-reward-label">REWARD</div>
+    <div id="loot-reward-value"
+      class="loot-reward-value">--</div>
+    <button class="btn-primary"
+      onclick="closeLootBox()">
+      COLLECT
+    </button>
+  </div>
+</div>
+
+<!-- LOGIN REWARD MODAL -->
+<div class="modal-overlay hidden"
+  id="login-reward-modal"
+  onclick="closeModalBg(event,
+    'login-reward-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">
+      🎁 Daily Login Reward
+    </div>
+    <div id="login-reward-content"></div>
+  </div>
+</div>
+
+<!-- SUMMON PULL SCREEN -->
+<div id="summon-pull-screen"
+  class="summon-pull-screen hidden">
+  <div id="pull-result-card"></div>
+  <button style="position:absolute;
+    bottom:40px;left:50%;
+    transform:translateX(-50%);
+    padding:14px 32px;
+    background:var(--accent);
+    border:none;border-radius:14px;
+    color:#fff;font-family:'Orbitron',
+    monospace;font-size:12px;
+    font-weight:700;letter-spacing:2px;
+    cursor:pointer"
+    onclick="closeSummonPull()">
+    COLLECT
+  </button>
 </div>
 
 <!-- PREMIUM -->
@@ -1504,27 +1992,8 @@ window.addEventListener('unhandledrejection', function(e) {
   </div>
   <div style="padding:16px;flex:1;overflow-y:auto">
     <div class="lb-tabs">
-      <button class="lb-tab active" onclick="loadLeaderboard('all',this)">All Time</button>
-      <button class="lb-tab" onclick="loadLeaderboard('weekly',this)">Weekly</button>
-      <button class="lb-tab" onclick="loadLeaderboard('streak',this)">Streaks</button>
-    </div>
-    <div class="lb-me-rank">
-      <div><div class="lb-me-position" id="my-rank-num">#--</div><div style="font-size:11px;color:var(--text2)">Your Rank</div></div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:700">Your Position</div><div style="font-size:11px;color:var(--text2);margin-top:2px" id="my-rank-sub">Loading...</div></div>
-    </div>
-    <div id="leaderboard-list"></div>
-  </div>
-</div>
-
-<!-- MODALS -->
-<!-- ADD QUEST -->
-<div class="modal-overlay hidden" id="add-quest-modal" onclick="closeModalBg(event,'add-quest-modal')">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">➕ New Quest</div>
-    <div class="form-group"><label>Title</label><input type="text" id="nq-title" placeholder="e.g. Morning workout"/></div>
-    <div class="form-group"><label>Type</label><select id="nq-type"><option value="habit">🔁 Habit (Daily)</option><option value="todo">✅ To-Do (Once)</option></select></div>
-    <div class="form-group"><label>Difficulty</label><select id="nq-difficulty"><option value="spark">⚪ Spark — Quick & easy</option><option value="charged">🟢 Charged — Some effort</option><option value="epic" selected>🟣 Epic — Real challenge</option><option value="legendary">🟡 Legendary — Max effort</option></select></div>
+    <button class="lb-tab active" onclick="loadLeaderboard('all',this)">All Time</button>
+    <div class="form-group"><label>Difficulty</label><select id="nq-difficulty"><option value="easy">⚪ Easy — 10 XP</option><option value="medium" selected>🟡 Medium — 25 XP</option><option value="hard">🔴 Hard — 50 XP</option></select></div>
     <div class="form-group"><label>Skill</label><select id="nq-skill"><option value="fitness">💪 Fitness</option><option value="mindset">🧠 Mindset</option><option value="knowledge">📚 Knowledge</option><option value="discipline">⚔️ Discipline</option><option value="creativity">🎨 Creativity</option><option value="social">🤝 Social</option></select></div>
     <div class="form-group"><label>Start Date</label><input type="date" id="nq-date"/></div>
     <div class="form-group"><label>Reminder Time (Optional)</label><input type="time" id="nq-time"/></div>
@@ -1712,10 +2181,17 @@ const ROLES = {
 };
 // Coins only — gems are premium currency, NOT earned from quests
 const DIFF_CONFIG = {
-  spark:    {label:'Spark',    cls:'diff-spark',    icon:'⚪',coins:5},
-  charged:  {label:'Charged',  cls:'diff-charged',  icon:'🟢',coins:10},
-  epic:     {label:'Epic',     cls:'diff-epic',     icon:'🟣',coins:20},
-  legendary:{label:'Legendary',cls:'diff-legendary',icon:'🟡',coins:40}
+  easy:  {label:'Easy',  cls:'diff-easy',
+    icon:'⚪',xp:10, coins:5},
+  medium:{label:'Medium',cls:'diff-medium',
+    icon:'🟡',xp:25, coins:15},
+  hard:  {label:'Hard',  cls:'diff-hard',
+    icon:'🔴',xp:50, coins:30}
+};
+const FIXED_XP=25;
+const DAILY_BONUS_XP=100;
+const DAILY_BONUS_COINS=100;,
+
 };
 const PERIOD_PHASES = {
   menstrual: {name:'Menstrual Phase',icon:'🌸',color:'#ec4899',days:'Day 1–5',desc:'Rest and restore. Your body is releasing.',tip:'Focus on gentle movement and self-care.'},
@@ -1766,7 +2242,15 @@ async function initApp() {
     user = session.user;
     await loadProfile();
     if (!profile?.terms_accepted) { showTerms(true); return; }
-    if (!profile?.gender_selected) { fadeLoading(); show('gender-screen'); return; }
+    if (!profile?.gender_selected) {
+      fadeLoading();
+      show('gender-screen'); return;
+    }
+    if (!profile?.onboarding_complete) {
+      fadeLoading();
+      show('onboarding-screen');
+      obShowStep(1); return;
+    }
     await checkVIPStatus();
     await generateDailyQuests();
     await loadAllData();
@@ -1859,6 +2343,10 @@ window.confirmGender = async function() {
   await sb.from('profiles').update({gender:selectedGender,gender_selected:true,is_female_mode:selectedGender==='female'}).eq('id',user.id);
   if (profile) { profile.gender = selectedGender; profile.gender_selected = true; profile.is_female_mode = selectedGender === 'female'; }
   hide('gender-screen');
+  if (!profile?.onboarding_complete) {
+    show('onboarding-screen');
+    obShowStep(1); return;
+  }
   await checkVIPStatus(); await generateDailyQuests(); await loadAllData(); showMainApp();
 };
 
@@ -1882,8 +2370,16 @@ window.doLogin = async function() {
   user = data.user; hide('auth-wrap'); show('loading-screen'); id('loading-screen').classList.remove('fade-out');
   await loadProfile();
   if (!profile?.terms_accepted) { showTerms(true); return; }
-  if (!profile?.gender_selected) { fadeLoading(); show('gender-screen'); return; }
-  await checkVIPStatus(); await generateDailyQuests(); await loadAllData(); showMainApp();
+  if (!profile?.gender_selected) {
+      fadeLoading(); show('gender-screen');
+      return;
+    }
+    if (!profile?.onboarding_complete) {
+      fadeLoading();
+      show('onboarding-screen');
+      obShowStep(1); return;
+    }
+    await checkVIPStatus();); await generateDailyQuests(); await loadAllData(); showMainApp();
 };
 window.doSignup = async function() {
   const username = val('signup-username'), email = val('signup-email'), pass = val('signup-password');
@@ -2063,7 +2559,14 @@ function renderHeroCard() {
   const role = getRoleInfo(profile.role||'warrior');
   id('hero-name').textContent = profile.username||'Hero';
   id('hero-role').style.color = role.color; id('hero-role').textContent = `${role.icon} ${role.name}`;
-  id('hero-badge').textContent = `LV ${level}`;
+  var rs=getRankStage(profile.xp||0);
+  var pct=getRankProgress(profile.xp||0);
+  id('hero-badge').textContent=rs.stage;
+  id('xp-fill').style.width=pct+'%';
+  id('xp-nums').textContent=
+    rs.rank+' '+rs.stage+' — '+pct+'%';
+  id('topbar-level').textContent=
+    rs.icon+' '+rs.fullName;
   id('xp-fill').style.width = pct+'%'; id('xp-nums').textContent = `${xp} / ${nextMin}`;
   id('hstat-streak').textContent = profile.streak||0;
   id('hstat-energy').textContent = profile.energy||100;
@@ -2296,23 +2799,66 @@ window.completeSQ = async function(sqId, done) {
   toast(`👑 +${sq.xp_reward} XP! 🪙50`);
   await checkAchievements(); renderAll();
 };
-async function giveXP(amount, skillCat, role) {
-  if (!profile) return;
-  let final = amount;
-  if (role && skillCat && ROLES[role]?.bonus === skillCat) {
-    final = Math.round(amount*1.2);
-    if (final > amount) setTimeout(()=>toast(`⚔️ ${ROLES[role].name} Bonus! +${final-amount}XP`,'gem'),400);
+async function giveXP(amount,skillCat,role){
+  if(!profile) return;
+  // Apply streak multiplier
+  var mult=getStreakMultiplier(
+    profile.streak||0);
+  var final=Math.round(amount*mult);
+  // Apply role bonus
+  if(role&&skillCat&&
+    ROLES[role]&&
+    ROLES[role].bonus===skillCat){
+    final=Math.round(final*1.2);
+    if(final>amount&&mult===1){
+      setTimeout(function(){
+        toast(ROLES[role].icon+
+          ' Class Bonus!','gem');},400);
+    }
   }
-  const newXP = (profile.xp||0)+final, newLevel = getLevel(newXP), oldLevel = getLevel(profile.xp||0);
-  await sb.from('profiles').update({xp:newXP,level:newLevel}).eq('id',user.id);
-  profile.xp=newXP; profile.level=newLevel;
-  if (newLevel>oldLevel) { setTimeout(()=>toast(`🎉 LEVEL UP! Level ${newLevel}!`),700); await awardCurrency(0,50); }
-  if (skillCat && skillCat!=='system' && skillCat!=='period') {
-    const sk = allSkills.find(s=>s.skill_name===skillCat);
-    if (sk) { const nSXP=(sk.skill_xp||0)+final,nSLV=Math.floor(nSXP/100)+1; await sb.from('skills').update({skill_xp:nSXP,skill_level:nSLV}).eq('id',sk.id); sk.skill_xp=nSXP; sk.skill_level=nSLV; }
+  var rs=getRankStage(profile.xp||0);
+  var newXP=(profile.xp||0)+final;
+  var newRs=getRankStage(newXP);
+  var rankedUp=newRs.id>rs.id;
+  await sb.from('profiles')
+    .update({xp:newXP}).eq('id',user.id);
+  profile.xp=newXP;
+  if(rankedUp){
+    setTimeout(function(){
+      toast('🎉 RANK UP! '+
+        newRs.fullName+'!','gem');
+    },700);
   }
-  const newMot = Math.min(100,(profile.motivation||100)+2);
-  await sb.from('profiles').update({motivation:newMot}).eq('id',user.id); profile.motivation=newMot;
+  if(skillCat&&skillCat!=='system'&&
+    skillCat!=='period'){
+    var sk=allSkills.find(function(s){
+      return s.skill_name===skillCat;
+    });
+    if(sk){
+      var nSXP=(sk.skill_xp||0)+final;
+      var nSLV=Math.floor(nSXP/100)+1;
+      await sb.from('skills').update({
+        skill_xp:nSXP,skill_level:nSLV
+      }).eq('id',sk.id);
+      sk.skill_xp=nSXP;
+      sk.skill_level=nSLV;
+    }
+  }
+  var newMot=Math.min(100,
+    (profile.motivation||100)+2);
+  await sb.from('profiles')
+    .update({motivation:newMot})
+    .eq('id',user.id);
+  profile.motivation=newMot;
+  applyFrame();
+}
+
+function getStreakMultiplier(streak){
+  if(streak>=30) return 3.0;
+  if(streak>=15) return 2.5;
+  if(streak>=8) return 2.0;
+  if(streak>=4) return 1.5;
+  return 1.0;
 }
 async function awardCurrency(gems, coins) {
   if (!profile) return;
@@ -2339,21 +2885,136 @@ async function checkStreak() {
 // ══════════════════════════════════
 // PENALTY SYSTEM
 // ══════════════════════════════════
-async function checkPenalties() {
-  if (!profile) return;
-  const yesterday = new Date(Date.now()-86400000).toISOString().split('T')[0];
-  try {
-    const {data:existing} = await sb.from('penalty_log').select('id').eq('user_id',user.id).eq('penalty_date',yesterday).single();
-    if (existing) return;
-    const {data:missed} = await sb.from('daily_quests').select('id').eq('user_id',user.id).eq('quest_date',yesterday).eq('quest_type','habit').eq('is_completed',false);
-    const missedCount = (missed||[]).length;
-    if (!missedCount) return;
-    const motLost = missedCount*5;
-    const newMot = Math.max(0,(profile.motivation||100)-motLost);
-    await sb.from('profiles').update({motivation:newMot}).eq('id',user.id); profile.motivation=newMot;
-    await sb.from('penalty_log').insert({user_id:user.id,penalty_date:yesterday,missed_habits:missedCount,motivation_lost:motLost});
-    if (motLost>0) setTimeout(()=>toast(`⚠️ ${missedCount} habits missed yesterday. -${motLost} motivation.`,'red'),1000);
-  } catch(e) {}
+async function checkPenalties(){
+  if(!profile) return;
+  var yesterday=new Date(
+    Date.now()-86400000)
+    .toISOString().split('T')[0];
+  try{
+    var {data:existing}=await sb
+      .from('penalty_log').select('id')
+      .eq('user_id',user.id)
+      .eq('penalty_date',yesterday).single();
+    if(existing) return;
+    var {data:missed}=await sb
+      .from('daily_quests').select('id')
+      .eq('user_id',user.id)
+      .eq('quest_date',yesterday)
+      .eq('quest_type','habit')
+      .eq('is_completed',false);
+    var missedCount=(missed||[]).length;
+    if(!missedCount) return;
+    var motLost=missedCount*5;
+    var newMot=Math.max(0,
+      (profile.motivation||100)-motLost);
+    await sb.from('profiles')
+      .update({motivation:newMot})
+      .eq('id',user.id);
+    profile.motivation=newMot;
+    await sb.from('penalty_log').insert({
+      user_id:user.id,
+      penalty_date:yesterday,
+      missed_habits:missedCount,
+      motivation_lost:motLost
+    });
+    // Reduce bond for missed day
+    await reduceBondForMissedDays(1);
+    if(motLost>0){
+      setTimeout(function(){
+        toast('⚠️ '+missedCount+
+          ' habits missed. -'+
+          motLost+' motivation.','red');
+      },1500);
+    }
+  }catch(e){}
+}
+
+// ══ COMEBACK SYSTEM ══
+async function startComebackSession(){
+  try{
+    var {data:existing}=await sb
+      .from('comeback_sessions')
+      .select('*')
+      .eq('user_id',user.id)
+      .eq('is_complete',false)
+      .single();
+    if(existing) return;
+    await sb.from('comeback_sessions')
+      .insert({user_id:user.id});
+    // Generate comeback quests (easy)
+    var comebackQuests=[
+      {title:'Complete 1 small task right now',
+        diff:'easy'},
+      {title:'Drink a glass of water',
+        diff:'easy'},
+      {title:'Write one sentence in your journal',
+        diff:'easy'}
+    ];
+    await sb.from('daily_quests').insert(
+      comebackQuests.map(function(q){
+        return {user_id:user.id,
+          title:q.title,quest_type:'todo',
+          skill_category:'mindset',
+          xp_reward:10,quest_date:today,
+          is_completed:false,
+          difficulty:'easy'};
+      })
+    );
+    dailyQuests=[];
+    await loadAllData();
+    toast('🔄 Comeback quests added. '+
+      'Complete them to restore your pet!',
+      'green');
+  }catch(e){}
+}
+
+async function checkComebackProgress(){
+  if(!profile?.comeback_active) return;
+  try{
+    var {data:session}=await sb
+      .from('comeback_sessions')
+      .select('*')
+      .eq('user_id',user.id)
+      .eq('is_complete',false)
+      .single();
+    if(!session) return;
+    var completed=dailyQuests.filter(
+      function(q){return q.is_completed;})
+      .length;
+    if(completed>=3){
+      // Comeback complete
+      await sb.from('comeback_sessions')
+        .update({is_complete:true,
+          completed_at:new Date().toISOString()})
+        .eq('id',session.id);
+      await sb.from('profiles').update({
+        comeback_active:false
+      }).eq('id',user.id);
+      profile.comeback_active=false;
+      // Restore pet with partial bond
+      var {data:ps}=await sb
+        .from('player_summons')
+        .select('*').eq('user_id',user.id)
+        .eq('is_active',false)
+        .order('obtained_at',{ascending:false})
+        .limit(1).single();
+      if(ps){
+        await sb.from('player_summons')
+          .update({is_active:true,bond_xp:200})
+          .eq('id',ps.id);
+        await sb.from('profiles')
+          .update({active_summon_id:ps.id})
+          .eq('id',user.id);
+        profile.active_summon_id=ps.id;
+        var {data:sm}=await sb
+          .from('shop_summons').select('name')
+          .eq('id',ps.summon_id).single();
+        toast('🔮 '+(sm?sm.name:'Your companion')+
+          ' has returned!','gem');
+      }
+      renderAll();
+    }
+  }catch(e){}
 }
 
 // ══════════════════════════════════
@@ -2479,7 +3140,7 @@ window.addQuest = async function() {
   const title=val('nq-title'), type=val('nq-type'), diff=val('nq-difficulty')||'epic', skill=val('nq-skill');
   const schedDate=val('nq-date')||today, schedTime=document.getElementById('nq-time').value||null;
   if (!title) { toast('Enter a title! ⚠️','red'); return; }
-  const {data} = await sb.from('daily_quests').insert({user_id:user.id,title,quest_type:type,skill_category:skill,xp_reward:FIXED_XP,quest_date:schedDate,is_completed:false,difficulty:diff,scheduled_time:schedTime,is_recurring:type==='habit'}).select().single();
+  const {data} = await sb.from('daily_quests').insert({user_id:user.id,title,quest_type:type,skill_category:skill,xp_reward: diff==='hard'?50:diff==='medium'?25:10,quest_date:schedDate,is_completed:false,difficulty:diff,scheduled_time:schedTime,is_recurring:type==='habit'}).select().single();
   if (data && schedDate===today) dailyQuests.push(data);
   closeModal('add-quest-modal'); id('nq-title').value='';
   toast(schedDate===today?'Quest created! 🎯':`Scheduled for ${schedDate}! 🗓️`,'green');
@@ -3425,210 +4086,520 @@ async function uploadSummonImage() {
 }
 
 async function growSummonBond(amount) {
-  if(!user) return;
-  try {
-    var res=await sb.from('summons')
-      .select('*').eq('user_id',user.id)
-      .eq('is_active',true)
-      .order('created_at',{ascending:false})
-      .limit(1);
-    var summon=res.data&&res.data[0]
-      ?res.data[0]:null;
-    if(!summon) return;
-    var newBondXP=(summon.bond_xp||0)+amount;
+async function growSummonBond(amount){
+  if(!user||!profile) return;
+  try{
+    var res=await sb.from('player_summons')
+      .select('*,shop_summons(name,image_url)')
+      .eq('user_id',user.id)
+      .eq('is_active',true).single();
+    if(!res.data) return;
+    var ps=res.data;
+    var newBondXP=Math.min(1000,
+      Math.max(0,(ps.bond_xp||500)+amount));
     var newBondLv=Math.floor(newBondXP/100)+1;
-    var leveledUp=newBondLv>summon.bond_level;
-    await sb.from('summons').update({
+    var leveledUp=newBondLv>
+      (ps.bond_level||1)&&amount>0;
+    var bondPct=Math.round(newBondXP/10);
+    // Warning at <10%
+    if(bondPct<10&&amount<0){
+      var petName=ps.shop_summons
+        ?ps.shop_summons.name:'Your companion';
+      setTimeout(function(){
+        toast('⚠️ '+petName+
+          ' bond is critical! '+
+          bondPct+'%','red');
+      },500);
+    }
+    // Pet leaves at 0
+    if(newBondXP===0){
+      await handlePetLeave(ps);
+      return;
+    }
+    await sb.from('player_summons').update({
       bond_xp:newBondXP,
       bond_level:newBondLv
-    }).eq('id',summon.id);
-    if(leveledUp) {
-      toast('🔮 '+summon.name+
-        ' Bond Level '+newBondLv+'!','gem');
+    }).eq('id',ps.id);
+    if(leveledUp){
+      var pn=ps.shop_summons
+        ?ps.shop_summons.name:'Companion';
+      toast('🔮 '+pn+' Bond Lv '+
+        newBondLv+'!','gem');
     }
-  } catch(e) {}
-  }
+  }catch(e){}
+}
+
+async function handlePetLeave(ps){
+  var petName=ps.shop_summons
+    ?ps.shop_summons.name:'Your companion';
+  await sb.from('player_summons').update({
+    is_active:false
+  }).eq('id',ps.id);
+  await sb.from('profiles').update({
+    active_summon_id:null,
+    comeback_active:true
+  }).eq('id',user.id);
+  profile.active_summon_id=null;
+  profile.comeback_active=true;
+  toast('💔 '+petName+
+    ' has left. Complete comeback quests '+
+    'to bring them back.','red');
+  await startComebackSession();
+}
+
+async function reduceBondForMissedDays(days){
+  var lossPerDay=days===1?10:days===2?25:50;
+  await growSummonBond(-lossPerDay);
+}
 // ══════════════════════════════════
-// RANK & FRAME SYSTEM
+// RANK & LEVEL SYSTEM
 // ══════════════════════════════════
-const PREDEFINED_FRAMES = [
-  {id:'frame-bronze',name:'Bronze',
-    icon:'🥉',desc:'Rank: Bronze',
-    rankRequired:'bronze'},
-  {id:'frame-silver',name:'Silver',
-    icon:'🥈',desc:'Rank: Silver',
-    rankRequired:'silver'},
-  {id:'frame-platinum',name:'Platinum',
-    icon:'💎',desc:'Rank: Platinum',
-    rankRequired:'platinum'},
-  {id:'frame-master',name:'Master',
-    icon:'⚔️',desc:'Rank: Master',
-    rankRequired:'master'},
-  {id:'frame-legendary',name:'Legendary',
-    icon:'🌟',desc:'Rank: Legendary',
-    rankRequired:'legendary'},
-  {id:'frame-ascended',name:'Ascended',
-    icon:'👑',desc:'Rank: Ascended',
-    rankRequired:'ascended'}
+const RANK_STAGES = [
+  {id:0,rank:'Bronze',stage:'I',
+    icon:'🥉',color:'#cd7f32',
+    frame:'frame-bronze',minXP:0,maxXP:300},
+  {id:1,rank:'Bronze',stage:'II',
+    icon:'🥉',color:'#cd7f32',
+    frame:'frame-bronze',minXP:300,maxXP:700},
+  {id:2,rank:'Bronze',stage:'III',
+    icon:'🥉',color:'#cd7f32',
+    frame:'frame-bronze',minXP:700,maxXP:1200},
+  {id:3,rank:'Silver',stage:'I',
+    icon:'🥈',color:'#c0c0c0',
+    frame:'frame-silver',minXP:1200,maxXP:1800},
+  {id:4,rank:'Silver',stage:'II',
+    icon:'🥈',color:'#c0c0c0',
+    frame:'frame-silver',minXP:1800,maxXP:2500},
+  {id:5,rank:'Silver',stage:'III',
+    icon:'🥈',color:'#c0c0c0',
+    frame:'frame-silver',minXP:2500,maxXP:3300},
+  {id:6,rank:'Gold',stage:'I',
+    icon:'🏅',color:'#ffd700',
+    frame:'frame-gold',minXP:3300,maxXP:4200},
+  {id:7,rank:'Gold',stage:'II',
+    icon:'🏅',color:'#ffd700',
+    frame:'frame-gold',minXP:4200,maxXP:5200},
+  {id:8,rank:'Gold',stage:'III',
+    icon:'🏅',color:'#ffd700',
+    frame:'frame-gold',minXP:5200,maxXP:6300},
+  {id:9,rank:'Platinum',stage:'I',
+    icon:'💎',color:'#60a5fa',
+    frame:'frame-platinum',
+    minXP:6300,maxXP:7500},
+  {id:10,rank:'Platinum',stage:'II',
+    icon:'💎',color:'#60a5fa',
+    frame:'frame-platinum',
+    minXP:7500,maxXP:8800},
+  {id:11,rank:'Platinum',stage:'III',
+    icon:'💎',color:'#60a5fa',
+    frame:'frame-platinum',
+    minXP:8800,maxXP:10200},
+  {id:12,rank:'Diamond',stage:'I',
+    icon:'💠',color:'#67e8f9',
+    frame:'frame-diamond',
+    minXP:10200,maxXP:11700},
+  {id:13,rank:'Diamond',stage:'II',
+    icon:'💠',color:'#67e8f9',
+    frame:'frame-diamond',
+    minXP:11700,maxXP:13300},
+  {id:14,rank:'Diamond',stage:'III',
+    icon:'💠',color:'#67e8f9',
+    frame:'frame-diamond',
+    minXP:13300,maxXP:15000},
+  {id:15,rank:'Master',stage:'I',
+    icon:'⚔️',color:'#6366f1',
+    frame:'frame-master',
+    minXP:15000,maxXP:17000},
+  {id:16,rank:'Master',stage:'II',
+    icon:'⚔️',color:'#6366f1',
+    frame:'frame-master',
+    minXP:17000,maxXP:19200},
+  {id:17,rank:'Master',stage:'III',
+    icon:'⚔️',color:'#6366f1',
+    frame:'frame-master',
+    minXP:19200,maxXP:21600},
+  {id:18,rank:'Grandmaster',stage:'I',
+    icon:'🔮',color:'#7c3aed',
+    frame:'frame-grandmaster',
+    minXP:21600,maxXP:24200},
+  {id:19,rank:'Grandmaster',stage:'II',
+    icon:'🔮',color:'#7c3aed',
+    frame:'frame-grandmaster',
+    minXP:24200,maxXP:27000},
+  {id:20,rank:'Grandmaster',stage:'III',
+    icon:'🔮',color:'#7c3aed',
+    frame:'frame-grandmaster',
+    minXP:27000,maxXP:30000},
+  {id:21,rank:'Legendary',stage:'I',
+    icon:'🌟',color:'#f59e0b',
+    frame:'frame-legendary',
+    minXP:30000,maxXP:33500},
+  {id:22,rank:'Legendary',stage:'II',
+    icon:'🌟',color:'#f59e0b',
+    frame:'frame-legendary',
+    minXP:33500,maxXP:37500},
+  {id:23,rank:'Legendary',stage:'III',
+    icon:'🌟',color:'#f59e0b',
+    frame:'frame-legendary',
+    minXP:37500,maxXP:42000},
+  {id:24,rank:'Mythic',stage:'I',
+    icon:'🔥',color:'#ef4444',
+    frame:'frame-mythic',
+    minXP:42000,maxXP:47000},
+  {id:25,rank:'Mythic',stage:'II',
+    icon:'🔥',color:'#ef4444',
+    frame:'frame-mythic',
+    minXP:47000,maxXP:52500},
+  {id:26,rank:'Mythic',stage:'III',
+    icon:'🔥',color:'#ef4444',
+    frame:'frame-mythic',
+    minXP:52500,maxXP:58500},
+  {id:27,rank:'Ascended',stage:'I',
+    icon:'👑',color:'#a855f7',
+    frame:'frame-ascended',
+    minXP:58500,maxXP:65500},
+  {id:28,rank:'Ascended',stage:'II',
+    icon:'👑',color:'#a855f7',
+    frame:'frame-ascended',
+    minXP:65500,maxXP:73500},
+  {id:29,rank:'Ascended',stage:'III',
+    icon:'👑',color:'#a855f7',
+    frame:'frame-ascended',
+    minXP:73500,maxXP:83500}
 ];
 
-function getUserRank(xp, streak) {
-  var score=(xp||0)+((streak||0)*50);
-  if(score>=8000) return 'ascended';
-  if(score>=5000) return 'legendary';
-  if(score>=3000) return 'master';
-  if(score>=1500) return 'platinum';
-  if(score>=500) return 'silver';
-  return 'bronze';
+function getRankStage(xp) {
+  var x=xp||0;
+  if(x>=83500){
+    var beyond=Math.floor((x-83500)/10000);
+    var stages=['IV','V','VI','VII','VIII',
+      'IX','X','XI','XII','XIII','XIV','XV'];
+    var st=stages[beyond]||
+      'X'+(beyond-stages.length+1);
+    return {rank:'Ascended',stage:st,
+      fullName:'Ascended '+st,
+      icon:'👑',color:'#a855f7',
+      frame:'frame-ascended',
+      minXP:83500+(beyond*10000),
+      maxXP:83500+((beyond+1)*10000),id:30+beyond};
+  }
+  for(var i=RANK_STAGES.length-1;i>=0;i--){
+    if(x>=RANK_STAGES[i].minXP){
+      var rs=RANK_STAGES[i];
+      return {rank:rs.rank,stage:rs.stage,
+        fullName:rs.rank+' '+rs.stage,
+        icon:rs.icon,color:rs.color,
+        frame:rs.frame,minXP:rs.minXP,
+        maxXP:rs.maxXP,id:i};
+    }
+  }
+  return {rank:'Bronze',stage:'I',
+    fullName:'Bronze I',icon:'🥉',
+    color:'#cd7f32',frame:'frame-bronze',
+    minXP:0,maxXP:300,id:0};
 }
 
-function getRankInfo(rank) {
-  return RANKS[rank]||RANKS.bronze;
-}
-
-function getRankOrder(rank) {
-  var keys=Object.keys(RANKS);
-  return keys.indexOf(rank);
+function getRankProgress(xp) {
+  var rs=getRankStage(xp||0);
+  var range=rs.maxXP-rs.minXP;
+  if(range<=0) return 100;
+  return Math.min(100,Math.round(
+    (((xp||0)-rs.minXP)/range)*100));
 }
 
 function applyFrame() {
   if(!profile) return;
   var activeFrame=profile.active_frame||'rank';
-  var rank=getUserRank(
-    profile.xp||0, profile.streak||0);
-  var rankInfo=getRankInfo(rank);
+  var rs=getRankStage(profile.xp||0);
   var frameClass=activeFrame==='rank'
-    ?rankInfo.frame:activeFrame;
-  var heroCard=document.querySelector('.hero-card');
-  var profileCard=document.querySelector('.profile-card');
-  var allFrames=Object.values(RANKS)
-    .map(function(r){return r.frame;});
-  allFrames.push('frame-custom');
+    ?rs.frame:activeFrame;
+  var heroCard=document.querySelector(
+    '.hero-card');
+  var profileCard=document.querySelector(
+    '.profile-card');
+  var allFrames=['frame-bronze','frame-silver',
+    'frame-gold','frame-platinum',
+    'frame-diamond','frame-master',
+    'frame-grandmaster','frame-legendary',
+    'frame-mythic','frame-ascended'];
   allFrames.forEach(function(fc){
     if(heroCard) heroCard.classList.remove(fc);
-    if(profileCard) profileCard.classList.remove(fc);
+    if(profileCard)
+      profileCard.classList.remove(fc);
   });
   if(heroCard) heroCard.classList.add(frameClass);
-  if(profileCard) profileCard.classList.add(frameClass);
+  if(profileCard)
+    profileCard.classList.add(frameClass);
   var rb=id('rank-badge-display');
   if(rb){
-    rb.textContent=rankInfo.icon+' '+rankInfo.name;
-    rb.style.color=rankInfo.color;
-    rb.style.borderColor=rankInfo.color+'44';
-    rb.style.background=rankInfo.color+'11';
+    rb.textContent=rs.icon+' '+rs.fullName;
+    rb.style.color=rs.color;
+    rb.style.borderColor=rs.color+'44';
+    rb.style.background=rs.color+'11';
   }
 }
 
-async function renderFramesSection() {
-  var el=id('frames-list'); if(!el) return;
-  var rank=getUserRank(
-    profile.xp||0, profile.streak||0);
-  var rankOrder=getRankOrder(rank);
-  var unlockedFrames=profile.unlocked_frames||[];
-  if(typeof unlockedFrames==='string') {
-    try{unlockedFrames=JSON.parse(unlockedFrames);}
-    catch(e){unlockedFrames=[];}
-  }
-  var activeFrame=profile.active_frame||'rank';
-  var html='<div style="font-size:13px;'+
-    'color:var(--text2);margin-bottom:12px">'+
-    'Your rank: '+getRankInfo(rank).icon+' '+
-    getRankInfo(rank).name+
-    '<br/><span style="font-size:11px;'+
-    'color:var(--text3)">'+
-    'Higher rank = better frames unlocked.'+
-    '</span></div>';
-  html+='<div style="font-size:11px;'+
-    'color:var(--text2);margin-bottom:8px;'+
-    'letter-spacing:1px;font-family:'+
-    'Orbitron,monospace">RANK FRAMES</div>';
-  html+='<div class="frames-row">';
-  PREDEFINED_FRAMES.forEach(function(f){
-    var frameRankOrder=getRankOrder(
-      f.rankRequired);
-    var isUnlocked=rankOrder>=frameRankOrder;
-    var isActive=activeFrame===f.id||
-      (activeFrame==='rank'&&
-        f.id===getRankInfo(rank).frame);
-    var opacity=isUnlocked?'1':'0.35';
-    var cursor=isUnlocked?'pointer':'not-allowed';
-    html+='<div style="text-align:center;'+
-      'flex-shrink:0">';
-    html+='<div class="frame-option '+
-      f.id+(isActive?' selected':'')+'" '+
-      'style="opacity:'+opacity+';'+
-      'cursor:'+cursor+'" '+
-      (isUnlocked
-        ?'onclick="setActiveFrame(\''+f.id+'\')"'
-        :'')+'>'+
-      f.icon+'</div>';
-    html+='<div class="frame-label">'+
-      f.name+'</div>';
-    html+='</div>';
-  });
-  html+='</div>';
-  if(unlockedFrames.length>0){
-    html+='<div style="font-size:11px;'+
-      'color:var(--text2);margin:12px 0 8px;'+
-      'letter-spacing:1px;font-family:'+
-      'Orbitron,monospace">'+
-      'SPECIAL FRAMES</div>';
-    html+='<div class="frames-row">';
-    unlockedFrames.forEach(function(fid){
-      var isActive=activeFrame===fid;
-      html+='<div style="text-align:center;'+
-        'flex-shrink:0">';
-      html+='<div class="frame-option '+fid+
-        (isActive?' selected':'')+'" '+
-        'onclick="setActiveFrame(\''+fid+'\')">'+
-        '✨</div>';
-      html+='<div class="frame-label">'+
-        fid.replace('frame-','')+'</div>';
-      html+='</div>';
-    });
-    html+='</div>';
-  }
-  html+='<div style="margin-top:12px">'+
-    '<button class="btn-secondary" '+
-    'onclick="setActiveFrame(\'rank\')" '+
-    'style="margin-top:0">'+
-    '↩ Use Rank Frame (auto)</button></div>';
-  el.innerHTML=html;
-  var sub=id('frame-sub');
-  if(sub){
-    var af=activeFrame==='rank'?
-      'Auto: '+getRankInfo(rank).name:
-      activeFrame.replace('frame-','');
-    sub.textContent='Active: '+af;
-  }
-}
+// ══════════════════════════════════
+// ONBOARDING SYSTEM
+// ══════════════════════════════════
+var selectedStruggle=null;
+var obGeneratedQuests=[];
+var obStarterPet=null;
 
-window.setActiveFrame=async function(frameId){
-  await sb.from('profiles')
-    .update({active_frame:frameId})
-    .eq('id',user.id);
-  profile.active_frame=frameId;
-  applyFrame();
-  renderFramesSection();
-  toast('Frame updated!','green');
+const STRUGGLE_CONFIG={
+  phone_addiction:{
+    label:'Phone Addiction',
+    petName:'Nova',
+    quests:[
+      {title:'No phone for 1 hour',
+        diff:'easy'},
+      {title:'Keep phone in another room while studying',
+        diff:'medium'},
+      {title:'Track your screen time today',
+        diff:'easy'}
+    ]
+  },
+  laziness:{
+    label:'Laziness',
+    petName:'Blaze',
+    quests:[
+      {title:'Wake up without snoozing',
+        diff:'easy'},
+      {title:'Complete 1 task before checking phone',
+        diff:'medium'},
+      {title:'Do 10 minutes of movement',
+        diff:'easy'}
+    ]
+  },
+  focus:{
+    label:'Focus Issues',
+    petName:'Sage',
+    quests:[
+      {title:'Study for 25 minutes without distraction',
+        diff:'medium'},
+      {title:'Write down 3 priorities for today',
+        diff:'easy'},
+      {title:'Complete one full task before switching',
+        diff:'medium'}
+    ]
+  }
 };
 
-async function unlockFrame(frameId) {
-  if(!profile) return;
-  var frames=profile.unlocked_frames||[];
-  if(typeof frames==='string'){
-    try{frames=JSON.parse(frames);}
-    catch(e){frames=[];}
+window.selectStruggle=function(struggle,el){
+  selectedStruggle=struggle;
+  document.querySelectorAll('.struggle-card')
+    .forEach(function(c){
+      c.classList.remove('selected');
+    });
+  el.classList.add('selected');
+  var btn=id('ob-next-1');
+  if(btn){btn.disabled=false;
+    btn.style.opacity='1';}
+};
+
+window.obStep1Continue=async function(){
+  if(!selectedStruggle) return;
+  obShowStep(2);
+  await generateObQuests();
+};
+
+async function generateObQuests(){
+  var config=STRUGGLE_CONFIG[selectedStruggle];
+  var useAI=ANTHROPIC_KEY&&
+    ANTHROPIC_KEY!=='PASTE_YOUR_ANTHROPIC_KEY_HERE';
+  if(useAI){
+    try{
+      var res=await fetch(
+        'https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'x-api-key':ANTHROPIC_KEY,
+          'anthropic-version':'2023-06-01',
+          'anthropic-dangerous-direct-browser-access':
+            'true'
+        },
+        body:JSON.stringify({
+          model:'claude-sonnet-4-20250514',
+          max_tokens:300,
+          messages:[{role:'user',content:
+            'Generate exactly 3 starter quests for a student who struggles with: '+
+            config.label+
+            '. Return ONLY valid JSON array with 3 objects, each having: title (short action, max 8 words), difficulty (easy/medium/hard). Make them actionable for today. No explanations.'}]
+        })
+      });
+      var data=await res.json();
+      var text=data.content&&data.content[0]
+        ?data.content[0].text:'';
+      var match=text.match(/\[[\s\S]*\]/);
+      if(match){
+        var parsed=JSON.parse(match[0]);
+        obGeneratedQuests=parsed.slice(0,3);
+      } else {
+        obGeneratedQuests=config.quests;
+      }
+    }catch(e){
+      obGeneratedQuests=config.quests;
+    }
+  } else {
+    obGeneratedQuests=config.quests;
   }
-  if(frames.indexOf(frameId)>-1) return;
-  frames.push(frameId);
-  await sb.from('profiles')
-    .update({unlocked_frames:frames})
-    .eq('id',user.id);
-  profile.unlocked_frames=frames;
-  toast('🖼️ New frame unlocked: '+frameId+
-    '!','gem');
+  obShowStep(3);
+  renderObQuests();
 }
+
+function renderObQuests(){
+  var el=id('ob-quests-list');
+  if(!el) return;
+  var html='';
+  for(var i=0;i<obGeneratedQuests.length;i++){
+    var q=obGeneratedQuests[i];
+    var diff=q.difficulty||q.diff||'easy';
+    var xp=diff==='hard'?50:diff==='medium'?25:10;
+    html+='<div class="ob-quest-preview">';
+    html+='<div class="ob-quest-num">QUEST '+
+      (i+1)+'</div>';
+    html+='<div class="ob-quest-title">'+
+      q.title+'</div>';
+    html+='<div class="ob-quest-xp">'+
+      '+'+xp+' XP • '+(cap(diff))+
+      '</div></div>';
+  }
+  el.innerHTML=html;
+}
+
+window.obStep3Continue=async function(){
+  obShowStep(4);
+  await loadObPet();
+};
+
+async function loadObPet(){
+  var config=STRUGGLE_CONFIG[selectedStruggle];
+  var petName=config.petName;
+  var res=await sb.from('shop_summons')
+    .select('*').eq('name',petName)
+    .single().catch(function(){
+      return {data:null};
+    });
+  obStarterPet=res.data;
+  var el=id('ob-pet-display');
+  if(!el) return;
+  if(obStarterPet&&obStarterPet.image_url){
+    el.innerHTML=
+      '<img class="ob-pet-img" src="'+
+      obStarterPet.image_url+'"/>'+
+      '<div class="ob-pet-name">'+
+      obStarterPet.name+'</div>'+
+      '<div class="ob-pet-desc">'+
+      (obStarterPet.description||'')+
+      '</div>';
+  } else {
+    var icons={Nova:'🦊',Blaze:'🐺',Sage:'🦉'};
+    el.innerHTML=
+      '<div class="ob-pet-placeholder">'+
+      (icons[petName]||'🔮')+'</div>'+
+      '<div class="ob-pet-name">'+petName+
+      '</div>'+
+      '<div class="ob-pet-desc">'+
+      (obStarterPet?
+        obStarterPet.description||'':
+        'Your starter companion.')+
+      '</div>';
+  }
+}
+
+window.obStep4Continue=function(){
+  obShowStep(5);
+};
+
+window.obFinish=async function(){
+  var btn=document.querySelector(
+    '#ob-step-5 .btn-primary');
+  if(btn){btn.disabled=true;
+    btn.textContent='LOADING...';}
+  await saveOnboarding();
+  hide('onboarding-screen');
+  await checkVIPStatus();
+  await generateDailyQuests();
+  await loadAllData();
+  showMainApp();
+};
+
+async function saveOnboarding(){
+  // Save struggle
+  await sb.from('profiles').update({
+    struggle:selectedStruggle,
+    onboarding_complete:true
+  }).eq('id',user.id);
+  profile.struggle=selectedStruggle;
+  profile.onboarding_complete=true;
+  // Save generated quests
+  var diffs={easy:10,medium:25,hard:50};
+  var questsToInsert=[];
+  for(var i=0;i<obGeneratedQuests.length;i++){
+    var q=obGeneratedQuests[i];
+    var diff=q.difficulty||q.diff||'easy';
+    questsToInsert.push({
+      user_id:user.id,
+      title:q.title,
+      quest_type:'habit',
+      skill_category:'discipline',
+      xp_reward:diffs[diff]||10,
+      quest_date:today,
+      is_completed:false,
+      difficulty:diff,
+      is_recurring:true
+    });
+  }
+  if(questsToInsert.length>0){
+    await sb.from('daily_quests')
+      .insert(questsToInsert);
+  }
+  // Assign starter pet
+  if(obStarterPet){
+    await sb.from('player_summons').insert({
+      user_id:user.id,
+      summon_id:obStarterPet.id,
+      is_active:true,
+      bond_level:1,
+      bond_xp:500,
+      obtained_from:'starter'
+    });
+    await sb.from('profiles').update({
+      active_summon_id:obStarterPet.id
+    }).eq('id',user.id);
+    profile.active_summon_id=obStarterPet.id;
+  }
+}
+
+function obShowStep(step){
+  for(var i=1;i<=5;i++){
+    var el=id('ob-step-'+i);
+    if(el){
+      if(i===step) el.classList.remove('hidden');
+      else el.classList.add('hidden');
+    }
+    var dot=id('ob-dot-'+i);
+    if(dot){
+      dot.classList.remove('active','done');
+      if(i<step) dot.classList.add('done');
+      else if(i===step)
+        dot.classList.add('active');
+    }
+  }
+  var container=document.querySelector(
+    '.ob-container');
+  if(container) container.scrollTop=0;
+}
+
+// Update initApp to check onboarding
+// Find your existing initApp and update
+// the routing logic after gender check:
+// After: if (!profile?.gender_selected)
+// Add: if (!profile?.onboarding_complete)
+//      show onboarding screen
+
+  
 
 // ══════════════════════════════════
 // SHOP SYSTEM
@@ -4136,6 +5107,250 @@ window.adminToggleSummon=async function(
     'green');
   loadAdminSummonsList();
 };
+
+// ══════════════════════════════════
+// DAILY COMPLETION LOOP
+// ══════════════════════════════════
+
+// Update daily bonus to include shard
+window.claimDailyBonus=async function(){
+  if(profile?.daily_bonus_claimed===today){
+    toast('Already claimed! ✅');return;
+  }
+  await giveXP(DAILY_BONUS_XP,null,
+    profile.role||'warrior');
+  await awardCurrency(0,DAILY_BONUS_COINS);
+  // Give 1 summon shard
+  var newShards=(profile.summon_shards||0)+1;
+  await sb.from('profiles')
+    .update({daily_bonus_claimed:today,
+      summon_shards:newShards})
+    .eq('id',user.id);
+  profile.daily_bonus_claimed=today;
+  profile.summon_shards=newShards;
+  hide('bonus-banner-wrap');
+  toast('🎁 Bonus! +100XP +🪙100 +1 Shard!',
+    'gem');
+  // Check if can convert shards to ticket
+  checkShardsToTicket();
+  // Open loot box
+  openLootBox();
+  await checkAchievements();
+  renderAll();
+};
+
+function checkShardsToTicket(){
+  var shards=profile.summon_shards||0;
+  if(shards>=5){
+    var tickets=Math.floor(shards/5);
+    var remaining=shards%5;
+    var newTickets=
+      (profile.summon_tickets||0)+tickets;
+    sb.from('profiles').update({
+      summon_shards:remaining,
+      summon_tickets:newTickets
+    }).eq('id',user.id);
+    profile.summon_shards=remaining;
+    profile.summon_tickets=newTickets;
+    toast('🎫 '+tickets+' Summon Ticket'+(
+      tickets>1?'s':'')+' earned!','gem');
+  }
+}
+
+// ══ LOOT BOX ══
+var LOOT_TABLE=[
+  {type:'coins',label:'COINS',
+    icon:'🪙',chance:40,
+    getValue:function(){
+      return 50+Math.floor(Math.random()*100);}},
+  {type:'coins',label:'COINS',
+    icon:'🪙',chance:20,
+    getValue:function(){
+      return 100+Math.floor(Math.random()*150);}},
+  {type:'xp',label:'XP BOOST',
+    icon:'⚡',chance:15,
+    getValue:function(){return 50;}},
+  {type:'shards',label:'SUMMON SHARD',
+    icon:'🔮',chance:15,
+    getValue:function(){return 1;}},
+  {type:'shield',label:'STREAK SHIELD',
+    icon:'🛡️',chance:8,
+    getValue:function(){return 1;}},
+  {type:'shards',label:'SUMMON SHARDS',
+    icon:'🔮✨',chance:2,
+    getValue:function(){return 3;}}
+];
+
+function rollLootTable(){
+  var roll=Math.random()*100;
+  var cumulative=0;
+  for(var i=0;i<LOOT_TABLE.length;i++){
+    cumulative+=LOOT_TABLE[i].chance;
+    if(roll<cumulative) return LOOT_TABLE[i];
+  }
+  return LOOT_TABLE[0];
+}
+
+async function openLootBox(){
+  var reward=rollLootTable();
+  var value=reward.getValue();
+  // Apply reward
+  if(reward.type==='coins'){
+    await awardCurrency(0,value);
+  } else if(reward.type==='xp'){
+    await giveXP(value,null,
+      profile.role||'warrior');
+  } else if(reward.type==='shards'){
+    var ns=(profile.summon_shards||0)+value;
+    await sb.from('profiles')
+      .update({summon_shards:ns})
+      .eq('id',user.id);
+    profile.summon_shards=ns;
+    checkShardsToTicket();
+  } else if(reward.type==='shield'){
+    var shields=(profile.streak_shields||0)+1;
+    await sb.from('profiles')
+      .update({streak_shields:shields})
+      .eq('id',user.id);
+    profile.streak_shields=shields;
+  }
+  // Log it
+  await sb.from('loot_box_history').insert({
+    user_id:user.id,
+    reward_type:reward.type,
+    reward_value:value,
+    reward_label:reward.label
+  }).catch(function(){});
+  // Show overlay
+  var icon=id('loot-reward-icon');
+  var label=id('loot-reward-label');
+  var val=id('loot-reward-value');
+  if(icon) icon.textContent=reward.icon;
+  if(label) label.textContent=reward.label;
+  if(val){
+    if(reward.type==='shield')
+      val.textContent='SHIELD ACTIVATED';
+    else val.textContent='+'+value;
+  }
+  show('loot-box-overlay');
+}
+
+window.closeLootBox=function(){
+  hide('loot-box-overlay');
+  renderAll();
+};
+
+// Per-quest loot chance (25%)
+async function rollQuestLoot(){
+  if(Math.random()<0.25){
+    await openLootBox();
+  }
+}
+
+// ══ 7-DAY LOGIN REWARDS ══
+async function checkLoginReward(){
+  if(!profile) return;
+  var todayDate=today;
+  if(profile.last_login_date===todayDate) return;
+  var yesterday=new Date(
+    Date.now()-86400000).toISOString()
+    .split('T')[0];
+  var loginStreak=profile.last_login_date
+    ===yesterday
+    ?(profile.login_streak_count||0)+1:1;
+  var dayInCycle=((loginStreak-1)%7)+1;
+  // Update login data
+  await sb.from('profiles').update({
+    last_login_date:todayDate,
+    login_streak_count:loginStreak
+  }).eq('id',user.id);
+  profile.last_login_date=todayDate;
+  profile.login_streak_count=loginStreak;
+  // Get reward for today
+  var res=await sb.from('login_rewards')
+    .select('*').eq('day',dayInCycle)
+    .single().catch(function(){
+      return {data:null};
+    });
+  if(!res.data) return;
+  var reward=res.data;
+  // Apply reward
+  if(reward.reward_type==='coins'){
+    await awardCurrency(0,reward.reward_value);
+  } else if(reward.reward_type==='xp'){
+    await giveXP(reward.reward_value,null,
+      profile.role||'warrior');
+  } else if(reward.reward_type==='shards'){
+    var ns=(profile.summon_shards||0)+
+      reward.reward_value;
+    await sb.from('profiles')
+      .update({summon_shards:ns})
+      .eq('id',user.id);
+    profile.summon_shards=ns;
+    checkShardsToTicket();
+  } else if(reward.reward_type==='ticket'){
+    var nt=(profile.summon_tickets||0)+1;
+    var nc=(profile.coins||0)+300;
+    await sb.from('profiles')
+      .update({summon_tickets:nt,coins:nc})
+      .eq('id',user.id);
+    profile.summon_tickets=nt;
+    profile.coins=nc;
+  }
+  // Show reward modal
+  showLoginRewardModal(
+    dayInCycle, reward, loginStreak);
+}
+
+function showLoginRewardModal(
+  day, reward, streak){
+  var el=id('login-reward-content');
+  if(!el) return;
+  var icons={coins:'🪙',xp:'⚡',
+    shards:'🔮',ticket:'🎫'};
+  var html='<div style="text-align:center;'+
+    'padding:16px 0">';
+  html+='<div style="font-size:48px;'+
+    'margin-bottom:12px;'+
+    'animation:rewardBounce .6s '+
+    'cubic-bezier(.4,0,.2,1)">'+
+    (icons[reward.reward_type]||'🎁')+'</div>';
+  html+='<div style="font-family:Orbitron,'+
+    'monospace;font-size:20px;'+
+    'font-weight:900;color:var(--gold);'+
+    'margin-bottom:6px">'+
+    reward.description+'</div>';
+  html+='<div style="font-size:13px;'+
+    'color:var(--text2);margin-bottom:20px">'+
+    'Day '+day+' Login Reward'+
+    (day===7?' 🎉 Week Complete!':'')+'</div>';
+  html+='<div class="login-reward-days">';
+  for(var d=1;d<=7;d++){
+    var isClaimed=d<day;
+    var isToday=d===day;
+    html+='<div class="lr-day '+
+      (isClaimed?'claimed ':'')+
+      (isToday?'today':'')+'">';
+    html+='<div class="lr-day-num">'+
+      'D'+d+'</div>';
+    html+='<div class="lr-day-icon">'+
+      (d===7?'🎫':d===3||d===6?'🔮':'🎁')+
+      '</div>';
+    html+='</div>';
+  }
+  html+='</div>';
+  html+='<div style="font-size:12px;'+
+    'color:var(--text3)">'+
+    'Login Streak: '+streak+' days</div>';
+  html+='</div>';
+  html+='<button class="btn-primary" '+
+    'onclick="closeModal('+
+    '\'login-reward-modal\')">'+
+    'COLLECT</button>';
+  el.innerHTML=html;
+  show('login-reward-modal');
+}
+  
 // ══════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════
