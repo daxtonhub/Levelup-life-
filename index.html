@@ -18,53 +18,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/main.css"/>
+<link rel="stylesheet" href="./css/auth.css"/>
 <title>LevelUp Life</title>
 <style>
 
-/* LOADING */
-
-/* TERMS */
-#terms-screen{position:fixed;inset:0;background:var(--bg);z-index:8000;display:flex;flex-direction:column;padding:0}
-.terms-header{padding:20px 20px 0;background:var(--bg2);border-bottom:1px solid var(--border)}
-.terms-logo{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--accent2);margin-bottom:16px}
-.terms-tabs{display:flex;gap:0;border-bottom:2px solid var(--border)}
-.terms-tab{flex:1;padding:12px;text-align:center;font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
-.terms-tab.active{color:var(--accent2);border-bottom-color:var(--accent2)}
-.terms-body{flex:1;overflow-y:auto;padding:20px}
-.terms-content{font-size:13px;line-height:1.8;color:var(--text2)}
-.terms-content h2{color:var(--text);font-family:'Orbitron',monospace;font-size:13px;margin:20px 0 8px;letter-spacing:1px}
-.terms-content p{margin-bottom:12px}
-.terms-footer{padding:20px;background:var(--bg2);border-top:1px solid var(--border)}
-.terms-check{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
-.terms-checkbox{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);background:var(--bg);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;margin-top:1px}
-.terms-checkbox.checked{background:var(--accent);border-color:var(--accent);color:#fff;font-size:12px}
-.terms-check-text{font-size:13px;color:var(--text2);line-height:1.5}
-.terms-check-text span{color:var(--accent2);font-weight:700}
-
-/* GENDER */
-#gender-screen{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 20%,#1a0a3a,var(--bg));z-index:7000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
-.gender-title{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:var(--accent2);text-align:center;margin-bottom:8px}
-.gender-sub{font-size:13px;color:var(--text2);text-align:center;margin-bottom:32px;line-height:1.6;max-width:300px}
-.gender-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:340px;margin-bottom:24px}
-.gender-card{background:var(--bg3);border:2px solid var(--border);border-radius:20px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s}
-.gender-card:active{transform:scale(.97)}
-.gender-card.selected{border-color:var(--accent2);background:rgba(168,85,247,.1)}
-.gender-icon{font-size:48px;margin-bottom:12px}
-.gender-name{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--text)}
-.gender-desc{font-size:11px;color:var(--text2);margin-top:4px;line-height:1.4}
-.gender-note{font-size:11px;color:var(--text3);text-align:center;max-width:300px;line-height:1.6}
-
-/* AUTH */
-#auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 50% 0%,#2d1065 0%,var(--bg) 60%)}
-.auth-screen{width:100%;max-width:400px}
-.auth-logo-wrap{text-align:center;margin-bottom:28px}
-.auth-logo-img{width:64px;height:64px;border-radius:16px;margin-bottom:12px;box-shadow:0 0 30px rgba(124,58,237,.5);animation:iconPulse 2s ease-in-out infinite}
-.auth-logo{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:var(--accent2);letter-spacing:2px;display:block}
-.auth-sub{font-size:12px;color:var(--text2);letter-spacing:2px;margin-top:4px;display:block}
-.auth-card{background:var(--bg3);border:1px solid var(--border);border-radius:24px;padding:28px 20px;box-shadow:0 0 40px rgba(124,58,237,.1)}
-.auth-tabs{display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:24px}
-.auth-tab{flex:1;padding:10px;border:none;background:transparent;color:var(--text2);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;border-radius:10px;cursor:pointer;transition:all .2s}
-.auth-tab.active{background:var(--accent);color:#fff}
 
 /* PREMIUM */
 .premium-screen{position:fixed;inset:0;background:var(--bg);z-index:6000;display:flex;flex-direction:column}
@@ -2017,7 +1974,7 @@ window.addEventListener('unhandledrejection', function(e) {
 </div>
 
 </div><!-- end app -->
-
+<script src="./js/auth.js"></script>
 <script>
 // ══════════════════════════════════
 // ⚠️ REPLACE THESE 3 VALUES
@@ -2182,143 +2139,16 @@ function fadeLoading() {
 // ══════════════════════════════════
 // VIP CHECK
 // ══════════════════════════════════
-async function checkVIPStatus() {
-  if (!user || !profile) return;
-  try {
-    const {data:vip} = await sb.from('vip_players').select('*').eq('email', user.email.toLowerCase()).single();
-    if (vip && !profile.is_premium) {
-      await sb.from('profiles').update({is_premium:true,premium_type:'premium_ai'}).eq('id', user.id);
-      if (!vip.user_id) await sb.from('vip_players').update({user_id:user.id}).eq('id',vip.id);
-      profile.is_premium = true;
-      profile.premium_type = 'premium_ai';
-    }
-  } catch(e) {}
-}
 
-// ══════════════════════════════════
-// TERMS
-// ══════════════════════════════════
-function showTerms(required) {
-  fadeLoading();
-  hide('auth-wrap');
-  show('terms-screen');
-  if (!required) {
-    const footer = document.querySelector('.terms-footer');
-    if (footer) footer.style.display = 'none';
-  }
-}
-function showTermsView() { showTerms(false); }
-
-window.switchTermsTab = function(tab, btn) {
-  document.querySelectorAll('.terms-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  hide('terms-privacy-content'); hide('terms-content');
-  show(tab === 'privacy' ? 'terms-privacy-content' : 'terms-content');
-};
-window.toggleTermsCheck = function() {
-  termsChecked = !termsChecked;
-  const cb = id('terms-checkbox');
-  const btn = id('terms-accept-btn');
-  cb.classList.toggle('checked', termsChecked);
-  cb.textContent = termsChecked ? '✓' : '';
-  btn.disabled = !termsChecked;
-  btn.style.opacity = termsChecked ? '1' : '.5';
-};
-window.acceptTerms = async function() {
-  if (!termsChecked) return;
-  if (user) {
-    await sb.from('profiles').update({terms_accepted:true,terms_accepted_at:new Date().toISOString()}).eq('id',user.id);
-    if (profile) profile.terms_accepted = true;
-    try { await sb.from('privacy_acceptances').insert({user_id:user.id,version:'1.0'}); } catch(e) {}
-  }
-  hide('terms-screen');
-  if (!profile?.gender_selected) { show('gender-screen'); }
-  else { await checkVIPStatus(); await generateDailyQuests(); await loadAllData(); showMainApp(); }
-};
 
 // ══════════════════════════════════
 // GENDER
 // ══════════════════════════════════
-window.pickGender = function(gender) {
-  selectedGender = gender;
-  id('gender-male').classList.toggle('selected', gender === 'male');
-  id('gender-female').classList.toggle('selected', gender === 'female');
-  const btn = id('gender-confirm-btn');
-  btn.disabled = false; btn.style.opacity = '1';
-};
-window.confirmGender = async function() {
-  if (!selectedGender) return;
-  await sb.from('profiles').update({gender:selectedGender,gender_selected:true,is_female_mode:selectedGender==='female'}).eq('id',user.id);
-  if (profile) { profile.gender = selectedGender; profile.gender_selected = true; profile.is_female_mode = selectedGender === 'female'; }
-  hide('gender-screen');
-  if (!profile?.onboarding_complete) {
-    show('onboarding-screen');
-    obShowStep(1); return;
-  }
-  await checkVIPStatus(); await generateDailyQuests(); await loadAllData(); showMainApp();
-};
 
 // ══════════════════════════════════
 // AUTH
 // ══════════════════════════════════
-window.switchAuth = function(tab) { showAuthScreen(tab); };
-function showAuthScreen(name) {
-  ['login','signup','forgot'].forEach(s => hide(s+'-screen'));
-  show(name+'-screen');
-}
-window.doLogin = async function() {
-  const email = val('login-email'), pass = val('login-password');
-  const errEl = id('login-error'), btn = id('login-btn');
-  errEl.textContent = '';
-  if (!email || !pass) { errEl.textContent = '⚠️ Fill in all fields'; return; }
-  btn.textContent = 'Logging in...'; btn.disabled = true;
-  const {data, error} = await sb.auth.signInWithPassword({email, password:pass});
-  btn.textContent = 'ENTER THE GAME'; btn.disabled = false;
-  if (error) { errEl.textContent = error.message.includes('Invalid') ? '❌ Wrong email or password' : '❌ '+error.message; return; }
-  user = data.user; hide('auth-wrap'); show('loading-screen'); id('loading-screen').classList.remove('fade-out');
-  await loadProfile();
-  if (!profile?.terms_accepted) { showTerms(true); return; }
-  if (!profile?.gender_selected) {
-      fadeLoading(); show('gender-screen');
-      return;
-    }
-    if (!profile?.onboarding_complete) {
-      fadeLoading();
-      show('onboarding-screen');
-      obShowStep(1); return;
-    }
-    await checkVIPStatus(); await generateDailyQuests(); await loadAllData(); showMainApp();
-};
-window.doSignup = async function() {
-  const username = val('signup-username'), email = val('signup-email'), pass = val('signup-password');
-  const errEl = id('signup-error'), btn = id('signup-btn');
-  errEl.textContent = '';
-  if (!username||!email||!pass) { errEl.textContent='⚠️ Fill in all fields'; return; }
-  if (pass.length < 6) { errEl.textContent='⚠️ Password must be 6+ characters'; return; }
-  btn.textContent='Creating account...'; btn.disabled=true;
-  const {data, error} = await sb.auth.signUp({email, password:pass});
-  btn.textContent='BEGIN ADVENTURE'; btn.disabled=false;
-  if (error) { errEl.textContent='❌ '+error.message; return; }
-  user = data.user;
-  const isAdmin = email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-  await sb.from('profiles').insert({id:user.id,username,xp:0,level:1,motivation:100,streak:0,is_admin:isAdmin,gems:0,coins:0,role:'warrior',terms_accepted:false,gender_selected:false});
-  for (const s of ['fitness','mindset','knowledge','discipline','creativity','social']) {
-    await sb.from('skills').insert({user_id:user.id,skill_name:s,skill_level:1,skill_xp:0});
-  }
-  hide('auth-wrap'); await loadProfile(); showTerms(true);
-};
-window.doForgot = async function() {
-  const email = val('forgot-email'), msgEl = id('forgot-msg');
-  msgEl.style.color = 'var(--red)';
-  if (!email) { msgEl.textContent='⚠️ Enter your email'; return; }
-  const {error} = await sb.auth.resetPasswordForEmail(email);
-  if (error) { msgEl.textContent='❌ '+error.message; return; }
-  msgEl.style.color='var(--green)'; msgEl.textContent='✅ Reset email sent!';
-};
-window.doLogout = async function() {
-  await sb.auth.signOut(); user=null; profile=null; dailyQuests=[]; systemQuests=[];
-  hide('main-app'); show('auth-wrap'); showAuthScreen('login');
-};
+
 
 // ══════════════════════════════════
 // DATA LOADING
