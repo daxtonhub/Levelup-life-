@@ -3507,9 +3507,7 @@ window.onSummonImageSelected=async function(e){
   reader.readAsDataURL(file);
 };
 
-=text.match(
-  
-async function generateSummonWithAI(
+  async function generateSummonWithAI(
   base64, mediaType, previewUrl) {
   try {
     var result = await sb.functions.invoke(
