@@ -3673,48 +3673,7 @@ async function uploadSummonImage() {
   }
 }
 
-async function growSummonBond(amount){
-  if(!user||!profile) return;
-  try{
-    var res=await sb.from('player_summons')
-      .select('*,shop_summons(name,image_url)')
-      .eq('user_id',user.id)
-      .eq('is_active',true).single();
-    if(!res.data) return;
-    var ps=res.data;
-    var newBondXP=Math.min(1000,
-      Math.max(0,(ps.bond_xp||500)+amount));
-    var newBondLv=Math.floor(newBondXP/100)+1;
-    var leveledUp=newBondLv>
-      (ps.bond_level||1)&&amount>0;
-    var bondPct=Math.round(newBondXP/10);
-    // Warning at <10%
-    if(bondPct<10&&amount<0){
-      var petName=ps.shop_summons
-        ?ps.shop_summons.name:'Your companion';
-      setTimeout(function(){
-        toast('⚠️ '+petName+
-          ' bond is critical! '+
-          bondPct+'%','red');
-      },500);
-    }
-    // Pet leaves at 0
-    if(newBondXP===0){
-      await handlePetLeave(ps);
-      return;
-    }
-    await sb.from('player_summons').update({
-      bond_xp:newBondXP,
-      bond_level:newBondLv
-    }).eq('id',ps.id);
-    if(leveledUp){
-      var pn=ps.shop_summons
-        ?ps.shop_summons.name:'Companion';
-      toast('🔮 '+pn+' Bond Lv '+
-        newBondLv+'!','gem');
-    }
-  }catch(e){}
-}
+
 
 async function handlePetLeave(ps){
   var petName=ps.shop_summons
@@ -4451,32 +4410,7 @@ window.toggleActiveSummon=async function(
   renderSummonInventory();
 };
 
-async function growSummonBond(amount) {
-  if(!user||!profile.active_summon_id) return;
-  try{
-    var res=await sb.from('player_summons')
-      .select('*').eq('id',
-        profile.active_summon_id).single();
-    if(!res.data) return;
-    var ps=res.data;
-    var newBondXP=(ps.bond_xp||0)+amount;
-    var newBondLv=Math.floor(newBondXP/100)+1;
-    var leveledUp=newBondLv>ps.bond_level;
-    await sb.from('player_summons')
-      .update({bond_xp:newBondXP,
-        bond_level:newBondLv})
-      .eq('id',ps.id);
-    if(leveledUp){
-      var sRes=await sb.from('shop_summons')
-        .select('name').eq('id',ps.summon_id)
-        .single();
-      var name=sRes.data
-        ?sRes.data.name:'Companion';
-      toast('🔮 '+name+' Bond Lv '+
-        newBondLv+'!','gem');
-    }
-  } catch(e){}
-}
+
 
 // ══════════════════════════════════
 // ADMIN SUMMON MANAGEMENT
