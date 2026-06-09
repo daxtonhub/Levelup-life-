@@ -3550,33 +3550,6 @@ window.saveBg = async function() {
 // ══════════════════════════════════
 // RANK SYSTEM
 // ══════════════════════════════════
-const RANKS = {
-  bronze:{name:'Bronze',icon:'🥉',
-    color:'#cd7f32',
-    css:'rank-bronze',
-    min:0},
-  silver:{name:'Silver',icon:'🥈',
-    color:'#c0c0c0',
-    css:'rank-silver',
-    min:500},
-  platinum:{name:'Platinum',icon:'💎',
-    color:'#60a5fa',
-    css:'rank-platinum',
-    min:1500},
-  master:{name:'Master',icon:'⚔️',
-    color:'#6366f1',
-    css:'rank-master',
-    min:3000},
-  legendary:{name:'Legendary',icon:'🌟',
-    color:'#f59e0b',
-    css:'rank-legendary',
-    min:5000},
-  ascended:{name:'Ascended',icon:'👑',
-    color:'#a855f7',
-    css:'rank-ascended',
-    min:8000}
-};
-
 function getUserRank(xp, streak) {
   var score=(xp||0)+(( streak||0)*50);
   if(score>=8000) return 'ascended';
@@ -3704,7 +3677,7 @@ async function renderSummonSection() {
   el.innerHTML=
     '<div class="summon-card">'+
     '<div style="display:flex;gap:16px;'+
-    'align-items:flex-start">'>+
+    'align-items:flex-start">'+   
     imgHtml+
     '<div style="flex:1;min-width:0">'+
     '<div class="summon-name">'+
@@ -3791,61 +3764,34 @@ window.onSummonImageSelected=async function(e){
   reader.readAsDataURL(file);
 };
 
+=text.match(
+  
 async function generateSummonWithAI(
   base64, mediaType, previewUrl) {
-  if(!ANTHROPIC_KEY||
-    ANTHROPIC_KEY==='PASTE_YOUR_ANTHROPIC_KEY_HERE'){
-    renderSummonManual();
-    toast('Add Anthropic API key to use AI','red');
-    return;
-  }
   try {
-    var response=await fetch(
-      'https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':ANTHROPIC_KEY,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':
-          'true'
-      },
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:400,
-        messages:[{
-          role:'user',
-          content:[
-            {type:'image',source:{
-              type:'base64',
-              media_type:mediaType,
-              data:base64
-            }},
-            {type:'text',
-              text:'Generate a companion identity for this image for a self-improvement RPG app called LevelUp Life. Return ONLY valid JSON with exactly these fields: name (1-2 powerful words), class (choose one: Warrior/Mage/Assassin/Healer/Creator/Strategist/Guardian/Shadow), race (choose one: Human/Beast/Spirit/Dragon/Hybrid/Ancient/Phantom), description (2-4 lines about personality and how this companion helps the user grow). Keep it short, meaningful, slightly powerful.'}
-          ]
-        }]
-      })
+    var result = await sb.functions.invoke(
+      'ai-proxy', {
+      body: {
+        type: 'summon_image',
+        image_base64: base64,
+        media_type: mediaType
+      }
     });
-    var data=await response.json();
-    var text=data.content&&
-      data.content[0]&&
-      data.content[0].text
-      ?data.content[0].text:'';
-    var jsonMatch=text.match(
-      /\{[\s\S]*\}/);
-    if(jsonMatch) {
-      var parsed=JSON.parse(jsonMatch[0]);
-      currentSummonData=parsed;
-      renderSummonPreview(
-        parsed, previewUrl);
+    if (result.error) throw result.error;
+    var text = result.data && result.data.text
+      ? result.data.text : '';
+    var jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      var parsed = JSON.parse(jsonMatch[0]);
+      currentSummonData = parsed;
+      renderSummonPreview(parsed, previewUrl);
     } else {
       throw new Error('No JSON in response');
     }
   } catch(err) {
-    console.error('AI summon error:',err);
+    console.error('AI summon error:', err);
     renderSummonManualWithImage(previewUrl);
-    toast('AI failed — enter details manually',
+    toast('AI failed. Enter details manually.',
       'red');
   }
 }
@@ -4078,7 +4024,6 @@ async function uploadSummonImage() {
   }
 }
 
-async function growSummonBond(amount) {
 async function growSummonBond(amount){
   if(!user||!profile) return;
   try{
@@ -4402,8 +4347,26 @@ async function generateObQuests(){
     ANTHROPIC_KEY!=='PASTE_YOUR_ANTHROPIC_KEY_HERE';
   if(useAI){
     try{
-      var res=await fetch(
-        'https://api.anthropic.com/v1/messages',{
+      var result = await sb.functions.invoke(
+        'ai-proxy', {
+        body: {
+          type: 'onboarding_quests',
+          struggle_label: config.label
+        }
+      });
+      if (result.error) throw result.error;
+      var text = result.data && result.data.text
+        ? result.data.text : '';
+      var match = text.match(/\[[\s\S]*\]/);
+      if(match){
+        var parsed = JSON.parse(match[0]);
+        obGeneratedQuests = parsed.slice(0,3);
+      } else {
+        obGeneratedQuests = config.quests;
+      }
+    }catch(e){
+      obGeneratedQuests = config.quests;
+    }
         method:'POST',
         headers:{
           'Content-Type':'application/json',
