@@ -3293,69 +3293,6 @@ window.saveBg = async function() {
 // ══════════════════════════════════
 // RANK SYSTEM
 // ══════════════════════════════════
-function getUserRank(xp, streak) {
-  var score=(xp||0)+(( streak||0)*50);
-  if(score>=8000) return 'ascended';
-  if(score>=5000) return 'legendary';
-  if(score>=3000) return 'master';
-  if(score>=1500) return 'platinum';
-  if(score>=500)  return 'silver';
-  return 'bronze';
-}
-
-function getRankProgress(xp, streak) {
-  var rankKeys=Object.keys(RANKS);
-  var score=(xp||0)+((streak||0)*50);
-  var currentRank=getUserRank(xp,streak);
-  var currentIdx=rankKeys.indexOf(
-    currentRank);
-  var nextIdx=currentIdx+1;
-  if(nextIdx>=rankKeys.length) {
-    return {pct:100,next:null};
-  }
-  var currentMin=RANKS[
-    rankKeys[currentIdx]].min;
-  var nextMin=RANKS[
-    rankKeys[nextIdx]].min;
-  var pct=Math.round(
-    ((score-currentMin)/
-      (nextMin-currentMin))*100);
-  return {
-    pct:Math.min(100,Math.max(0,pct)),
-    next:RANKS[rankKeys[nextIdx]]
-  };
-}
-
-function applyRankFrame() {
-  if(!profile) return;
-  var rank=getUserRank(
-    profile.xp||0, profile.streak||0);
-  var rankInfo=RANKS[rank];
-  var heroCard=document.querySelector(
-    '.hero-card');
-  var profileCard=document.querySelector(
-    '.profile-card');
-  Object.keys(RANKS).forEach(function(r){
-    if(heroCard) heroCard.classList
-      .remove('rank-'+r);
-    if(profileCard) profileCard.classList
-      .remove('rank-'+r);
-  });
-  if(heroCard) heroCard.classList
-    .add(rankInfo.css);
-  if(profileCard) profileCard.classList
-    .add(rankInfo.css);
-  var rankBadge=id('rank-badge-display');
-  if(rankBadge) {
-    rankBadge.textContent=
-      rankInfo.icon+' '+rankInfo.name;
-    rankBadge.style.color=rankInfo.color;
-    rankBadge.style.borderColor=
-      rankInfo.color+'44';
-    rankBadge.style.background=
-      rankInfo.color+'11';
-  }
-}
 
 // ══════════════════════════════════
 // SUMMON SYSTEM
@@ -3507,36 +3444,7 @@ window.onSummonImageSelected=async function(e){
   reader.readAsDataURL(file);
 };
 
-  async function generateSummonWithAI(
-  base64, mediaType, previewUrl) {
-  try {
-    var result = await sb.functions.invoke(
-      'ai-proxy', {
-      body: {
-        type: 'summon_image',
-        image_base64: base64,
-        media_type: mediaType
-      }
-    });
-    if (result.error) throw result.error;
-    var text = result.data && result.data.text
-      ? result.data.text : '';
-    var jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      var parsed = JSON.parse(jsonMatch[0]);
-      currentSummonData = parsed;
-      renderSummonPreview(parsed, previewUrl);
-    } else {
-      throw new Error('No JSON in response');
-    }
-  } catch(err) {
-    console.error('AI summon error:', err);
-    renderSummonManualWithImage(previewUrl);
-    toast('AI failed. Enter details manually.',
-      'red');
-  }
-}
-
+  
 function renderSummonPreview(data, previewUrl){
   var imgTag=previewUrl
     ?'<img class="summon-preview-img" '+
@@ -4081,69 +3989,6 @@ window.obStep1Continue=async function(){
   obShowStep(2);
   await generateObQuests();
 };
-
-async function generateObQuests(){
-  var config=STRUGGLE_CONFIG[selectedStruggle];
-  var useAI=ANTHROPIC_KEY&&
-    ANTHROPIC_KEY!=='PASTE_YOUR_ANTHROPIC_KEY_HERE';
-  if(useAI){
-    try{
-      var result = await sb.functions.invoke(
-        'ai-proxy', {
-        body: {
-          type: 'onboarding_quests',
-          struggle_label: config.label
-        }
-      });
-      if (result.error) throw result.error;
-      var text = result.data && result.data.text
-        ? result.data.text : '';
-      var match = text.match(/\[[\s\S]*\]/);
-      if(match){
-        var parsed = JSON.parse(match[0]);
-        obGeneratedQuests = parsed.slice(0,3);
-      } else {
-        obGeneratedQuests = config.quests;
-      }
-    }catch(e){
-      obGeneratedQuests = config.quests;
-    }
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'x-api-key':ANTHROPIC_KEY,
-          'anthropic-version':'2023-06-01',
-          'anthropic-dangerous-direct-browser-access':
-            'true'
-        },
-        body:JSON.stringify({
-          model:'claude-sonnet-4-20250514',
-          max_tokens:300,
-          messages:[{role:'user',content:
-            'Generate exactly 3 starter quests for a student who struggles with: '+
-            config.label+
-            '. Return ONLY valid JSON array with 3 objects, each having: title (short action, max 8 words), difficulty (easy/medium/hard). Make them actionable for today. No explanations.'}]
-        })
-      });
-      var data=await res.json();
-      var text=data.content&&data.content[0]
-        ?data.content[0].text:'';
-      var match=text.match(/\[[\s\S]*\]/);
-      if(match){
-        var parsed=JSON.parse(match[0]);
-        obGeneratedQuests=parsed.slice(0,3);
-      } else {
-        obGeneratedQuests=config.quests;
-      }
-    }catch(e){
-      obGeneratedQuests=config.quests;
-    }
-  } else {
-    obGeneratedQuests=config.quests;
-  }
-  obShowStep(3);
-  renderObQuests();
-}
 
 function renderObQuests(){
   var el=id('ob-quests-list');
