@@ -1,4 +1,3 @@
-
 const id = (x) => document.getElementById(x);
 // ══════════════════════════════════
 // RANK SYSTEM
