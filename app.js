@@ -1,4 +1,4 @@
-const id = (x) => document.getElementById(x);
+const $ = (x) => document.getElementById(x);
 // ══════════════════════════════════
 // RANK SYSTEM
 // ══════════════════════════════════
