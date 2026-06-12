@@ -101,36 +101,6 @@ body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);mi
 .btn-secondary:active{border-color:var(--accent);color:var(--accent)}
 .btn-danger{width:100%;padding:13px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:12px;color:var(--red);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;cursor:pointer}
 
-/* PREMIUM */
-.premium-screen{position:fixed;inset:0;background:var(--bg);z-index:6000;display:flex;flex-direction:column}
-.premium-header{display:flex;align-items:center;padding:16px;border-bottom:1px solid var(--border)}
-.premium-tabs{display:flex;gap:4px;flex:1}
-.premium-tab{flex:1;padding:10px;border-radius:20px;border:none;background:var(--bg3);color:var(--text2);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
-.premium-tab.active{color:#fff;background:linear-gradient(135deg,#a855f7,#ec4899)}
-.premium-close{width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;margin-left:10px;color:var(--text2);flex-shrink:0}
-.premium-body{flex:1;overflow-y:auto;padding:24px 20px}
-.premium-headline{font-size:26px;font-weight:900;color:var(--text);line-height:1.3;margin-bottom:8px}
-.premium-headline span{font-style:italic}
-.premium-offer{font-size:14px;color:var(--text2);margin-bottom:24px;line-height:1.5}
-.premium-offer strong{color:var(--accent2)}
-.premium-features{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:24px}
-.premium-feature{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
-.premium-feature:last-child{border-bottom:none}
-.pf-check{color:var(--green);font-size:14px;font-weight:700;flex-shrink:0;margin-top:1px}
-.pf-text{font-size:13px;color:var(--text2);line-height:1.5}
-.premium-badge{display:flex;align-items:center;justify-content:center;margin-bottom:20px}
-.badge-wrap{text-align:center;border:1px solid var(--border);border-radius:12px;padding:10px 20px}
-.badge-icon{font-size:22px;margin-bottom:4px}
-.badge-text{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:1px}
-.stars{display:flex;gap:4px;justify-content:center;font-size:18px;margin-top:6px}
-.premium-footer{padding:20px;background:var(--bg2);border-top:1px solid var(--border)}
-.premium-price{text-align:center;margin-bottom:16px}
-.price-amount{font-size:18px;font-weight:700;color:var(--text)}
-.price-per{font-size:12px;color:var(--text2);margin-top:3px}
-.price-note{font-size:11px;color:var(--text3);margin-top:4px}
-.btn-premium{width:100%;padding:16px;border:none;border-radius:16px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:900;cursor:pointer;transition:transform .15s;background:linear-gradient(135deg,#6b21a8,#a855f7)}
-.btn-premium.ai{background:linear-gradient(135deg,#9d174d,#ec4899,#a855f7)}
-.btn-premium:active{transform:scale(.97)}
 
 /* TOPBAR */
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(18,18,26,.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;backdrop-filter:blur(10px)}
@@ -613,31 +583,6 @@ window.addEventListener('unhandledrejection', function(e) {
   <button class="btn-primary" id="gender-confirm-btn" onclick="confirmGender()" style="max-width:300px;margin-top:24px;opacity:.5" disabled>CONFIRM</button>
 </div>
 
-<!-- PREMIUM -->
-<div id="premium-screen" class="hidden">
-  <div class="premium-header">
-    <div class="premium-tabs">
-       <button class="premium-tab active" id="ptab-premium" onclick="switchPremiumTab('premium',this)">Premium</button>
-      <button class="premium-tab" id="ptab-ai" onclick="switchPremiumTab('ai',this)">Premium + AI</button>
-    </div>
-    <div class="premium-close" onclick="hide('premium-screen')">✕</div>
-  </div>
-  <div class="premium-body">
-    <div class="premium-headline">Level up your life <span>for real.</span></div>
-    <div class="premium-offer" id="premium-offer-text">With <strong>60% off</strong> and a <strong>7-day free trial</strong> on LevelUp Life Premium features</div>
-    <div class="premium-features" id="premium-features-list"></div>
-    <div class="premium-badge"><div class="badge-wrap"><div class="badge-icon">🏆</div><div class="badge-text">TOP RATED</div><div class="stars">⭐⭐⭐⭐⭐</div></div></div>
-  </div>
-  <div class="premium-footer">
-    <div class="premium-price">
-      <div class="price-amount" id="premium-price-amount">₹999 / year</div>
-      <div class="price-per" id="premium-price-per">(₹83.25/month) • Cancel anytime</div>
-      <div class="price-note">No payment now.</div>
-    </div>
-    <button class="btn-premium" id="premium-cta-btn" onclick="startPremiumTrial()">Try for free</button>
-  </div>
-</div>
-
 <!-- AUTH -->
 <div id="auth-wrap" class="hidden">
   <div id="login-screen" class="auth-screen">
@@ -769,7 +714,9 @@ window.addEventListener('unhandledrejection', function(e) {
     <div id="quests-list"></div>
     <button class="add-quest-btn" onclick="openAddQuest()">＋ Add New Quest</button>
   </div>
-
+<div id="advancement-banner" class="hidden" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:var(--gold);font-weight:700;text-align:center">
+  🏆 Advancement Quest Required to Level Up
+</div>
   <!-- JOURNAL -->
   <div id="tab-journal" class="tab-content hidden">
     <div class="journal-date-header">
@@ -807,13 +754,6 @@ window.addEventListener('unhandledrejection', function(e) {
         <div class="pstat"><div class="pstat-val" style="color:var(--gem)" id="pstat-gems">0</div><div class="pstat-lbl">GEMS</div></div>
         <div class="pstat"><div class="pstat-val" style="color:var(--coin)" id="pstat-coins">0</div><div class="pstat-lbl">COINS</div></div>
       </div>
-    </div>
-
-    <!-- Premium banner -->
-    <div style="background:linear-gradient(135deg,rgba(168,85,247,.1),rgba(236,72,153,.08));border:1px solid rgba(168,85,247,.25);border-radius:16px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="show('premium-screen');updatePremiumContent('premium')">
-      <div style="font-size:28px">👑</div>
-      <div style="flex:1"><div style="font-family:'Orbitron',monospace;font-size:12px;color:var(--accent2);font-weight:700">UPGRADE TO PREMIUM</div><div style="font-size:12px;color:var(--text2);margin-top:2px">Unlock all features + AI Coach</div></div>
-      <div style="font-size:20px">→</div>
     </div>
 
     <!-- GLORY -->
@@ -1196,13 +1136,7 @@ const DAILY_BONUS_XP = 100;
 const DAILY_BONUS_COINS = 100;
 const today = new Date().toISOString().split('T')[0];
 
-const LEVELS = [
-  {min:0,title:'Novice'},{min:100,title:'Apprentice'},
-  {min:300,title:'Explorer'},{min:600,title:'Warrior'},
-  {min:1000,title:'Champion'},{min:1500,title:'Hero'},
-  {min:2200,title:'Legend'},{min:3000,title:'Myth'},
-  {min:4000,title:'Demigod'},{min:5500,title:'Ascended'}
-];
+
 const SKILL_ICONS = {fitness:'💪',mindset:'🧠',knowledge:'📚',discipline:'⚔️',creativity:'🎨',social:'🤝'};
 const MOOD_ICONS = {struggling:'😔',neutral:'😐',okay:'🙂',good:'😊',amazing:'🌟'};
 const ROLES = {
@@ -1246,7 +1180,6 @@ let qFilter = 'all', selectedBg = '#1a1a2e';
 let selectedMood = 'okay', selectedRole = 'warrior';
 let selectedGender = null, termsChecked = false;
 let userGuild = null, currentManualCategory = 'all';
-let currentPremiumTab = 'premium';
 
 // ══════════════════════════════════
 // PWA
@@ -1291,22 +1224,6 @@ function fadeLoading() {
 }
 
 // ══════════════════════════════════
-// VIP CHECK
-// ══════════════════════════════════
-async function checkVIPStatus() {
-  if (!user || !profile) return;
-  try {
-    const {data:vip} = await sb.from('vip_players').select('*').eq('email', user.email.toLowerCase()).single();
-    if (vip && !profile.is_premium) {
-      await sb.from('profiles').update({is_premium:true,premium_type:'premium_ai'}).eq('id', user.id);
-      if (!vip.user_id) await sb.from('vip_players').update({user_id:user.id}).eq('id',vip.id);
-      profile.is_premium = true;
-      profile.premium_type = 'premium_ai';
-    }
-  } catch(e) {}
-}
-
-// ══════════════════════════════════
 // TERMS
 // ══════════════════════════════════
 function showTerms(required) {
@@ -1344,7 +1261,7 @@ window.acceptTerms = async function() {
   }
   hide('terms-screen');
   if (!profile?.gender_selected) { show('gender-screen'); }
-  else { await checkVIPStatus(); await generateDailyQuests(); await loadAllData(); showMainApp(); }
+  else { await generateDailyQuests(); await loadAllData(); showMainApp(); }
 };
 
 // ══════════════════════════════════
@@ -1362,7 +1279,7 @@ window.confirmGender = async function() {
   await sb.from('profiles').update({gender:selectedGender,gender_selected:true,is_female_mode:selectedGender==='female'}).eq('id',user.id);
   if (profile) { profile.gender = selectedGender; profile.gender_selected = true; profile.is_female_mode = selectedGender === 'female'; }
   hide('gender-screen');
-  await checkVIPStatus(); await generateDailyQuests(); await loadAllData(); showMainApp();
+  await generateDailyQuests(); await loadAllData(); showMainApp();
 };
 
 // ══════════════════════════════════
@@ -1386,7 +1303,7 @@ window.doLogin = async function() {
   await loadProfile();
   if (!profile?.terms_accepted) { showTerms(true); return; }
   if (!profile?.gender_selected) { fadeLoading(); show('gender-screen'); return; }
-  await checkVIPStatus(); await generateDailyQuests(); await loadAllData(); showMainApp();
+  await generateDailyQuests(); await loadAllData(); showMainApp();
 };
 window.doSignup = async function() {
   const username = val('signup-username'), email = val('signup-email'), pass = val('signup-password');
@@ -1544,10 +1461,7 @@ async function checkPeriodPhase() {
 function renderAll() {
   renderTopbar(); renderHeroCard(); renderDashQuests(); renderDashSystem(); renderSkills(); renderQuestsTab(); renderMeTab();
 }
-function getLevel(xp) { let l=1; for(let i=LEVELS.length-1;i>=0;i--){if(xp>=LEVELS[i].min){l=i+1;break;}} return l; }
-function getTitle(l) { return LEVELS[Math.min(l-1,LEVELS.length-1)].title; }
-function getMinXP(l)  { return LEVELS[Math.min(l-1,LEVELS.length-1)].min; }
-function getNextXP(l) { return LEVELS[Math.min(l,LEVELS.length-1)].min; }
+
 function getRoleInfo(role) { return ROLES[role] || ROLES.warrior; }
 
 function renderTopbar() {
@@ -1721,24 +1635,7 @@ window.completeSQ = async function(sqId, done) {
   toast(`👑 +${sq.xp_reward} XP! 🪙50`);
   await checkAchievements(); renderAll();
 };
-async function giveXP(amount, skillCat, role) {
-  if (!profile) return;
-  let final = amount;
-  if (role && skillCat && ROLES[role]?.bonus === skillCat) {
-    final = Math.round(amount*1.2);
-    if (final > amount) setTimeout(()=>toast(`⚔️ ${ROLES[role].name} Bonus! +${final-amount}XP`,'gem'),400);
-  }
-  const newXP = (profile.xp||0)+final, newLevel = getLevel(newXP), oldLevel = getLevel(profile.xp||0);
-  await sb.from('profiles').update({xp:newXP,level:newLevel}).eq('id',user.id);
-  profile.xp=newXP; profile.level=newLevel;
-  if (newLevel>oldLevel) { setTimeout(()=>toast(`🎉 LEVEL UP! Level ${newLevel}!`),700); await awardCurrency(0,50); }
-  if (skillCat && skillCat!=='system' && skillCat!=='period') {
-    const sk = allSkills.find(s=>s.skill_name===skillCat);
-    if (sk) { const nSXP=(sk.skill_xp||0)+final,nSLV=Math.floor(nSXP/100)+1; await sb.from('skills').update({skill_xp:nSXP,skill_level:nSLV}).eq('id',sk.id); sk.skill_xp=nSXP; sk.skill_level=nSLV; }
-  }
-  const newMot = Math.min(100,(profile.motivation||100)+2);
-  await sb.from('profiles').update({motivation:newMot}).eq('id',user.id); profile.motivation=newMot;
-}
+
 async function awardCurrency(gems, coins) {
   if (!profile) return;
   const ng=(profile.gems||0)+gems, nc=(profile.coins||0)+coins;
@@ -1988,37 +1885,6 @@ window.executeNameChange = async function() {
   await sb.from('profiles').update({username:newName,coins:newCoins,name_change_count:count+1,name_change_reset_date:today}).eq('id',user.id);
   profile.username=newName; profile.coins=newCoins; profile.name_change_count=count+1;
   closeModal('name-modal'); toast(`✅ Name changed to ${newName}!`,'green'); renderAll();
-};
-
-// ══════════════════════════════════
-// PREMIUM UI
-// ══════════════════════════════════
-window.switchPremiumTab = function(tab, btn) {
-  currentPremiumTab=tab;
-  document.querySelectorAll('.premium-tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active');
-  updatePremiumContent(tab);
-};
-function updatePremiumContent(tab) {
-  const fl=id('premium-features-list'), ot=id('premium-offer-text'), pa=id('premium-price-amount'), pp=id('premium-price-per'), cb=id('premium-cta-btn');
-  if (tab==='premium') {
-    if(ot) ot.innerHTML='With <strong>60% off</strong> and a <strong>7-day free trial</strong> on LevelUp Life Premium features';
-    if(pa) pa.textContent='₹999 / year'; if(pp) pp.textContent='(₹83.25/month) • Cancel anytime';
-    if(cb){cb.className='btn-premium';cb.textContent='Try for free';}
-    if(fl) fl.innerHTML=['Unlimited quests & habits','Advanced skill tracking','Full achievement system','90-day journal backup','Name change (2x/month)','Remove all limitations'].map(f=>`<div class="premium-feature"><div class="pf-check">✓</div><div class="pf-text">${f}</div></div>`).join('');
-  } else {
-    if(ot) ot.innerHTML='With <strong>50% off</strong> and a <strong>3-day free trial</strong> on Premium + AI features';
-    if(pa) pa.textContent='₹1999 / year'; if(pp) pp.textContent='(₹166.58/month) • Cancel anytime';
-    if(cb){cb.className='btn-premium ai';cb.textContent='Try for free';}
-    if(fl) fl.innerHTML=['Everything in Premium','ARIA AI Life Coach (unlimited)','AI-powered journal insights','Personalized quest recommendations','AI mood analysis','Smart habit suggestions'].map(f=>`<div class="premium-feature"><div class="pf-check">✓</div><div class="pf-text">${f}</div></div>`).join('');
-  }
-}
-window.startPremiumTrial = async function() {
-  const plan=currentPremiumTab==='ai'?'premium_ai':'premium', trialDays=plan==='premium_ai'?3:7;
-  const trialEnd=new Date(Date.now()+trialDays*24*60*60*1000).toISOString();
-  try { await sb.from('subscriptions').insert({user_id:user.id,plan,status:'trial',trial_ends_at:trialEnd}); } catch(e) {}
-  await sb.from('profiles').update({is_premium:true,premium_type:plan}).eq('id',user.id);
-  profile.is_premium=true; profile.premium_type=plan;
-  hide('premium-screen'); toast(`👑 ${trialDays}-day trial started!`,'gem');
 };
 
 // ══════════════════════════════════
