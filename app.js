@@ -1,5 +1,3 @@
-alert("JS is running");
-const $ = (x) => document.getElementById(x);
 // ══════════════════════════════════
 // RANK SYSTEM
 // ══════════════════════════════════
@@ -114,8 +112,6 @@ window.completeAdvancement = async function() {
 // RENDER (replaces topbar/hero xp section)
 // ══════════════════════════════════
 function renderTopbar() {
-  console.log("renderTopbar running");
-  console.log(document.getElementById("topbar-name"));
   if (!profile) return;
   const xp = profile.xp||0, level = profile.level||1, rank = getRankFromLevel(level);
   id('topbar-name').textContent = profile.username||'Hero';
@@ -149,37 +145,3 @@ function renderHeroCard() {
     banner.classList.toggle('hidden', !blocked);
   }
 }
-document.addEventListener("DOMContentLoaded", () => {
-  const testName = document.getElementById("topbar-name");
-  if (testName) testName.innerText = "TEST USER";
-
-  const testCoins = document.getElementById("topbar-coins");
-  if (testCoins) testCoins.innerText = "🪙 999";
-
-  const testXP = document.getElementById("topbar-xp");
-  if (testXP) testXP.innerText = "9999 XP";
-});
-
-const adminTab = document.getElementById("admin-tab");
-if (adminTab) adminTab.style.display = "block";
-
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("App Started");
-
-  // TEMP fake data to test rendering
-  profile = {
-    username: "TestUser",
-    level: 5,
-    xp: 1200,
-    currentXP: 200,
-    requiredXP: 500,
-    coins: 300,
-    gems: 50,
-    role: "warrior",
-    streak: 3,
-    energy: 80
-  };
-
-  renderTopbar();
-  renderHeroCard();
-});
