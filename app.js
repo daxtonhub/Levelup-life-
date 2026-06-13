@@ -1,3 +1,4 @@
+alert("JS is running");
 const $ = (x) => document.getElementById(x);
 // ══════════════════════════════════
 // RANK SYSTEM
