@@ -146,3 +146,13 @@ function renderHeroCard() {
     banner.classList.toggle('hidden', !blocked);
   }
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const testName = document.getElementById("topbar-name");
+  if (testName) testName.innerText = "TEST USER";
+
+  const testCoins = document.getElementById("topbar-coins");
+  if (testCoins) testCoins.innerText = "🪙 999";
+
+  const testXP = document.getElementById("topbar-xp");
+  if (testXP) testXP.innerText = "9999 XP";
+});
