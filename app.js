@@ -113,6 +113,8 @@ window.completeAdvancement = async function() {
 // RENDER (replaces topbar/hero xp section)
 // ══════════════════════════════════
 function renderTopbar() {
+  console.log("renderTopbar running");
+  console.log(document.getElementById("topbar-name"));
   if (!profile) return;
   const xp = profile.xp||0, level = profile.level||1, rank = getRankFromLevel(level);
   id('topbar-name').textContent = profile.username||'Hero';
@@ -156,7 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const testXP = document.getElementById("topbar-xp");
   if (testXP) testXP.innerText = "9999 XP";
 });
-document.body.style.background = "red";
 
 const adminTab = document.getElementById("admin-tab");
 if (adminTab) adminTab.style.display = "block";
