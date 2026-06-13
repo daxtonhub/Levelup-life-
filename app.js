@@ -156,3 +156,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const testXP = document.getElementById("topbar-xp");
   if (testXP) testXP.innerText = "9999 XP";
 });
+document.body.style.background = "red";
+
+const adminTab = document.getElementById("admin-tab");
+if (adminTab) adminTab.style.display = "block";
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("App Started");
+
+  // TEMP fake data to test rendering
+  profile = {
+    username: "TestUser",
+    level: 5,
+    xp: 1200,
+    currentXP: 200,
+    requiredXP: 500,
+    coins: 300,
+    gems: 50,
+    role: "warrior",
+    streak: 3,
+    energy: 80
+  };
+
+  renderTopbar();
+  renderHeroCard();
+});
