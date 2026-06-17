@@ -3,7 +3,11 @@ const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon.png'
+  './icon.png',
+  './app.js',
+  './features.js',
+  './supabase.js',
+  './styles.css'
 ];
 
 self.addEventListener('install', e => {
