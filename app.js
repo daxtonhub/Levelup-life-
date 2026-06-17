@@ -80,7 +80,9 @@ function applyFrame() {
 }
 
 // ─── CONSTANTS ────────────────────────────────
-const today = new Date().toISOString().split('T')[0];
+function getToday() {
+  return new Date().toISOString().split('T')[0];
+}
 const DAILY_BONUS_XP    = 300;
 const DAILY_BONUS_COINS  = 500;
 const DAILY_BONUS_GEMS   = 20;
@@ -730,12 +732,12 @@ async function checkAchievements() {
   if (!profile) return;
   try {
     const [{ data: allDone }, { data: allAch }, { data: earned }] = await Promise.all([
-      sb.from('daily_quests').select('id').eq('user_id', user.id).eq('is_completed', true),
+      sb.from('daily_quests').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('is_completed', true),
       sb.from('achievements').select('*').eq('is_active', true),
       sb.from('user_achievements').select('achievement_id').eq('user_id', user.id)
     ]);
     const earnedIds = (earned || []).map(e => e.achievement_id);
-    const totalDone = (allDone || []).length, streak = profile.streak || 0;
+    const totalDone = allDone || 0;
     const rs = getRankInfo(profile.xp || 0);
     for (const ach of (allAch || [])) {
       if (earnedIds.includes(ach.id)) continue;
@@ -745,7 +747,7 @@ async function checkAchievements() {
       else if (ach.requirement_type === 'rank_reached')  q = rs.stageIndex >= ach.requirement_value;
       if (q) {
         await sb.from('user_achievements').insert({ user_id: user.id, achievement_id: ach.id });
-        await awardCurrency(0, ach.coins_reward || 0);
+        await awardCurrency(ach.gems_reward || 0, ach.coins_reward || 0);
         if (ach.xp_reward > 0) await giveXP(ach.xp_reward, null, profile.role);
         setTimeout(() => toast(`🏆 ${ach.title}! +🪙${ach.coins_reward || 0}`, 'gem'), 300);
       }
