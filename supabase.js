@@ -24,7 +24,11 @@ function show(i)  { const el = document.getElementById(i); if (el) el.classList.
 function hide(i)  { const el = document.getElementById(i); if (el) el.classList.add('hidden'); }
 function cap(s)   { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
 function empty(icon, msg) { return `<div class="empty"><div class="empty-icon">${icon}</div>${msg}</div>`; }
-
+function sanitize(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
 function toast(msg, type = '') {
   const old = id('_toast'); if (old) old.remove();
   const t = document.createElement('div');
