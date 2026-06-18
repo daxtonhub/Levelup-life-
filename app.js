@@ -20,6 +20,9 @@ const RANK_TIERS = [
   { name:'Transcendent', icon:'✨', color:'#ffffff', frame:'frame-transcendent' }
 ];
 
+// ─── TODAY (must be declared globally) ────────
+const today = new Date().toISOString().split('T')[0];
+
 // XP needed to COMPLETE stage at stageIndex (0 = Bronze I)
 function getStageXP(stageIndex) {
   return Math.round(STAGE_XP_BASE * Math.pow(STAGE_XP_MULT, stageIndex));
@@ -80,9 +83,7 @@ function applyFrame() {
 }
 
 // ─── CONSTANTS ────────────────────────────────
-function getToday() {
-  return new Date().toISOString().split('T')[0];
-}
+
 const DAILY_BONUS_XP    = 300;
 const DAILY_BONUS_COINS  = 500;
 const DAILY_BONUS_GEMS   = 20;
@@ -743,7 +744,7 @@ async function checkAchievements() {
       if (earnedIds.includes(ach.id)) continue;
       let q = false;
       if      (ach.requirement_type === 'quests_done')   q = totalDone >= ach.requirement_value;
-      else if (ach.requirement_type === 'streak_days')   q = streak    >= ach.requirement_value;
+      else if (ach.requirement_type === 'streak_days') q = (profile.streak || 0) >= ach.requirement_value;
       else if (ach.requirement_type === 'rank_reached')  q = rs.stageIndex >= ach.requirement_value;
       if (q) {
         await sb.from('user_achievements').insert({ user_id: user.id, achievement_id: ach.id });
