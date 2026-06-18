@@ -15,7 +15,7 @@ async function renderJournal() {
         <div class="je-delete-btn" onclick="softDeleteJournal('${e.id}',event)">🗑</div>
         <div onclick="viewJournalEntry('${e.id}')">
           <div class="je-top"><div class="je-mood">${MOOD_ICONS[e.mood]||'🙂'}</div><div class="je-title">${e.title||'Untitled'}</div><div class="je-date">${formatDate(e.entry_date)}</div></div>
-          `<div class="je-preview">${sanitize(e.content)}</div>`
+          <div class="je-preview">${sanitize(e.content)}</div>
           <div class="je-footer">${e.what_learned?'<div class="je-tag">📚 Learned</div>':''}${e.lesson_learned?'<div class="je-tag">💡 Lesson</div>':''}</div>
         </div>
       </div>`).join('');
@@ -85,7 +85,7 @@ window.viewJournalEntry = async (entryId) => {
       <div style="font-size:28px">${MOOD_ICONS[e.mood]||'🙂'}</div>
       <div><div style="font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--text)">${e.title||'Untitled'}</div><div style="font-size:12px;color:var(--text2);margin-top:3px">${formatDate(e.entry_date)}</div></div>
     </div>
-    `<div class="je-full-content">${sanitize(e.content)}</div>`
+    <div class="je-full-content">${sanitize(e.content)}</div>
     ${e.what_learned?`<div class="je-section-label">📚 WHAT I LEARNED TODAY</div><div class="je-section-text">${e.what_learned}</div>`:''}
     ${e.lesson_learned?`<div class="je-section-label">💡 LESSON LEARNED</div><div class="je-section-text">${e.lesson_learned}</div>`:''}`;
   show('journal-view-modal');
@@ -952,7 +952,7 @@ async function renderAdmin() {
       reader.onload = (ev) => { preview.innerHTML = `<img src="${ev.target.result}" style="width:80px;height:80px;border-radius:12px;object-fit:cover;border:2px solid var(--accent2)"/>`; };
       reader.readAsDataURL(file);
     }
-  }, { once: true });
+  });
 }
 
 function adminQCard(q, users) {
