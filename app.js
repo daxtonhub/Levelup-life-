@@ -80,7 +80,7 @@ function applyFrame() {
 }
 
 // ─── CONSTANTS ────────────────────────────────
-const getToday() = new Date().toISOString().split('T')[0];
+// today removed — using getToday() from supabase.js
 const DAILY_BONUS_XP    = 300;
 const DAILY_BONUS_COINS  = 500;
 const DAILY_BONUS_GEMS   = 20;
