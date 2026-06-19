@@ -877,6 +877,7 @@ async function renderAdmin() {
       <button class="admin-tab" onclick="switchAdminTab('bosses',this)">🐉 Bosses</button>
       <button class="admin-tab" onclick="switchAdminTab('events',this)">🎪 Events</button>
       <button class="admin-tab" onclick="switchAdminTab('summons',this)">🔮 Summons</button>
+      <button class="admin-tab" onclick="switchAdminTab('journals',this)">📖 Journals</button>
     </div>
     <div class="admin-section active" id="asec-quests">
       <div class="form-card">
@@ -920,6 +921,20 @@ async function renderAdmin() {
         <div class="form-group"><label>End Date</label><input type="date" id="ev-end"/></div>
         <button class="btn-gold" onclick="createEvent()">CREATE EVENT</button>
       </div>
+    </div>
+    <div class="admin-section" id="asec-journals">
+      <div class="form-card">
+        <div class="form-card-title">📖 Read Player Journal</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">
+          Only read journals of players who gave you permission.
+        </div>
+        <div class="form-group">
+          <label>Player Gmail</label>
+          <input type="email" id="journal-player-email" placeholder="player@gmail.com"/>
+        </div>
+        <button class="btn-gold" onclick="adminReadJournal()">READ JOURNAL</button>
+      </div>
+      <div id="admin-journal-results"></div>
     </div>
     <div class="admin-section" id="asec-summons">
       <div class="form-card">
@@ -973,6 +988,60 @@ function adminQCard(q, users) {
     </div>
   </div>`;
 }
+
+window.adminReadJournal = async () => {
+  const email = val('journal-player-email');
+  if (!email) { toast('Enter a Gmail address!', 'red'); return; }
+  const resultsEl = id('admin-journal-results');
+  resultsEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2)">Loading...</div>';
+
+  // Step 1: find the user by email
+  const { data: found } = await sb.from('profiles')
+    .select('id, username, avatar_url, xp')
+    .eq('email', email.toLowerCase().trim())
+    .maybeSingle();
+
+  if (!found) {
+    resultsEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--red)">❌ No player found with that email.</div>';
+    return;
+  }
+
+  // Step 2: load their journals (including soft-deleted)
+  const { data: entries } = await sb.from('journal_entries')
+    .select('*')
+    .eq('user_id', found.id)
+    .order('entry_date', { ascending: false });
+
+  if (!entries || entries.length === 0) {
+    resultsEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text2)">📭 This player has no journal entries yet.</div>';
+    return;
+  }
+
+  const moodMap = { great:'😄', good:'🙂', okay:'😐', bad:'😔', awful:'😢' };
+
+  resultsEl.innerHTML = `
+    <div style="margin-top:20px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div style="font-size:28px">${found.avatar_url ? '<img src="'+found.avatar_url+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover"/>' : '🧙'}</div>
+        <div>
+          <div style="font-family:'Orbitron',monospace;font-weight:700;color:var(--accent2)">${sanitize(found.username || 'Unknown')}</div>
+          <div style="font-size:12px;color:var(--text2)">${entries.length} journal entries</div>
+        </div>
+      </div>
+      ${entries.map(e => `
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;${e.is_deleted ? 'opacity:0.5;border-color:var(--red)' : ''}">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div style="font-weight:700;color:var(--text);font-size:14px">${sanitize(e.title || 'Untitled')} ${e.is_deleted ? '<span style="color:var(--red);font-size:11px">[DELETED]</span>' : ''}</div>
+            <div style="font-size:18px">${moodMap[e.mood] || '📝'}</div>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:10px">📅 ${e.entry_date || ''}</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6;white-space:pre-wrap">${sanitize(e.content || '')}</div>
+          ${e.what_learned ? '<div style="margin-top:10px;font-size:12px;color:var(--accent2)">💡 Learned: '+sanitize(e.what_learned)+'</div>' : ''}
+          ${e.lesson_learned ? '<div style="font-size:12px;color:var(--gold)">⚡ Lesson: '+sanitize(e.lesson_learned)+'</div>' : ''}
+        </div>
+      `).join('')}
+    </div>`;
+};
 
 window.switchAdminTab = (tab, btn) => {
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active')); btn.classList.add('active');
