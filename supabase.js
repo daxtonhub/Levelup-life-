@@ -28,9 +28,7 @@ function val(i)   { var el = document.getElementById(i); return el ? el.value.tr
 function show(i)  { var el = document.getElementById(i); if (el) el.classList.remove('hidden'); }
 function hide(i)  { var el = document.getElementById(i); if (el) el.classList.add('hidden'); }
 function cap(s)   { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
-function empty(icon, msg) {
-  return '<div class="empty"><div class="empty-icon">' + icon + '</div>' + msg + '</div>';
-}
+function empty(icon, msg) { return '<div class="empty"><div class="empty-icon">' + icon + '</div>' + msg + '</div>'; }
 function sanitize(str) {
   var div = document.createElement('div');
   div.textContent = str || '';
