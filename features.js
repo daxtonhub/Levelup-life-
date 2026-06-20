@@ -674,21 +674,25 @@ async function uploadSummonImage() {
 async function growSummonBond(amount) {
   if (!user || !profile) return;
   try {
-    const { data: summons } = await sb.from('summons').select('*').eq('user_id', user.id).eq('is_active', true).order('created_at', { ascending: false }).limit(1);
-    const summon = summons?.[0]; if (!summon) return;
-    const newBondXP  = Math.min(1000, Math.max(0, (summon.bond_xp || 0) + amount));
-    const newBondLv  = Math.floor(newBondXP / 100) + 1;
-    const leveledUp  = newBondLv > (summon.bond_level || 1) && amount > 0;
-    const bondPct    = Math.round(newBondXP / 10);
-    if (bondPct < 10 && amount < 0) setTimeout(() => toast(`⚠️ ${summon.name} bond is critical! ${bondPct}%`, 'red'), 500);
-    if (newBondXP === 0) { await handlePetLeave(summon); return; }
-    await sb.from('summons').update({ bond_xp: newBondXP, bond_level: newBondLv }).eq('id', summon.id);
-    if (leveledUp) toast(`🔮 ${summon.name} Bond Lv ${newBondLv}!`, 'gem');
+    const { data: summons } = await sb.from('summons').select('*').eq('user_id', user.id).eq('is_active', true);
+    if (!summons?.length) return;
+    for (const summon of summons) {
+      const newBondXP = Math.min(1000, Math.max(0, (summon.bond_xp || 0) + amount));
+      const newBondLv = Math.floor(newBondXP / 100) + 1;
+      const leveledUp = newBondLv > (summon.bond_level || 1) && amount > 0;
+      const bondPct   = Math.round(newBondXP / 10);
+      if (bondPct < 10 && amount < 0) setTimeout(() => toast(`⚠️ ${summon.name} bond is critical! ${bondPct}%`, 'red'), 500);
+      if (newBondXP === 0) { await handlePetLeave(summon); continue; }
+      await sb.from('summons').update({ bond_xp: newBondXP, bond_level: newBondLv }).eq('id', summon.id);
+      if (leveledUp) toast(`🔮 ${summon.name} Bond Lv ${newBondLv}!`, 'gem');
+    }
+    await loadActiveSummons();
   } catch(e) {}
 }
 
 async function handlePetLeave(summon) {
   await sb.from('summons').update({ is_active: false }).eq('id', summon.id);
+  await loadActiveSummons();
   await sb.from('profiles').update({ comeback_active: true }).eq('id', user.id);
   profile.comeback_active = true;
   toast(`💔 ${summon.name} has left. Complete comeback quests to bring them back.`, 'red');
