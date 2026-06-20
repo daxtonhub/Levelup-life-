@@ -937,26 +937,40 @@ async function renderAdmin() {
       <div id="admin-journal-results"></div>
     </div>
     <div class="admin-section" id="asec-summons">
-      <div class="form-card">
-        <div class="form-card-title">🔮 Add New Summon to Shop</div>
-        <div class="form-group"><label>Summon Image</label><input type="file" id="admin-summon-img" accept="image/*" style="width:100%;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text)"/><div id="admin-summon-preview" style="margin-top:8px"></div></div>
-        <div class="form-group"><label>Name</label><input type="text" id="as-name" placeholder="e.g. Shadow Wolf"/></div>
-        <div class="form-group"><label>Class</label><select id="as-class"><option>Warrior</option><option>Mage</option><option>Assassin</option><option>Healer</option><option>Creator</option><option>Strategist</option><option>Guardian</option><option>Shadow</option></select></div>
-        <div class="form-group"><label>Race</label><select id="as-race"><option>Human</option><option>Beast</option><option>Spirit</option><option>Dragon</option><option>Hybrid</option><option>Ancient</option><option>Phantom</option></select></div>
-        <div class="form-group"><label>Description</label><textarea id="as-desc" placeholder="Describe this summon..." style="min-height:70px"></textarea></div>
-        <div class="form-group"><label>Rarity</label><select id="as-rarity"><option value="common">Common</option><option value="rare">Rare</option><option value="epic">Epic</option><option value="legendary">Legendary</option></select></div>
-        <div class="form-group"><label>Price (Coins)</label><input type="number" id="as-price-coins" value="1000" min="0"/></div>
-        <div class="form-group"><label>Price (Gems) — 0 = coins only</label><input type="number" id="as-price-gems" value="0" min="0"/></div>
-        <div class="form-group"><label>Min XP to unlock (0 = free)</label><input type="number" id="as-xp" value="0" min="0"/></div>
-        <div class="form-group"><label>Unlock Description</label><input type="text" id="as-unlock-desc" placeholder="e.g. Reach Platinum rank"/></div>
-        <div class="form-group"><label>Special Effect</label><input type="text" id="as-effect" placeholder="e.g. +10% XP from fitness quests"/></div>
-        <div class="form-group"><label>Has Frame?</label><select id="as-has-frame"><option value="false">No</option><option value="true">Yes (legendary/mythic only)</option></select></div>
-        <div class="form-group"><label>Frame Class (if has frame)</label><input type="text" id="as-frame-class" placeholder="e.g. frame-shadowwolf"/></div>
-        <button class="btn-gold" onclick="adminAddSummon()">🔮 ADD SUMMON TO SHOP</button>
-      </div>
-      <div class="sec-title">Current Summons</div>
-      <div id="admin-summons-list"></div>
-    </div>`;
+  <div class="form-card">
+    <div class="form-card-title">🔮 Add New Summon to Shop</div>
+    <div class="form-group"><label>Summon Image</label><input type="file" id="admin-summon-img" accept="image/*" style="width:100%;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text)"/><div id="admin-summon-preview" style="margin-top:8px"></div></div>
+    <button class="btn-ai" id="admin-ai-gen-btn" onclick="adminGenerateSummonAI()" style="margin-bottom:14px">✨ Generate with AI</button>
+    <div class="form-group"><label>Name</label><input type="text" id="as-name" placeholder="e.g. Shadow Wolf"/></div>
+    <div class="form-group"><label>Class</label><select id="as-class"><option>Warrior</option><option>Mage</option><option>Assassin</option><option>Healer</option><option>Creator</option><option>Strategist</option><option>Guardian</option><option>Shadow</option></select></div>
+    <div class="form-group"><label>Race</label><select id="as-race"><option>Human</option><option>Beast</option><option>Spirit</option><option>Dragon</option><option>Hybrid</option><option>Ancient</option><option>Phantom</option><option>Elf</option><option>Orc</option><option>Dwarf</option></select></div>
+    <div class="form-group"><label>Description</label><textarea id="as-desc" placeholder="Describe this summon..." style="min-height:70px"></textarea></div>
+    <div class="form-group"><label>Rarity</label><select id="as-rarity"><option value="common">Common</option><option value="rare">Rare</option><option value="epic">Epic</option><option value="legendary">Legendary</option></select></div>
+
+    <div class="sec-title" style="margin-top:16px">Abilities (up to 3, optional)</div>
+    <div class="form-group"><label>Ability 1</label><select id="as-ability-type-1"><option value="">None</option><option value="xp_boost">+% All XP</option><option value="coin_boost">+% Coins</option><option value="skill_xp_boost">+% Skill XP</option><option value="energy_boost">+ Energy per Quest</option><option value="streak_shield">🛡️ Streak Guard</option></select></div>
+    <div class="form-group"><label>Ability 1 Value</label><input type="number" id="as-ability-value-1" value="10" min="0"/></div>
+    <div class="form-group hidden" id="as-ability-skill-wrap-1"><label>Ability 1 Skill</label><select id="as-ability-skill-1"><option value="fitness">Fitness</option><option value="mindset">Mindset</option><option value="knowledge">Knowledge</option><option value="discipline">Discipline</option><option value="creativity">Creativity</option><option value="social">Social</option></select></div>
+
+    <div class="form-group"><label>Ability 2</label><select id="as-ability-type-2"><option value="">None</option><option value="xp_boost">+% All XP</option><option value="coin_boost">+% Coins</option><option value="skill_xp_boost">+% Skill XP</option><option value="energy_boost">+ Energy per Quest</option><option value="streak_shield">🛡️ Streak Guard</option></select></div>
+    <div class="form-group"><label>Ability 2 Value</label><input type="number" id="as-ability-value-2" value="10" min="0"/></div>
+    <div class="form-group hidden" id="as-ability-skill-wrap-2"><label>Ability 2 Skill</label><select id="as-ability-skill-2"><option value="fitness">Fitness</option><option value="mindset">Mindset</option><option value="knowledge">Knowledge</option><option value="discipline">Discipline</option><option value="creativity">Creativity</option><option value="social">Social</option></select></div>
+
+    <div class="form-group"><label>Ability 3</label><select id="as-ability-type-3"><option value="">None</option><option value="xp_boost">+% All XP</option><option value="coin_boost">+% Coins</option><option value="skill_xp_boost">+% Skill XP</option><option value="energy_boost">+ Energy per Quest</option><option value="streak_shield">🛡️ Streak Guard</option></select></div>
+    <div class="form-group"><label>Ability 3 Value</label><input type="number" id="as-ability-value-3" value="10" min="0"/></div>
+    <div class="form-group hidden" id="as-ability-skill-wrap-3"><label>Ability 3 Skill</label><select id="as-ability-skill-3"><option value="fitness">Fitness</option><option value="mindset">Mindset</option><option value="knowledge">Knowledge</option><option value="discipline">Discipline</option><option value="creativity">Creativity</option><option value="social">Social</option></select></div>
+
+    <div class="form-group"><label>Price (Coins)</label><input type="number" id="as-price-coins" value="1000" min="0"/></div>
+    <div class="form-group"><label>Price (Gems) — 0 = coins only</label><input type="number" id="as-price-gems" value="0" min="0"/></div>
+    <div class="form-group"><label>Min XP to unlock (0 = free)</label><input type="number" id="as-xp" value="0" min="0"/></div>
+    <div class="form-group"><label>Unlock Description</label><input type="text" id="as-unlock-desc" placeholder="e.g. Reach Platinum rank"/></div>
+    <div class="form-group"><label>Has Frame?</label><select id="as-has-frame"><option value="false">No</option><option value="true">Yes (legendary only)</option></select></div>
+    <div class="form-group"><label>Frame Class (if has frame)</label><input type="text" id="as-frame-class" placeholder="e.g. frame-shadowwolf"/></div>
+    <button class="btn-gold" onclick="adminAddSummon()">🔮 ADD SUMMON TO SHOP</button>
+  </div>
+  <div class="sec-title">Current Summons</div>
+  <div id="admin-summons-list"></div>
+</div>
 
   // Image preview listener
   document.addEventListener('change', (e) => {
