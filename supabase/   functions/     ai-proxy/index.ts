@@ -65,9 +65,8 @@ serve(async (req) => {
 
     const text = data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || ''
     console.log('Gemini text length:', text.length)
-    if (!text) {
-      console.warn('Empty text — full response:', JSON.stringify(data))
-    }
+    console.log('Gemini text content:', text)
+    console.log('Finish reason:', data?.candidates?.[0]?.finishReason)
     const normalized = { content: [{ type: 'text', text }] }
 
     return new Response(JSON.stringify(normalized), {
