@@ -248,6 +248,7 @@ window.addEventListener('unhandledrejection', function(e) {
         <div class="hstat"><div class="hstat-val" id="hstat-energy" style="color:var(--green)">100</div><div class="hstat-lbl">⚡ Energy</div></div>
         <div class="hstat"><div class="hstat-val" id="hstat-done">0</div><div class="hstat-lbl">✅ Done</div></div>
       </div>
+      <div class="hero-summons-row" id="hero-summons-row"></div>
     </div>
 
     <!-- DAILY BONUS BANNER -->
@@ -430,16 +431,7 @@ window.addEventListener('unhandledrejection', function(e) {
       </div>
     </div>
 
-    <!-- SUMMON INVENTORY -->
-    <div class="me-section">
-      <div class="me-section-header" onclick="toggleSection('inventory-content','inventory-arrow')">
-        <div class="me-section-icon">🎒</div>
-        <div style="flex:1"><div class="me-section-label">Summon Inventory</div><div class="me-section-sub" id="inventory-sub">Your companions</div></div>
-        <div class="me-section-arrow" id="inventory-arrow">›</div>
-      </div>
-      <div id="inventory-content" class="me-section-content hidden"><div id="inventory-list" style="padding-top:12px"></div></div>
-    </div>
-
+    
     <!-- AVATAR FRAMES -->
     <div class="me-section">
       <div class="me-section-header" onclick="toggleSection('frames-content','frames-arrow')">
@@ -450,15 +442,15 @@ window.addEventListener('unhandledrejection', function(e) {
       <div id="frames-content" class="me-section-content hidden"><div id="frames-list" style="padding-top:12px"></div></div>
     </div>
 
-    <!-- SUMMONS (Custom AI) -->
-    <div class="me-section">
-      <div class="me-section-header" onclick="toggleSection('summons-content','summons-arrow')">
-        <div class="me-section-icon">🔮</div>
-        <div style="flex:1"><div class="me-section-label">Summons</div><div class="me-section-sub" id="summon-status-sub">Summon your companion</div></div>
-        <div class="me-section-arrow" id="summons-arrow">›</div>
-      </div>
-      <div id="summons-content" class="me-section-content hidden"><div id="summon-content-inner" style="padding-top:12px"></div></div>
-    </div>
+    <!-- YOUR SUMMONS -->
+<div class="me-section">
+  <div class="me-section-header" onclick="toggleSection('your-summons-content','your-summons-arrow')">
+    <div class="me-section-icon">🔮</div>
+    <div style="flex:1"><div class="me-section-label">Your Summons</div><div class="me-section-sub" id="your-summons-sub">Your companions</div></div>
+    <div class="me-section-arrow" id="your-summons-arrow">›</div>
+  </div>
+  <div id="your-summons-content" class="me-section-content hidden"><div id="your-summons-list" style="padding-top:12px"></div></div>
+</div>
 
     <!-- CLASS -->
     <div class="me-section">
@@ -672,11 +664,7 @@ window.addEventListener('unhandledrejection', function(e) {
   <div class="modal"><div class="modal-handle"></div><div class="modal-title" id="guild-modal-title">⚔️ Guild</div><div id="guild-modal-content"></div></div>
 </div>
 
-<!-- SUMMON MODAL -->
-<div class="modal-overlay hidden" id="summon-modal" onclick="closeModalBg(event,'summon-modal')">
-  <div class="modal"><div class="modal-handle"></div><div class="modal-title" id="summon-modal-title">🔮 Summon a Companion</div><div id="summon-modal-body"></div></div>
-</div>
-
+  
 <!-- MANUAL VIEW -->
 <div class="modal-overlay hidden" id="manual-modal" onclick="closeModalBg(event,'manual-modal')">
   <div class="modal"><div class="modal-handle"></div><div id="manual-modal-content"></div></div>
