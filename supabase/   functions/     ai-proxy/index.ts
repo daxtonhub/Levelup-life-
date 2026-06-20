@@ -12,7 +12,9 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
   try {
+    console.log('Request received')
     const { messages, system, max_tokens } = await req.json()
+    console.log('Payload parsed, messages count:', messages?.length)
 
     const contents = messages.map((m: any) => {
       let parts
@@ -37,33 +39,42 @@ serve(async (req) => {
     if (system) body.systemInstruction = { parts: [{ text: system }] }
 
     const apiKey = Deno.env.get('GEMINI_API_KEY')
+    console.log('API key present:', !!apiKey)
     if (!apiKey) {
+      console.error('GEMINI_API_KEY secret not set')
       return new Response(JSON.stringify({ error: 'GEMINI_API_KEY secret not set in Supabase' }), {
         status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
 
+    console.log('Calling Gemini model:', GEMINI_MODEL)
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
       { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
     )
+    console.log('Gemini response status:', response.status)
     const data = await response.json()
 
-    // Surface real Gemini errors instead of silently returning empty text
     if (!response.ok || data.error) {
       const msg = data?.error?.message || `Gemini request failed (${response.status})`
+      console.error('Gemini error:', msg)
       return new Response(JSON.stringify({ error: msg }), {
         status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
 
     const text = data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || ''
+    console.log('Gemini text length:', text.length)
+    if (!text) {
+      console.warn('Empty text — full response:', JSON.stringify(data))
+    }
     const normalized = { content: [{ type: 'text', text }] }
 
     return new Response(JSON.stringify(normalized), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   } catch (err) {
+    console.error('Function crashed:', err.message)
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
