@@ -85,6 +85,25 @@ const DAILY_BONUS_XP    = 300;
 const DAILY_BONUS_COINS  = 500;
 const DAILY_BONUS_GEMS   = 20;
 
+const SUMMON_RANKS = {
+  Common:    { color:'#94a3b8', icon:'⚪' },
+  Rare:      { color:'#60a5fa', icon:'🔵' },
+  Epic:      { color:'#a855f7', icon:'🟣' },
+  Legendary: { color:'#f59e0b', icon:'🟡' },
+  Mythic:    { color:'#ef4444', icon:'🔴' }
+};
+
+function abilityLabel(a) {
+  if (!a || !a.type) return null;
+  if (a.type === 'xp_boost') return `+${a.value}% All XP`;
+  if (a.type === 'coin_boost') return `+${a.value}% Coins`;
+  if (a.type === 'skill_xp_boost') return `+${a.value}% ${cap(a.skill||'')} XP`;
+  if (a.type === 'energy_boost') return `+${a.value} Energy/Quest`;
+  if (a.type === 'streak_shield') return `🛡️ Streak Guard`;
+  return null;
+}
+function getAbilitiesList(s) { return (s.abilities || []).map(abilityLabel).filter(Boolean); }
+
 const DIFF_CONFIG = {
   easy:   { label:'Easy',   cls:'diff-easy',   icon:'⚪', xp:50,  coins:15 },
   medium: { label:'Medium', cls:'diff-medium', icon:'🟡', xp:100, coins:35 },
@@ -157,6 +176,14 @@ let selectedMood = 'okay', selectedRole = 'warrior';
 let selectedGender = null, termsChecked = false;
 let currentManualCategory = 'all';
 let userGuild = null;
+let activeSummons = [];
+
+async function loadActiveSummons() {
+  try {
+    const { data } = await sb.from('summons').select('*').eq('user_id', user.id).eq('is_active', true).order('created_at', { ascending: true }).limit(2);
+    activeSummons = data || [];
+  } catch(e) { activeSummons = []; }
+}
 
 // ─── PWA ──────────────────────────────────────
 if ('serviceWorker' in navigator) {
@@ -351,7 +378,7 @@ function showMainApp() {
   fadeLoading(); hide('auth-wrap'); hide('terms-screen'); hide('gender-screen');
   setTimeout(async () => {
     show('main-app');
-    renderDateDisplay(); renderAll(); checkDailyBonusAvailable(); checkPeriodPhase(); checkPenalties(); loadUserGuild(); requestNotificationPermission(); await checkLoginReward();
+renderDateDisplay(); await loadActiveSummons(); renderAll(); checkDailyBonusAvailable(); checkPeriodPhase(); checkPenalties(); loadUserGuild(); requestNotificationPermission(); await checkLoginReward();
     if (profile?.is_admin || user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) { const nb = id('nav-admin'); if (nb) nb.style.display = ''; }
     if (profile?.gender === 'female') { id('female-mode-row')?.style.setProperty('display', ''); if (profile?.is_female_mode) { id('female-toggle')?.classList.add('on'); show('female-section'); id('period-quest-filter')?.style.setProperty('display', ''); } }
     const gd = id('gender-display'); if (gd) gd.textContent = profile?.gender === 'female' ? '🌸 Female' : profile?.gender === 'male' ? '⚔️ Male' : 'Not set';
@@ -594,7 +621,9 @@ window.completeQuest = async (qid, skillCat, done, diff) => {
     await sb.from('daily_quests').update({ is_completed: true, completion_count: 1 }).eq('id', qid);
     const oldXP = profile.xp || 0;
     await giveXP(dc.xp, skillCat, profile.role || 'warrior');
-    const newEnergy = Math.min(100, (profile.energy ?? 100) + 2);
+    let energyBonus = 0;
+for (const s of activeSummons) { for (const a of (s.abilities || [])) { if (a.type === 'energy_boost') energyBonus += (a.value || 0); } }
+const newEnergy = Math.min(100, (profile.energy ?? 100) + 2 + energyBonus);
     await sb.from('profiles').update({ energy: newEnergy }).eq('id', user.id);
     profile.energy = newEnergy;
     await awardCurrency(0, dc.coins);
@@ -639,6 +668,12 @@ async function giveXP(amount, skillCat, role) {
   const mult  = getStreakMultiplier(profile.streak || 0);
   let   final = Math.round(amount * mult);
   if (role && skillCat && ROLES[role]?.bonus === skillCat) { final = Math.round(final * 1.2); setTimeout(() => toast(`${ROLES[role].icon} Class Bonus!`, 'gem'), 400); }
+  for (const s of activeSummons) {
+    for (const a of (s.abilities || [])) {
+      if (a.type === 'xp_boost' && a.value > 0) final = Math.round(final * (1 + a.value / 100));
+      else if (a.type === 'skill_xp_boost' && skillCat === a.skill && a.value > 0) final = Math.round(final * (1 + a.value / 100));
+    }
+  }
   const oldXP = profile.xp || 0, newXP = oldXP + final;
   await sb.from('profiles').update({ xp: newXP }).eq('id', user.id);
   profile.xp = newXP;
@@ -658,18 +693,36 @@ function getStreakMultiplier(streak) {
 
 async function awardCurrency(gems, coins) {
   if (!profile) return;
-  const ng = (profile.gems||0) + gems, nc = (profile.coins||0) + coins;
+  let finalCoins = coins;
+  if (coins > 0) {
+    for (const s of activeSummons) {
+      for (const a of (s.abilities || [])) {
+        if (a.type === 'coin_boost' && a.value > 0) finalCoins = Math.round(finalCoins * (1 + a.value / 100));
+      }
+    }
+  }
+  const ng = (profile.gems||0) + gems, nc = (profile.coins||0) + finalCoins;
   await sb.from('profiles').update({ gems: ng, coins: nc }).eq('id', user.id);
   profile.gems = ng; profile.coins = nc;
 }
 
 async function checkStreak() {
-  if (!profile || profile.last_active === getToday()) return;
+  if (!profile || profile.last_active === today) return;
   const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  const missedDays = profile.last_active !== yesterday && profile.last_active !== today;
   let newStreak = profile.last_active === yesterday ? (profile.streak||0) + 1 : 1;
-  if (profile.streak_shields > 0 && profile.last_active !== yesterday && profile.last_active !== getToday()) { newStreak = profile.streak || 0; await sb.from('profiles').update({ streak_shields: (profile.streak_shields||1) - 1 }).eq('id', user.id); profile.streak_shields = Math.max(0, (profile.streak_shields||1) - 1); toast('🛡️ Streak Shield activated!', 'green'); }
-  profile.streak = newStreak; profile.last_active = getToday();
-  await sb.from('profiles').update({ streak: newStreak, last_active: getToday() }).eq('id', user.id);
+  const hasSummonGuard = activeSummons.some(s => (s.abilities||[]).some(a => a.type === 'streak_shield'));
+  if (missedDays && hasSummonGuard) {
+    newStreak = profile.streak || 0;
+    toast('🛡️ Your summon protected your streak!', 'green');
+  } else if (missedDays && profile.streak_shields > 0) {
+    newStreak = profile.streak || 0;
+    await sb.from('profiles').update({ streak_shields: (profile.streak_shields||1) - 1 }).eq('id', user.id);
+    profile.streak_shields = Math.max(0, (profile.streak_shields||1) - 1);
+    toast('🛡️ Streak Shield activated!', 'green');
+  }
+  profile.streak = newStreak; profile.last_active = today;
+  await sb.from('profiles').update({ streak: newStreak, last_active: today }).eq('id', user.id);
 }
 
 async function checkPenalties() {
