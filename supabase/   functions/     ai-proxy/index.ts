@@ -13,7 +13,7 @@ serve(async (req) => {
   }
   try {
     console.log('Request received')
-    const { messages, system, max_tokens } = await req.json()
+    const { messages, system } = await req.json()
     console.log('Payload parsed, messages count:', messages?.length)
 
     const contents = messages.map((m: any) => {
@@ -34,7 +34,10 @@ serve(async (req) => {
 
     const body: any = {
       contents,
-      generationConfig: { maxOutputTokens: max_tokens || 1000 }
+      generationConfig: {
+        maxOutputTokens: 3000,
+        thinkingConfig: { thinkingLevel: 'minimal' }
+      }
     }
     if (system) body.systemInstruction = { parts: [{ text: system }] }
 
@@ -65,7 +68,6 @@ serve(async (req) => {
 
     const text = data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || '').join('') || ''
     console.log('Gemini text length:', text.length)
-    console.log('Gemini text content:', text)
     console.log('Finish reason:', data?.candidates?.[0]?.finishReason)
     const normalized = { content: [{ type: 'text', text }] }
 
