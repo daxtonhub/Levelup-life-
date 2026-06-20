@@ -439,10 +439,10 @@ async function renderFramesSection() {
   // Summon frames from owned legendary/mythic summons
   let summonFrames = [];
   try {
-    const { data: ownedSummons } = await sb.from('player_summons').select('*,shop_summons(name,frame_class,rarity,has_frame)').eq('user_id', user.id);
+    const { data: ownedSummons } = await sb.from('summons').select('name,frame_class,rank,has_frame').eq('user_id', user.id);
     summonFrames = (ownedSummons || [])
-      .filter(ps => ps.shop_summons?.has_frame && ps.shop_summons?.frame_class)
-      .map(ps => ({ id: ps.shop_summons.frame_class, name: ps.shop_summons.name + ' Frame', icon: ps.shop_summons.rarity === 'legendary' ? '🌟' : '🔥', source: 'summon' }));
+      .filter(s => s.has_frame && s.frame_class)
+      .map(s => ({ id: s.frame_class, name: s.name + ' Frame', icon: s.rank === 'Legendary' ? '🌟' : '🔮', source: 'summon' }));
   } catch(e) {}
 
   const allFrames = [{ id: 'rank', name: 'Current Rank Frame', icon: rs.icon, source: 'auto' }, ...rankFrames, ...summonFrames];
@@ -503,173 +503,51 @@ window.selectFrame = async (frameId) => {
   toast('🖼️ Frame equipped!', 'green');
 };
 
-// ─── SUMMONS (Custom AI) ──────────────────────
-let currentSummonData = null, currentSummonImageBase64 = null, currentSummonMediaType = null;
-
-async function loadUserSummon() {
-  const sub = id('summon-status-sub'); if (!profile) return;
+// ─── YOUR SUMMONS (merged, dual-equip) ────────
+async function renderYourSummons() {
+  const el = id('your-summons-list'); if (!el) return;
   try {
-    const { data: summons } = await sb.from('summons').select('*').eq('user_id', user.id).eq('is_active', true).order('created_at', { ascending: false }).limit(1);
-    const summon = summons?.[0] || null;
-    if (summon && sub) sub.textContent = summon.name + ' — Bond Lv ' + summon.bond_level;
-    else if (sub) sub.textContent = 'No companion yet';
-    return summon;
-  } catch(e) { return null; }
+    const { data: owned } = await sb.from('summons').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+    const equippedCount = (owned||[]).filter(s => s.is_active).length;
+    const sub = id('your-summons-sub'); if (sub) sub.textContent = `${(owned||[]).length} companion${(owned||[]).length!==1?'s':''} • ${equippedCount}/2 equipped`;
+    if (!owned?.length) { el.innerHTML = empty('🔮', 'No summons yet. Check the Summon Store!'); return; }
+    el.innerHTML = owned.map(s => {
+      const bondPct = Math.min(100, (s.bond_xp || 0) % 100);
+      const rankInfo = SUMMON_RANKS[s.rank] || SUMMON_RANKS.Common;
+      const abilitiesList = getAbilitiesList(s);
+      return `<div class="inv-summon-card ${s.is_active?'active-summon':''}" onclick="toggleActiveSummon('${s.id}',${s.is_active})">
+        ${s.image_url ? `<img class="inv-summon-img" src="${s.image_url}"/>` : `<div class="inv-summon-img" style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:24px">🔮</div>`}
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;flex-wrap:wrap">
+            <span style="font-size:14px;font-weight:700;color:var(--text)">${s.name}</span>
+            <span class="rarity-badge" style="color:${rankInfo.color};border-color:${rankInfo.color}44;background:${rankInfo.color}11">${rankInfo.icon} ${s.rank||'Common'}</span>
+            ${s.is_active ? '<span class="active-badge">EQUIPPED</span>' : ''}
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:2px">⚔️ ${s.class} • 🧬 ${s.race}</div>
+          ${abilitiesList.length ? `<div style="font-size:11px;color:var(--green)">${abilitiesList.map(t=>'✨ '+t).join(' • ')}</div>` : ''}
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">Bond Lv ${s.bond_level} — ${s.bond_xp} XP</div>
+          <div class="bond-mini-track"><div class="bond-mini-fill" style="width:${bondPct}%"></div></div>
+        </div>
+        <div style="flex-shrink:0;font-size:20px;color:var(--text3)">${s.is_active?'✅':'○'}</div>
+      </div>`;
+    }).join('');
+  } catch(e) { el.innerHTML = empty('🔮', 'Failed to load summons'); }
 }
 
-async function renderSummonSection() {
-  const el = id('summon-content-inner'); if (!el) return;
-  const summon = await loadUserSummon();
-  if (!summon) {
-    el.innerHTML = `<div class="summon-empty">
-      <div class="summon-empty-icon">🔮</div>
-      <div style="font-family:'Orbitron',monospace;font-size:14px;color:var(--accent2);font-weight:900;margin-bottom:8px">No Companion Yet</div>
-      <div style="font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.6">Upload an image and AI will bring your companion to life.</div>
-      <button class="btn-summon" onclick="openSummonModal()">🔮 SUMMON A COMPANION</button>
-    </div>`;
-    return;
+window.toggleActiveSummon = async (summonId, isCurrentlyActive) => {
+  if (isCurrentlyActive) {
+    await sb.from('summons').update({ is_active: false }).eq('id', summonId);
+    await loadActiveSummons();
+    toast('Summon unequipped');
+  } else {
+    if (activeSummons.length >= 2) { toast('Max 2 summons equipped! Unequip one first.', 'red'); return; }
+    await sb.from('summons').update({ is_active: true }).eq('id', summonId);
+    await loadActiveSummons();
+    toast('🔮 Summon equipped!', 'green');
   }
-  const bondPct = Math.min(100, Math.round(((summon.bond_xp || 0) % 100)));
-  el.innerHTML = `<div class="summon-card">
-    <div style="display:flex;gap:16px;align-items:flex-start">
-      ${summon.image_url ? `<img class="summon-avatar" src="${summon.image_url}"/>` : `<div class="summon-avatar-placeholder">🔮</div>`}
-      <div style="flex:1;min-width:0">
-        <div class="summon-name">${summon.name}</div>
-        <div class="summon-class">⚔️ ${summon.class}</div>
-        <div class="summon-race">🧬 ${summon.race}</div>
-        <div class="summon-desc">${summon.description}</div>
-      </div>
-    </div>
-    <div class="summon-bond">
-      <div class="summon-bond-label">BOND LEVEL ${summon.bond_level} — ${summon.bond_xp} XP</div>
-      <div class="summon-bond-track"><div class="summon-bond-fill" style="width:${bondPct}%"></div></div>
-    </div>
-  </div>
-  <button class="btn-regen" onclick="openSummonModal()">+ Summon Another Companion</button>`;
-}
-
-window.openSummonModal = () => {
-  currentSummonData = null; currentSummonImageBase64 = null; currentSummonMediaType = null;
-  id('summon-modal-title').textContent = '🔮 Summon a Companion';
-  renderSummonStep1(); show('summon-modal');
+  renderYourSummons();
+  renderHeroCard();
 };
-
-function renderSummonStep1() {
-  id('summon-modal-body').innerHTML = `
-    <div style="text-align:center;padding:12px 0">
-      <div style="font-size:40px;margin-bottom:12px">🖼️</div>
-      <div style="font-size:14px;color:var(--text2);margin-bottom:20px;line-height:1.6">Upload an image of your companion.<br/>AI will generate its identity.</div>
-      <input type="file" id="summon-img-input" accept="image/*" style="display:none" onchange="onSummonImageSelected(event)"/>
-      <button class="btn-summon" onclick="document.getElementById('summon-img-input').click()">📷 CHOOSE IMAGE</button>
-      <div class="manual-override-btn" onclick="renderSummonManual()">Enter details manually instead</div>
-    </div>`;
-}
-
-window.onSummonImageSelected = async (e) => {
-  const file = e.target.files[0]; if (!file) return;
-  const mediaType = file.type || 'image/jpeg';
-  const reader = new FileReader();
-  reader.onload = async (ev) => {
-    const dataUrl = ev.target.result, base64 = dataUrl.split(',')[1];
-    currentSummonImageBase64 = base64; currentSummonMediaType = mediaType;
-    id('summon-modal-body').innerHTML = `
-      <div class="summon-preview" style="text-align:center">
-        <img class="summon-preview-img" src="${dataUrl}"/><br/>
-        <div style="font-size:13px;color:var(--text2);margin-bottom:12px">Image selected!</div>
-      </div>
-      <div class="summon-loading">✨ GENERATING IDENTITY...</div>`;
-    await generateSummonWithAI(base64, mediaType, dataUrl);
-  };
-  reader.readAsDataURL(file);
-};
-
-async function generateSummonWithAI(base64, mediaType, previewUrl) {
-  try {
-    const text = await callAI([{ role: 'user', content: [
-      { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-      { type: 'text', text: 'Generate a companion identity for this image for a self-improvement RPG app called LevelUp Life. Return ONLY valid JSON with exactly these fields: name (1-2 powerful words), class (Warrior/Mage/Assassin/Healer/Creator/Strategist/Guardian/Shadow), race (Human/Beast/Spirit/Dragon/Hybrid/Ancient/Phantom), description (2-3 lines about personality and how this companion helps the user grow). Keep it short and meaningful.' }
-    ]}]);
-    const match = text.match(/\{[\s\S]*\}/);
-    if (match) { currentSummonData = JSON.parse(match[0]); renderSummonPreview(currentSummonData, previewUrl); }
-    else throw new Error('No JSON');
-  } catch(err) {
-    console.error('AI summon error:', err);
-    renderSummonManualWithImage(previewUrl);
-    toast('AI failed — enter details manually', 'red');
-  }
-}
-
-function renderSummonPreview(data, previewUrl) {
-  id('summon-modal-body').innerHTML = `
-    <div class="summon-preview" style="text-align:center">
-      ${previewUrl ? `<img class="summon-preview-img" src="${previewUrl}"/>` : '<div style="font-size:40px;margin-bottom:12px">🔮</div>'}
-      <div class="summon-name">${data.name||'Unknown'}</div>
-      <div class="summon-class">⚔️ ${data.class||'Warrior'}</div>
-      <div class="summon-race">🧬 ${data.race||'Spirit'}</div>
-      <div class="summon-desc" style="text-align:left;margin-top:10px">${data.description||''}</div>
-    </div>
-    <button class="btn-summon" onclick="saveSummon()">✨ CONFIRM SUMMON</button>
-    <button class="btn-regen" onclick="renderSummonStep1()">🔄 Choose Different Image</button>
-    <div class="manual-override-btn" onclick="renderSummonManualWithImage('${previewUrl||''}')">Edit details manually</div>`;
-}
-
-function renderSummonManual() {
-  currentSummonImageBase64 = null;
-  id('summon-modal-body').innerHTML = `
-    <div class="form-group"><label>Name</label><input type="text" id="sm-name" placeholder="e.g. Shadow Fang"/></div>
-    <div class="form-group"><label>Class</label><select id="sm-class"><option>Warrior</option><option>Mage</option><option>Assassin</option><option>Healer</option><option>Creator</option><option>Strategist</option><option>Guardian</option><option>Shadow</option></select></div>
-    <div class="form-group"><label>Race</label><select id="sm-race"><option>Human</option><option>Beast</option><option>Spirit</option><option>Dragon</option><option>Hybrid</option><option>Ancient</option><option>Phantom</option></select></div>
-    <div class="form-group"><label>Description</label><textarea id="sm-desc" placeholder="Describe your companion..." style="min-height:80px"></textarea></div>
-    <button class="btn-summon" onclick="saveSummonManual()">✨ SUMMON</button>
-    <button class="btn-regen" onclick="renderSummonStep1()">← Back</button>`;
-}
-
-function renderSummonManualWithImage(previewUrl) {
-  id('summon-modal-body').innerHTML = `
-    ${previewUrl ? `<div style="text-align:center;margin-bottom:12px"><img src="${previewUrl}" style="width:80px;height:80px;border-radius:14px;object-fit:cover;border:2px solid var(--accent2)"/></div>` : ''}
-    <div class="form-group"><label>Name</label><input type="text" id="sm-name" placeholder="e.g. Shadow Fang" value="${currentSummonData?.name||''}"/></div>
-    <div class="form-group"><label>Class</label><select id="sm-class"><option>Warrior</option><option>Mage</option><option>Assassin</option><option>Healer</option><option>Creator</option><option>Strategist</option><option>Guardian</option><option>Shadow</option></select></div>
-    <div class="form-group"><label>Race</label><select id="sm-race"><option>Human</option><option>Beast</option><option>Spirit</option><option>Dragon</option><option>Hybrid</option><option>Ancient</option><option>Phantom</option></select></div>
-    <div class="form-group"><label>Description</label><textarea id="sm-desc" style="min-height:80px">${currentSummonData?.description||''}</textarea></div>
-    <button class="btn-summon" onclick="saveSummonManual()">✨ SUMMON</button>
-    <button class="btn-regen" onclick="renderSummonStep1()">← Back</button>`;
-  if (currentSummonData?.class) { const cls = id('sm-class'); if(cls) cls.value = currentSummonData.class; }
-  if (currentSummonData?.race)  { const rc  = id('sm-race');  if(rc)  rc.value  = currentSummonData.race;  }
-}
-
-window.saveSummon = async () => {
-  if (!currentSummonData) return;
-  let imageUrl = null;
-  if (currentSummonImageBase64 && currentSummonMediaType) imageUrl = await uploadSummonImage();
-  await sb.from('summons').insert({ user_id: user.id, name: currentSummonData.name||'Companion', class: currentSummonData.class||'Warrior', race: currentSummonData.race||'Spirit', description: currentSummonData.description||'', image_url: imageUrl, bond_level: 1, bond_xp: 0, is_active: true });
-  closeModal('summon-modal');
-  toast('🔮 ' + (currentSummonData.name||'Companion') + ' summoned!', 'gem');
-  renderSummonSection();
-};
-
-window.saveSummonManual = async () => {
-  const name = val('sm-name'), cls = document.getElementById('sm-class')?.value || 'Warrior', race = document.getElementById('sm-race')?.value || 'Spirit', desc = document.getElementById('sm-desc')?.value?.trim() || '';
-  if (!name) { toast('Enter a name!', 'red'); return; }
-  let imageUrl = null;
-  if (currentSummonImageBase64 && currentSummonMediaType) imageUrl = await uploadSummonImage();
-  await sb.from('summons').insert({ user_id: user.id, name, class: cls, race, description: desc, image_url: imageUrl, bond_level: 1, bond_xp: 0, is_active: true });
-  closeModal('summon-modal');
-  toast('🔮 ' + name + ' summoned!', 'gem');
-  renderSummonSection();
-};
-
-async function uploadSummonImage() {
-  if (!currentSummonImageBase64) return null;
-  try {
-    const byteStr = atob(currentSummonImageBase64), arr = new Uint8Array(byteStr.length);
-    for (let i = 0; i < byteStr.length; i++) arr[i] = byteStr.charCodeAt(i);
-    const ext = (currentSummonMediaType.split('/')[1] || 'jpg'), blob = new Blob([arr], { type: currentSummonMediaType });
-    const path = user.id + '/summon_' + Date.now() + '.' + ext;
-    const upRes = await sb.storage.from('avatars').upload(path, blob, { upsert: true });
-    if (upRes.error) return null;
-    return sb.storage.from('avatars').getPublicUrl(path).data.publicUrl + '?t=' + Date.now();
-  } catch(e) { return null; }
-}
 
 async function growSummonBond(amount) {
   if (!user || !profile) return;
@@ -723,10 +601,10 @@ async function renderShopSection() {
   try {
     const [sRes, pRes] = await Promise.all([
       sb.from('shop_summons').select('*').eq('is_available', true).order('rarity'),
-      sb.from('player_summons').select('*').eq('user_id', user.id)
+      sb.from('summons').select('shop_summon_id').eq('user_id', user.id)
     ]);
-    shopSummons = sRes.data || []; playerOwnedSummons = pRes.data || [];
-    const ownedIds = playerOwnedSummons.map(p => p.summon_id);
+    shopSummons = sRes.data || [];
+    const ownedIds = (pRes.data || []).map(p => p.shop_summon_id).filter(Boolean);
     let filtered = shopFilter === 'all' ? shopSummons : shopSummons.filter(s => s.rarity === shopFilter);
     if (!filtered.length) { el.innerHTML = empty('🔮', 'No summons in this category yet'); return; }
 
@@ -736,6 +614,7 @@ async function renderShopSection() {
       const meetsReqs = (profile.xp||0) >= (s.unlock_xp||0);
       const imgHtml = s.image_url ? `<img class="summon-img" src="${s.image_url}"/>` : `<div class="summon-img-placeholder">🔮</div>`;
       const rarityClass = 'rarity-' + s.rarity;
+      const abilitiesList = getAbilitiesList(s);
       html += `<div class="shop-summon-card ${rarityClass}">
         <div style="display:flex;gap:14px;padding:14px;align-items:flex-start">
           ${imgHtml}
@@ -746,7 +625,7 @@ async function renderShopSection() {
             </div>
             <div style="font-size:11px;color:var(--text2);margin-bottom:3px">⚔️ ${s.class} • 🧬 ${s.race}</div>
             <div style="font-size:12px;color:var(--text2);margin-bottom:6px;line-height:1.5">${s.description||''}</div>
-            ${s.special_effect ? `<div class="effect-tag">✨ ${s.special_effect}</div>` : ''}
+            ${abilitiesList.length ? abilitiesList.map(t => `<div class="effect-tag">✨ ${t}</div>`).join('') : (s.special_effect ? `<div class="effect-tag">✨ ${s.special_effect}</div>` : '')}
             ${s.has_frame ? `<div class="effect-tag" style="margin-left:4px">🖼️ Includes Frame</div>` : ''}
             ${!meetsReqs && s.unlock_description ? `<div class="lock-tag">🔒 ${s.unlock_description}</div>` : ''}
           </div>
@@ -783,57 +662,71 @@ window.purchaseSummon = async (summonId) => {
     await awardCurrency(0, -summon.price_coins);
     toast(`🪙 -${summon.price_coins} coins`);
   }
-  await sb.from('player_summons').insert({ user_id: user.id, summon_id: summonId, is_active: false, bond_level: 1, bond_xp: 0, obtained_from: 'shop' });
-  // Unlock summon frame if it has one
-  if (summon.has_frame && summon.frame_class) {
-    await sb.from('player_frames').insert({ user_id: user.id, frame_id: summon.frame_class, frame_name: summon.name + ' Frame', frame_source: 'summon' }).catch(() => {});
-  }
+  await sb.from('summons').insert({
+    user_id: user.id, name: summon.name, class: summon.class, race: summon.race,
+    rank: summon.rarity ? cap(summon.rarity) : 'Common', description: summon.description, image_url: summon.image_url,
+    special_effect: summon.special_effect, has_frame: summon.has_frame || false, frame_class: summon.frame_class,
+    abilities: summon.abilities || [],
+    bond_level: 1, bond_xp: 0, is_active: false, obtained_from: 'shop', shop_summon_id: summon.id
+  });
   toast(`🔮 ${summon.name} acquired!`, 'gem');
-  renderTopbar(); renderHeroCard(); renderShopSection(); renderSummonInventory();
+  renderTopbar(); renderHeroCard(); renderShopSection(); renderYourSummons();
 };
 
-// ─── SUMMON INVENTORY ─────────────────────────
-async function renderSummonInventory() {
-  const el = id('inventory-list'); if (!el) return;
-  try {
-    const { data: owned } = await sb.from('player_summons').select('*,shop_summons(*)').eq('user_id', user.id).order('obtained_at', { ascending: false });
-    const sub = id('inventory-sub'); if (sub) sub.textContent = (owned||[]).length + ' companion' + ((owned||[]).length !== 1 ? 's' : '');
-    if (!owned?.length) { el.innerHTML = `<div class="empty"><div class="empty-icon">🔮</div><div>No summons yet.</div><div style="font-size:12px;color:var(--text3);margin-top:6px">Purchase summons from the store!</div></div>`; return; }
-    el.innerHTML = owned.map(ps => {
-      const s = ps.shop_summons; if (!s) return '';
-      const bondPct = Math.min(100, (ps.bond_xp || 0) % 100);
-      const rarityClass = 'rarity-' + (s.rarity || 'common');
-      return `<div class="inv-summon-card ${ps.is_active?'active-summon':''}" onclick="toggleActiveSummon('${ps.id}',${ps.is_active})">
-        ${s.image_url ? `<img class="inv-summon-img" src="${s.image_url}"/>` : `<div class="inv-summon-img" style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:24px">🔮</div>`}
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
-            <span style="font-size:14px;font-weight:700;color:var(--text)">${s.name}</span>
-            <span class="rarity-badge ${rarityClass}">${cap(s.rarity)}</span>
-            ${ps.is_active ? '<span class="active-badge">ACTIVE</span>' : ''}
-          </div>
-          <div style="font-size:11px;color:var(--text2);margin-bottom:2px">⚔️ ${s.class} • 🧬 ${s.race}</div>
-          ${s.special_effect ? `<div style="font-size:11px;color:var(--green)">✨ ${s.special_effect}</div>` : ''}
-          <div style="font-size:10px;color:var(--text3);margin-top:4px">Bond Lv ${ps.bond_level} — ${ps.bond_xp} XP</div>
-          <div class="bond-mini-track"><div class="bond-mini-fill" style="width:${bondPct}%"></div></div>
-        </div>
-        <div style="flex-shrink:0;font-size:20px;color:var(--text3)">${ps.is_active?'✅':'○'}</div>
-      </div>`;
-    }).join('');
-  } catch(e) { el.innerHTML = empty('🔮', 'Failed to load inventory'); }
+// ─── ADMIN AI SUMMON GENERATOR ────────────────
+function collectAbilitiesFromForm() {
+  const abilities = [];
+  for (let i = 1; i <= 3; i++) {
+    const type = document.getElementById(`as-ability-type-${i}`)?.value;
+    if (!type) continue;
+    const value = parseFloat(document.getElementById(`as-ability-value-${i}`)?.value) || 0;
+    const skill = type === 'skill_xp_boost' ? (document.getElementById(`as-ability-skill-${i}`)?.value || null) : null;
+    abilities.push({ type, value, skill });
+  }
+  return abilities.slice(0, 3);
 }
 
-window.toggleActiveSummon = async (psId, isCurrentlyActive) => {
-  if (isCurrentlyActive) {
-    await sb.from('player_summons').update({ is_active: false }).eq('id', psId);
-    await sb.from('profiles').update({ active_summon_id: null }).eq('id', user.id);
-    profile.active_summon_id = null; toast('Summon deactivated');
-  } else {
-    await sb.from('player_summons').update({ is_active: false }).eq('user_id', user.id);
-    await sb.from('player_summons').update({ is_active: true }).eq('id', psId);
-    await sb.from('profiles').update({ active_summon_id: psId }).eq('id', user.id);
-    profile.active_summon_id = psId; toast('🔮 Summon activated!', 'green');
-  }
-  renderSummonInventory();
+window.adminGenerateSummonAI = async () => {
+  const imgInput = id('admin-summon-img');
+  if (!imgInput?.files?.[0]) { toast('Select an image first!', 'red'); return; }
+  const file = imgInput.files[0];
+  const btn = id('admin-ai-gen-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '✨ Generating...'; }
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    const dataUrl = ev.target.result, base64 = dataUrl.split(',')[1];
+    const mediaType = file.type || 'image/jpeg';
+    try {
+      const text = await callAI([{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
+        { type: 'text', text: 'Generate a companion identity for this image for a self-improvement RPG app called LevelUp Life shop catalog. Return ONLY valid JSON with exactly these fields: name (1-2 powerful words), class (Warrior/Mage/Assassin/Healer/Creator/Strategist/Guardian/Shadow), race (Human/Beast/Spirit/Dragon/Hybrid/Ancient/Phantom/Elf/Orc/Dwarf), rank (Common/Rare/Epic/Legendary), description (2-3 lines), abilities (an array of 1 to 3 objects, each with type [one of: xp_boost, coin_boost, skill_xp_boost, energy_boost, streak_shield], value [5-15 for xp_boost/coin_boost, 3-8 for energy_boost, 10-25 for skill_xp_boost, 0 for streak_shield], skill [only required if type is skill_xp_boost: fitness/mindset/knowledge/discipline/creativity/social, otherwise null]). Match abilities to the companion theme — e.g. a dragon might get xp_boost and streak_shield together.' }
+      ]}]);
+      const match = text.match(/\{[\s\S]*\}/);
+      const d = match ? JSON.parse(match[0]) : null;
+      if (!d) throw new Error('No JSON');
+      id('as-name').value = d.name || '';
+      id('as-class').value = d.class || 'Warrior';
+      id('as-race').value = d.race || 'Spirit';
+      id('as-rarity').value = (d.rank || 'common').toLowerCase();
+      id('as-desc').value = d.description || '';
+      const abilities = Array.isArray(d.abilities) ? d.abilities.slice(0,3) : [];
+      for (let i = 1; i <= 3; i++) {
+        const a = abilities[i-1];
+        const typeEl = id(`as-ability-type-${i}`), valEl = id(`as-ability-value-${i}`), skillWrap = id(`as-ability-skill-wrap-${i}`), skillEl = id(`as-ability-skill-${i}`);
+        if (a) {
+          if (typeEl) typeEl.value = a.type || '';
+          if (valEl) valEl.value = a.value || 0;
+          if (a.type === 'skill_xp_boost' && a.skill) { skillWrap?.classList.remove('hidden'); if (skillEl) skillEl.value = a.skill; }
+          else { skillWrap?.classList.add('hidden'); }
+        } else { if (typeEl) typeEl.value = ''; skillWrap?.classList.add('hidden'); }
+      }
+      toast('✨ AI generated! Review and edit before saving.', 'green');
+    } catch(e) {
+      toast('AI generation failed — fill in manually', 'red');
+    }
+    if (btn) { btn.disabled = false; btn.textContent = '✨ Generate with AI'; }
+  };
+  reader.readAsDataURL(file);
 };
 
 // ─── ADMIN ────────────────────────────────────
@@ -1168,7 +1061,7 @@ async function loadAdminSummonsList() {
       ${s.image_url?`<img src="${s.image_url}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0"/>`:`<div style="width:40px;height:40px;border-radius:8px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🔮</div>`}
       <div class="sq-info">
         <div class="sq-title">${s.name}</div>
-        <div class="sq-desc">${s.class} — ${cap(s.rarity)}${s.has_frame?' 🖼️ Frame':''}</div>
+        <div class="sq-desc">${s.class} — ${cap(s.rarity)}${s.has_frame?' 🖼️ Frame':''}${getAbilitiesList(s).length?' • '+getAbilitiesList(s).join(', '):''}</div>
         <div class="sq-badges">
           <div class="sq-xp-badge">${s.price_gems>0?'💎 '+s.price_gems+' gems':'🪙 '+s.price_coins+' coins'}</div>
           <div class="sq-tag" style="color:${s.is_available?'var(--green)':'var(--red)'}">● ${s.is_available?'Available':'Hidden'}</div>
@@ -1186,9 +1079,10 @@ window.adminAddSummon = async () => {
   const name = val('as-name'), cls = val('as-class'), race = val('as-race'), desc = val('as-desc');
   const rarity = val('as-rarity') || 'common', priceCoins = parseInt(val('as-price-coins')) || 0;
   const priceGems = parseInt(val('as-price-gems')) || 0, unlockXP = parseInt(val('as-xp')) || 0;
-  const unlockDesc = val('as-unlock-desc'), effect = val('as-effect');
+  const unlockDesc = val('as-unlock-desc');
   const hasFrame = document.getElementById('as-has-frame')?.value === 'true';
   const frameClass = val('as-frame-class') || null;
+  const abilities = collectAbilitiesFromForm();
   if (!name) { toast('Enter a name!', 'red'); return; }
   toast('Uploading...', 'green');
   let imageUrl = null;
@@ -1198,7 +1092,7 @@ window.adminAddSummon = async () => {
     const upRes = await sb.storage.from('summons').upload(path, file, { upsert: true });
     if (!upRes.error) imageUrl = sb.storage.from('summons').getPublicUrl(path).data.publicUrl;
   }
-  await sb.from('shop_summons').insert({ name, description: desc, class: cls, race, image_url: imageUrl, rarity, price_coins: priceCoins, price_gems: priceGems, is_premium: priceGems > 0, unlock_xp: unlockXP, unlock_description: unlockDesc||null, special_effect: effect||null, has_frame: hasFrame, frame_class: frameClass, is_available: true, added_by: user.id });
+  await sb.from('shop_summons').insert({ name, description: desc, class: cls, race, image_url: imageUrl, rarity, price_coins: priceCoins, price_gems: priceGems, is_premium: priceGems > 0, unlock_xp: unlockXP, unlock_description: unlockDesc||null, has_frame: hasFrame, frame_class: frameClass, abilities, is_available: true, added_by: user.id });
   toast(`🔮 ${name} added to shop!`, 'green');
   loadAdminSummonsList();
 };
