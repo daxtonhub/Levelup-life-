@@ -456,6 +456,19 @@ function renderHeroCard() {
   if (profile.bg_image_url) applyBgImage(profile.bg_image_url);
   else if (profile.namecard_bg) { const hb = document.querySelector('.hero-bg'); if (hb) hb.style.background = `linear-gradient(135deg,${profile.namecard_bg} 0%,#0a0a1a 100%)`; }
   applyFrame();
+  const summonsRow = id('hero-summons-row');
+  if (summonsRow) {
+    summonsRow.innerHTML = activeSummons.map(s => {
+      const rankInfo = SUMMON_RANKS[s.rank] || SUMMON_RANKS.Common;
+      return `<div class="hero-summon-chip">
+        ${s.image_url ? `<img src="${s.image_url}"/>` : `<div class="hero-summon-chip-placeholder">🔮</div>`}
+        <div class="hero-summon-chip-info">
+          <div class="hero-summon-chip-name">${s.name}</div>
+          <div class="hero-summon-chip-meta">${rankInfo.icon} ${s.rank} • Bond ${s.bond_level}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
 }
 
 function checkDailyBonusAvailable() {
@@ -599,10 +612,9 @@ window.toggleSection = (contentId, arrowId) => {
     else if (contentId === 'events-content')    renderEvents();
     else if (contentId === 'boss-content')      renderBossFights();
     else if (contentId === 'manuals-content')   renderManuals();
-    else if (contentId === 'shop-content')      renderShopSection();
-    else if (contentId === 'inventory-content') renderSummonInventory();
-    else if (contentId === 'frames-content')    renderFramesSection();
-    else if (contentId === 'summons-content')   renderSummonSection();
+    else if (contentId === 'shop-content')         renderShopSection();
+    else if (contentId === 'frames-content')       renderFramesSection();
+    else if (contentId === 'your-summons-content') renderYourSummons();
   }
 };
 
