@@ -869,16 +869,6 @@ async function renderAdmin() {
   <div id="admin-summons-list"></div>
 </div>
 
-  // Image preview listener
-  document.addEventListener('change', (e) => {
-    if (e.target?.id === 'admin-summon-img') {
-      const file = e.target.files[0]; if (!file) return;
-      const preview = id('admin-summon-preview'); if (!preview) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => { preview.innerHTML = `<img src="${ev.target.result}" style="width:80px;height:80px;border-radius:12px;object-fit:cover;border:2px solid var(--accent2)"/>`; };
-      reader.readAsDataURL(file);
-    }
-  }, { once: true });
 }
 
 function adminQCard(q, users) {
