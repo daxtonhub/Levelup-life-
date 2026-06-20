@@ -1100,5 +1100,21 @@ window.adminAddSummon = async () => {
 window.adminDeleteSummon = async (id_) => { await sb.from('shop_summons').delete().eq('id', id_); toast('Summon deleted', 'red'); loadAdminSummonsList(); };
 window.adminToggleSummon = async (id_, curr) => { await sb.from('shop_summons').update({ is_available: !curr }).eq('id', id_); toast(curr?'Summon hidden':'Summon visible', 'green'); loadAdminSummonsList(); };
 
+// ─── ADMIN FORM LISTENERS (registered once, not per-render) ──
+document.addEventListener('change', (e) => {
+  if (e.target?.id === 'admin-summon-img') {
+    const file = e.target.files[0]; if (!file) return;
+    const preview = id('admin-summon-preview'); if (!preview) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => { preview.innerHTML = `<img src="${ev.target.result}" style="width:80px;height:80px;border-radius:12px;object-fit:cover;border:2px solid var(--accent2)"/>`; };
+    reader.readAsDataURL(file);
+  }
+  if (e.target?.id?.startsWith('as-ability-type-')) {
+    const idx = e.target.id.split('-').pop();
+    const wrap = id(`as-ability-skill-wrap-${idx}`);
+    if (wrap) wrap.classList.toggle('hidden', e.target.value !== 'skill_xp_boost');
+  }
+});
+
 // ─── KICK OFF ─────────────────────────────────
 initApp().catch(emergencyShowAuth);
