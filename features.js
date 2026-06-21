@@ -842,7 +842,7 @@ async function renderAdmin() {
     <div class="form-group"><label>Class</label><select id="as-class"><option>Warrior</option><option>Mage</option><option>Assassin</option><option>Healer</option><option>Creator</option><option>Strategist</option><option>Guardian</option><option>Shadow</option></select></div>
     <div class="form-group"><label>Race</label><select id="as-race"><option>Human</option><option>Beast</option><option>Spirit</option><option>Dragon</option><option>Hybrid</option><option>Ancient</option><option>Phantom</option><option>Elf</option><option>Orc</option><option>Dwarf</option></select></div>
     <div class="form-group"><label>Description</label><textarea id="as-desc" placeholder="Describe this summon..." style="min-height:70px"></textarea></div>
-    <div class="form-group"><label>Rarity</label><select id="as-rarity"><option value="common">Common</option><option value="rare">Rare</option><option value="epic">Epic</option><option value="legendary">Legendary</option></select></div>
+    <div class="form-group"><label>Rarity</label><select id="as-rarity"><option value="common">Common</option><option value="rare">Rare</option><option value="epic">Epic</option><option value="legendary">Legendary</option><option value="mythic">Mythic</option></select></div>
 
     <div class="sec-title" style="margin-top:16px">Abilities (up to 3, optional)</div>
     <div class="form-group"><label>Ability 1</label><select id="as-ability-type-1"><option value="">None</option><option value="xp_boost">+% All XP</option><option value="coin_boost">+% Coins</option><option value="skill_xp_boost">+% Skill XP</option><option value="energy_boost">+ Energy per Quest</option><option value="streak_shield">🛡️ Streak Guard</option></select></div>
